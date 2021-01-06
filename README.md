@@ -4,6 +4,8 @@
 
 [Primeros Pasos En React](#Primeros-Pasos-En-React)
 
+[Introducción a babel](#Introducción-a-babel)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -185,3 +187,27 @@ Ahora si se utiliza por ejemplo una constante para traer un nombre, de esta form
 En principio no se ve nada pero se traigo la constante nombre a los corchetes va a haber un cambio, de esta forma
 
 ![assets-git/6.png](assets-git/6.png)
+
+## Introducción a babel
+
+Babel funciona en el Background cuando creamos aplicaciones en React. Babel nos permite utilizar caracteristicas actuales de JavaScript, es decir el ultimo estandar de EcmaScript que tengamos e incluso permite hacer uso de estas caracteristicas en navegadores que aun no las soporten.
+
+Aqui un ejemplo que tambien se puede probrar en la pagina de [babel](https://babeljs.io/):
+
+En el lado derecho de la pantalla Babel hace la transformacion de JavaScript moderno a un navegador que no sea compatible con JavaScript.
+
+El lado izquierdo utiliza template literals los cuales sirven para concatenar en este caso un string con numeros
+
+![assets-git/7.png](assets-git/7.png)
+
+El siguiente ejemplo utiliza ub objeto que recibe un array de personajes
+
+![assets-git/8.png](assets-git/8.png)
+
+De momento se ven iguales, pero si se comenta y se prueba en la consola del navegador va a salir un error que dice que la propiedad length no se puede leer en un elemento indefinido
+
+![assets-git/9.png](assets-git/9.png)
+
+Si delante de la palabra personajes se agrega un signo `?`, la consola no va a mostrar error solo mostrara undefined pero al mismo tiempo si se agrega a Babel el codigo que hace que sea compatible con otros navegadores cambia a una una forma mas compleja y es para esto que existe Babel
+
+![assets-git/10.png](assets-git/10.png)
