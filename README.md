@@ -6,7 +6,7 @@
 
 [Introducción a babel](#Introducción-a-babel)
 
-[Bases de JavaScript](#Bases de JavaScript)
+[Bases de JavaScript](#Bases-de-JavaScript)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
