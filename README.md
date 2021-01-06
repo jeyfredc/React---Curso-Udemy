@@ -6,6 +6,8 @@
 
 [Introducción a babel](#Introducción-a-babel)
 
+[Bases de JavaScript](#Bases de JavaScript)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -211,3 +213,45 @@ De momento se ven iguales, pero si se comenta y se prueba en la consola del nave
 Si delante de la palabra personajes se agrega un signo `?`, la consola no va a mostrar error solo mostrara undefined pero al mismo tiempo si se agrega a Babel el codigo que hace que sea compatible con otros navegadores cambia a una una forma mas compleja y es para esto que existe Babel
 
 ![assets-git/10.png](assets-git/10.png)
+
+## Bases de JavaScript
+
+A continuacion se va a crear la primera aplicacion React utilizando la terminal del computador y moviendose hasta la carpeta que se haya instalado en el escritorio. Cuando esten sobre la ubicacion de la carpeta ejecutar el comando `npx create-react-app intro-javascript` y luego presionar Enter
+
+**Nota:**Deben tener en cuenta que ya se debio haber instalado node-js para verificar que ya este instalado ejecutar `npx --version` en la consola
+
+![assets-git/11.png](assets-git/11.png)
+
+a continuacion la consola despues de realizar la instalacion de la aplicacion sugiere ejecutar los comandos 
+
+  `cd intro-javascript`
+  `yarn start` o tambien se puede ejecutar `npm start`
+
+Antes de realizar esto ir al escritorio abrir la carpeta que en mi caso se llama React-Udemy y renombrar la carpeta `intro-javascript` por `02-intro-javascript`
+
+Ahora en la consola ejecutar 
+
+  `cd 02-intro-javascript`
+  `yarn start` o tambien se puede ejecutar `npm start`
+
+![assets-git/12.png](assets-git/12.png)
+
+para finalizar o cerrar el servidor que ejecuta react se debe presionar sobre la consola `ctrl + c`
+
+si se quiere abrir solo la carpeta **02-intro-javascript** se puede ejecutar en consola `code .`, este comando solo va a abrir todo lo que este contenido en la carpeta. Asi por un lado esta la carpeta y por el otro el navegador ejecutando React
+
+![assets-git/13.png](assets-git/13.png)
+
+La carpeta **node_modules**, son todas las librerias que trae React por defecto, alli esta instalada Babel y otras librerias mas, el archivo .gitignore va a ayudar a no presentar algunos archivos cuando se utilice git, package.json es donde estan las dependencias del proyecto instaladas y comandos del proyecto. Dentro del Readme.md se encuentran instrucciones basicas de React.
+
+Dentro de la carpeta **src** borrar todos los archivos que esten, del lado del navegador inmediatamente se va a mostrar un error
+
+![assets-git/14.png](assets-git/14.png)
+
+Este error pasa porque esta buscando un archivo dentro de la carpeta **src** que se llame **index.js**, para eso crear el archivo dentro de la carpeta
+
+si dentro de este archivo se escribe un `console.log('Hola Mundo');` y abrimos la consola del navegador se va a mostrar sobre la consola.
+
+![assets-git/15.png](assets-git/15.png)
+
+Esto pasa gracias a webpack, que es el que ejecuta todo al instante en el navegador, lo pasa por Babel, lo pasa por varias configuraciones, detecta el cambio y actualiza el navegador web, lo cual permite realizar un desarrollo rapido para las aplicaciones
