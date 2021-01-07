@@ -8,6 +8,10 @@
 
 [Bases de JavaScript](#Bases-de-JavaScript)
 
+[Variables y constantes](#Variables-y-constantes)
+
+[Template string](#Template-string)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -190,6 +194,10 @@ En principio no se ve nada pero se traigo la constante nombre a los corchetes va
 
 ![assets-git/6.png](assets-git/6.png)
 
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
 ## Introducción a babel
 
 Babel funciona en el Background cuando creamos aplicaciones en React. Babel nos permite utilizar caracteristicas actuales de JavaScript, es decir el ultimo estandar de EcmaScript que tengamos e incluso permite hacer uso de estas caracteristicas en navegadores que aun no las soporten.
@@ -255,3 +263,185 @@ si dentro de este archivo se escribe un `console.log('Hola Mundo');` y abrimos l
 ![assets-git/15.png](assets-git/15.png)
 
 Esto pasa gracias a webpack, que es el que ejecuta todo al instante en el navegador, lo pasa por Babel, lo pasa por varias configuraciones, detecta el cambio y actualiza el navegador web, lo cual permite realizar un desarrollo rapido para las aplicaciones
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Variables y constantes
+
+Lo primero que se debe hacer es que si en algun momento se trabajo con el keyword `var` en JavaScript, actualmente EcmaScript ya no hace uso de esta porque el scope siempre era declarado como global cuando se usaba en funciones y queriamos que no se usaran fuera de ella.
+
+Actualmente se utilizan los keyword `let` y `const` para asignar informacion.
+
+Dentro del archivo **index.js** del capitulo anterior borramos el `console.log('Hola Mundo');` y agregamos al archivo
+
+```
+const nombre= 'Pablito';
+let
+```
+y vemos como en la consola del navegador aparece Pablito pero tambien se muestra un error que señala el keyword let en la linea 6 y ademas lanza un error `Unexpected reserved word 'let' (6:0)`
+
+![assets-git/16.png](assets-git/16.png)
+
+para solucionarlo simplemente a let  lo nombramos como apellido y le asignamos un string
+
+```
+const nombre= 'Pablito';
+let apellido ='clavo un clavito'
+```
+
+Ahora lanza una advertencia o warning en la consola que indica que la variables nombre y apellido fueron asignadas pero no se esta haciendo uso de ellas 
+
+![assets-git/17.png](assets-git/17.png)
+
+Si nunca se va a cambiar el valor del apellido entonces se debe declarar como una constante
+
+```
+const nombre= 'Pablito';
+const apellido ='clavo un clavito'
+```
+
+por ejemplo a continuacion se declara el valor de un dado con let y si quiero empezar a utilizar esas variables y constantes, hago uso de un `console.log` de esta forma ya no van a aparecer advertenciaas porque se esta haciendo uso de las variables
+
+```
+const nombre = 'pablito';
+let apellido ='clavo un clavito'
+
+let valorDado = 3;
+
+console.log(nombre, apellido, valorDado);
+```
+
+![assets-git/18.png](assets-git/18.png)
+
+Pero ahora, si yo quiero asignar otro numero a `valorDado` lo establezco porque utilice el keyword `let` y no `const`
+
+```
+const nombre = 'pablito';
+let apellido ='clavo un clavito'
+
+let valorDado = 3;
+valorDado = 6;
+
+console.log(nombre, apellido, valorDado);
+```
+
+![assets-git/19.png](assets-git/19.png)
+
+**Nota:** si se utilizo el keyword `let` para declarar y asignar `valorDado`, no es necesario hacerlo 2 veces. por ejemplo este bloque de condigo lanzaria un error si se estalece de esta forma
+
+```
+let valorDado = 3;
+let valorDado = 6;
+```
+
+Ahora viendolo en el scope, let ValorDado si lo puedo establecer pero solo dentro de un bloque de codigo, la variable que esta por encima del if es una variable que pertenece al scope global y la que esta dentro del if es del Scope local
+
+```
+const nombre = 'pablito';
+let apellido ='clavo un clavito'
+
+let valorDado = 3;
+valorDado = 6;
+
+console.log(nombre, apellido, valorDado);
+
+if (true){
+    let valorDado = 1;
+    
+    console.log(`Esto solo pertene al bloque de codigo del if" ${valorDado}`)
+}
+```
+
+![assets-git/20.png](assets-git/20.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Template string
+
+Anteriormente en JavaScript declarabamos 2 variables y las concatenabamos usando `variable + " " + variable`.
+
+Ejemplo
+
+```
+const nombre = "pablito";
+const apellido = "clavo un clavito";
+
+const nombreCompleto = nombre + " " + apellido
+
+console.log(nombreCompleto)
+```
+
+![assets-git/21.png](assets-git/21.png)
+
+Actualmente JaaScript utiliza los template string las cuales son estas llamadas comillas francesas **` `**, las cuales se tiene que ubicar en el teclado porque cada configuracion es diferente y esto permite hacer la concatenacion de variables utilizando `${}`. 
+
+Ejemplo
+
+```
+const nombre = "pablito";
+const apellido = "clavo un clavito";
+
+//const nombreCompleto = nombre + " " + apellido
+
+const nombreCompleto = `${nombre} ${apellido}`
+
+console.log(nombreCompleto)
+```
+
+![assets-git/22.png](assets-git/22.png)
+
+adicional permite hacer saltos de linea y concatenar con mas elementos de JavaScript, por ejemplo añadiendo un numero y otra frase
+
+Ejemplo
+
+```
+const nombre = "pablito";
+const apellido = "clavo un clavito";
+
+//const nombreCompleto = nombre + " " + apellido
+
+const nombreCompleto = `
+${nombre}
+${apellido}
+${4}
+Esta es una 
+           frase distinta al nombre`
+
+console.log(nombreCompleto)
+```
+
+![assets-git/23.png](assets-git/23.png)
+
+Ahora creamos una funcion a continuación que recibe como parametro a nombre y atención porque no se esta llamando en la funcion getSaludo que se esta pasando al `console.log`. 
+
+La consola va a mandar un `undefined`
+
+```
+function getSaludo(nombre){
+    return 'Hola ' + nombre;
+}
+
+console.log(`Este es un texto: ${getSaludo()}`)
+```
+
+![assets-git/24.png](assets-git/24.png)
+
+Este undefined lo trae porque el argumento o parametro que establecimos en la funcion `getSaludo` es `nombre` por tanto se debe pasar en la funcion para que traiga el valor de este
+
+```
+function getSaludo(nombre){
+    return 'Hola ' + nombre;
+}
+
+console.log(`Este es un texto: ${getSaludo(nombre)}`)
+```
+
+![assets-git/25.png](assets-git/25.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
