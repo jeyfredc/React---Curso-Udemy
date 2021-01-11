@@ -12,6 +12,8 @@
 
 [Template string](#Template-string)
 
+[Objetos literales](#Objetos-literales)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -441,6 +443,147 @@ console.log(`Este es un texto: ${getSaludo(nombre)}`)
 ```
 
 ![assets-git/25.png](assets-git/25.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Objetos literales
+
+Un objeto literal se considera que son 2 corchetes `{}` y estos tienes unas propiedades y prototipos por ejemplo aqui se crea una constante persona y se hace un console.log de esta 
+
+```
+const persona = {
+
+};
+
+console.log(persona)
+```
+
+![assets-git/26.png](assets-git/26.png)
+
+`{}` estas llaves o corchetes inidican que es un objeto y si en la consola del navegador abrimos esos corchetes vamos a ver que tiene un `__proto__` donde encontramos, sus funciones, propiedades y metodos del objeto.
+
+![assets-git/27.png](assets-git/27.png)
+
+Los objeto literales trabajan con pares de valores, donde en este ejemplo tenemos una llave la cual es `nombre:` y su valor el cual es `Tony`
+
+Ejemplo 
+
+```
+const persona = {
+  nombre: 'Tony'
+};
+
+console.log(persona)
+```
+
+y si quiero objetener el valor del nombre haria un console.log`(persona.nombre)`
+
+![assets-git/28.png](assets-git/28.png)
+
+tambien se pueden añadir mas propiedades al objeto persona como apellido, edad. Cada propiedad va separada de una coma y recibe en este caso 2 string y 1 valor numerico
+
+```
+const persona = {
+    nombre: 'Tony',
+    apellido: 'Stark',
+    edad: 45,
+  };
+  
+  console.log(persona)
+```
+
+![assets-git/29.png](assets-git/29.png)
+
+Si ahora hicieramos un `console.log( {persona: persona})` vamos a crear y crear un objeto dentro de otro objeto
+
+![assets-git/30.png](assets-git/30.png)
+
+Pero en JavaScript actualmente cuando la propiedad se llama igual al objeto se puede obviar la propiedad y hacer un `console.log({persona})`, se obtendra el mismo resultado de la imagen anterior.
+
+Si se hace un `console.table` se puede obtener la misma informacion presentada en tabla pero tambien ver la onformacion como se ha venido presentando
+
+![assets-git/31.png](assets-git/31.png)
+
+En el objeto se puede adicionar, mas objetos, funciones, metodos y por ejemplo ahora se va a añadir otro objeto que se llama direccion y tiene otras propiedades
+
+```
+const persona = {
+    nombre: 'Tony',
+    apellido: 'Stark',
+    edad: 45,
+    direccion: {
+        ciudad:'New york',
+        zip: 55321321,
+        lat: 14.3232,
+        lng: 34.9233321
+    }
+  };
+  
+  console.log( persona )
+```
+
+En el navegador los datos se van a presentar en orden alfabetico asi yo no lo establezca de esta forma pero esto es propiedo del navegador 
+
+![assets-git/32.png](assets-git/32.png)
+
+Si queremos clonar al objeto persona existe una mala practica que se va a demostrar a continuacion pero no se debe poner en practica porque React no admite este tipo de errores y podria generar algunas complicaciones.
+
+Primero se va a realizar de la forma incorrecta de hacer un clon y luego de forma correcta.
+
+primero declaro una constante de `persona2 = persona;` y luego hago un `console.log` de `persona2`
+
+luego en la consola del navegador vemos como tenemos una copia de persona 
+
+![assets-git/33.png](assets-git/33.png)
+
+y si yo quiero asignar otro nombre a `persona2`, lo que hago es que pongo
+
+`persona2.nombre = 'peter';`
+
+![assets-git/34.png](assets-git/34.png)
+
+pero esto es una falsa idea porque lo que esta haciendo `persona2` es obtener una referencia de `persona`, por tanto si yo hago un `console.log` de `persona` despues de haber asignado a peter. Voy a obtener una modificacion de la referencia del nombre en memoria y ahora `persona` y `persona2` se van a tener el nombre de `peter`
+
+![assets-git/35.png](assets-git/35.png)
+
+A continuación la forma correcta de realizar un clon o una mutación de un objeto, se puede crea un objeto de persona2 asignando todas las propiedades
+
+```
+const persona2 = { nombre:'peter'};
+```
+
+y añadir el resto de propiedades manualmente, pero tampoco se debe realizar de esta forma a menos que se quiera, para esto JavaScript actualmente hace uso del operador de spread o operador de propagacion el cual esta representado con 3 puntos `...`.
+
+Si utilizo la constante `persona2` y le asigno un objeto con el operador spread apuntando a `persona`, lo que realmente estoy haciendo es hacer una copia de persona y obtener todas sus propiedades para utilizarlas en mi nuevo objeto `persona2`
+
+```
+const persona = {
+    nombre: 'Tony',
+    apellido: 'Stark',
+    edad: 45,
+    direccion: {
+        ciudad:'New york',
+        zip: 55321321,
+        lat: 14.3232,
+        lng: 34.9233321
+    }
+  };
+  
+  
+  const persona2 = { ...persona };
+  
+  persona2.nombre = 'peter';
+  
+  console.log( persona )
+  console.log(persona2)
+
+```
+
+![assets-git/36.png](assets-git/36.png)
+
+De esta forma es como se obtiene el clon del objeto `persona`.
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
