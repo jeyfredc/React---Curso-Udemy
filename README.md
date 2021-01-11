@@ -14,6 +14,8 @@
 
 [Objetos literales](#Objetos-literales)
 
+[Arreglos](#Arreglos)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -584,6 +586,116 @@ const persona = {
 ![assets-git/36.png](assets-git/36.png)
 
 De esta forma es como se obtiene el clon del objeto `persona`.
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Arreglos
+
+Un arreglo es una colección de información que se encuentra dentro de una variable
+
+por ejemplo un array se encuentra en JavaScript y se reconoce por que esta entre parentesis cuadrados `[]`, como lo definimos a continuación
+
+```
+const arreglo = new Array();
+
+console.log(arreglo);
+```
+
+![assets-git/37.png](assets-git/37.png)
+
+el array generalmente no se declara asi, no es recomendable pero se puede hacer, normalmente un array se declara de la siguiente forma
+
+`const arreglo = [];`
+
+y este se le puede añadir valores con el metodo `push` de la siguiente forma
+
+```
+const arreglo = [];
+
+arreglo.push(1);
+arreglo.push(2);
+arreglo.push(3);
+arreglo.push(4);
+
+console.log(arreglo);
+```
+
+y luego encontramos a 1 en la posicion 0, 2 en la posicion 1, 3 en la posición 2 y 4 en la posición 3
+
+![assets-git/38.png](assets-git/38.png)
+
+Pero no solo se puede añadir valores mediante el metodo `push` si no tambien declararlos dentro del arreglo
+
+```
+const arreglo = [1, 2, 3, 4];
+
+// arreglo.push(1);
+// arreglo.push(2);
+// arreglo.push(3);
+// arreglo.push(4);
+
+console.log(arreglo);
+```
+
+![assets-git/39.png](assets-git/39.png)
+
+y si declaro un `arreglo2` puedo hacer una copia del 1 y de cierta forma concatenar `arreglo` con `arreglo2` de esta forma
+
+```
+const arreglo = [1, 2, 3, 4];
+
+// arreglo.push(1);
+// arreglo.push(2);
+// arreglo.push(3);
+// arreglo.push(4);
+
+let arreglo2 = [ ...arreglo, 5 ];
+
+console.log(arreglo);
+console.log(arreglo2);
+```
+
+![assets-git/40.png](assets-git/40.png)
+
+Ahora se va a crear un `arreglo3` haciendo uso del metodo `map` el cual hace un recorrido por el arreglo que se defina y a partir de este puedo crear un nuevo arreglo. para saber mas a cerca de este metodo pueden visitar el siguiente [enlace](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/Array/map).
+
+A continuacion declaro el arreglo3 que es igual al recorrido del arreglo 2 y dentro de los parentesis establezoco una funcion que recibe como parametro un numero
+
+```
+const arreglo = [1, 2, 3, 4];
+
+// arreglo.push(1);
+// arreglo.push(2);
+// arreglo.push(3);
+// arreglo.push(4);
+
+let arreglo2 = [ ...arreglo, 5 ];
+
+const arreglo3 = arreglo2.map( function(numero) {
+
+})
+
+
+console.log(arreglo);
+console.log(arreglo2);
+console.log(arreglo3);
+```
+
+Por el momento arreglo 3 esta obteniendo 5 veces el valor e undefined porque no le estoy retornando nada. Como se ve en la imagen a continuación `map` recorrio el `arreglo2` el cual esta compuesto por una copia de arreglo mas el numero de la variable, es por esta razon que se imprime 5 veces `undefined`
+
+![assets-git/41.png](assets-git/41.png)
+
+si hago un return de `Hola` se va a imprimir 5 veces Hola
+
+![assets-git/42.png](assets-git/42.png)
+
+y si a continuación retorno `numero * 2` voy a obtener el valor de cada numero por su doble
+
+![assets-git/43.png](assets-git/43.png)
+
+
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
