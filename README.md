@@ -16,6 +16,8 @@
 
 [Arreglos](#Arreglos)
 
+[Funciones](#Funciones)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -695,6 +697,166 @@ y si a continuación retorno `numero * 2` voy a obtener el valor de cada numero 
 
 ![assets-git/43.png](assets-git/43.png)
 
+## Funciones
+
+Una funcion basica se puede crear de la siguiente forma
+
+```
+function saludar( nombre){
+  return `Hola, ${ nombre }`
+}
+
+console.log( saludar('Tony'));
+```
+
+![assets-git/44.png](assets-git/44.png)
+
+si a continuacion se comenta el `console.log` anterior y se hace un `console.log()` de la función voy a obtener en consola una referencia a la funcion que se indica mediante una `f` en el navegador
+
+![assets-git/45.png](assets-git/45.png)
+
+y si ahora agrego `saludar=30`, voy a obtener su valor pero voy a dejar de obtener una referencia a la función
+
+![assets-git/46.png](assets-git/46.png)
+
+Por tanto no es recomendable declarar una función de esa forma.
+
+Por tanto su a continuación se crea una constante `saludar` y el resto de la funcion se deja de la misma forma y asigno el numero a saludar voy a obtener un error
+
+```
+const saludar = function( nombre){
+    return `Hola, ${ nombre }`;
+  }
+
+  saludar = 30;
+  
+/*   console.log( saludar('Tony')); */
+
+console.log(saludar)
+```
+
+![assets-git/47.png](assets-git/47.png)
+
+Una función como la anterior se puede transformar a una función de flecha o un `arrow function`, en esta modificación se quita el keyword `function` y delante del parametro se agrega una flecha `=>`
+
+```
+const saludar = function( nombre){
+    return `Hola, ${ nombre }`;
+  }
+
+const saludar2 = (nombre) => {
+    return `Hola, ${nombre}`;
+}
+  
+  
+console.log(saludar('Tony'));
+console.log(saludar2('peter'));
+```
+
+![assets-git/48.png](assets-git/48.png)
+
+Y existe otra forma de hacerlo mas facil en el caso que solo se necesite retornar una sola cosa y la funcion sea corta y es quitar la palabra `return` y dejar la función de flecha sin los corchetes
+
+```
+const saludar = function( nombre){
+    return `Hola, ${ nombre }`;
+  }
+
+const saludar2 = (nombre) => {
+    return `Hola, ${nombre}`;
+}
+  
+const saludar3 = (nombre) => `Hola, ${nombre}`;
+    
+console.log(saludar('Tony'));
+console.log(saludar2('peter'));
+console.log(saludar3('Valentina'));
+```
+
+![assets-git/49.png](assets-git/49.png)
+
+Ahora otro ejemplo utilizando una nueva funcion llamada `getUser` la cual retorna el id y el nombre de usuario de una persona
+
+```
+const saludar = function( nombre){
+    return `Hola, ${ nombre }`;
+  }
+
+const saludar2 = (nombre) => {
+    return `Hola, ${nombre}`;
+}
+  
+const saludar3 = (nombre) => `Hola, ${nombre}`;
+    
+console.log(saludar('Tony'));
+console.log(saludar2('peter'));
+console.log(saludar3('Valentina'));
+
+
+const getUser = () => {
+    return{
+    id: 'zxh123',
+    username: 'camilo2004',
+    }
+}
+
+console.log(getUser())
+```
+
+![assets-git/50.png](assets-git/50.png)
+
+Si quitara el `return` y las llaves a continuación tendria un error porque de esta forma no puedo obtener un objeto
+
+![assets-git/51.png](assets-git/51.png)
+
+Si quiero obtener el objeto implicitamente debo establecer todo dentro de un parentesis para obtener el valor del objeto
+
+```
+const saludar = function( nombre){
+    return `Hola, ${ nombre }`;
+  }
+
+const saludar2 = (nombre) => {
+    return `Hola, ${nombre}`;
+}
+  
+const saludar3 = (nombre) => `Hola, ${nombre}`;
+    
+console.log(saludar('Tony'));
+console.log(saludar2('peter'));
+console.log(saludar3('Valentina'));
+
+
+const getUser = () => 
+    ({
+    id: 'zxh123',
+    username: 'camilo2004',
+    });
+
+console.log(getUser());
+```
+
+![assets-git/52.png](assets-git/52.png)
+
+El siguiente codigo esta funcionando pero como refuerzo pueden realizar la siguiente tarea
+
+```
+// Tarea
+// 1. Tranformar a una función de flecha
+// 2. Tiene que retornar un objeto implicito
+// 3. Realizar pruebas
+
+function getUsuarioActivo( nombre ) {
+    return{
+        id: 'abc567',
+        username: nombre
+    }
+};
+
+const usuarioActivo = getUsuarioActivo('Gonzalo');
+
+console.log( usuarioActivo);
+```
 
 
 <div align="right">
