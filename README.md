@@ -18,6 +18,8 @@
 
 [Funciones](#Funciones)
 
+[Desestructuración de objetos](#Desestructuración-de-objetos)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -858,6 +860,317 @@ const usuarioActivo = getUsuarioActivo('Gonzalo');
 console.log( usuarioActivo);
 ```
 
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Desestructuración de objetos
+
+Esta tambien es llamada como Asignación desestructurante y para ver mas a cerca de esta se puede revisar en el siguiente [enlace](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Operadores/Destructuring_assignment), donde esta la documentación de JavaScript.
+
+A continuacióin se va a declarar nuevamente a un objeto persona que tiene propiedades de nombre, edad y clave
+
+```
+const persona = {
+  nombre: 'Tony',
+  edad: 45,
+  clave: 'IronMan',
+}
+```
+
+si quiero obtener el valor de cada propiedad anteriormente haria esto
+
+```
+console.log(persona.nombre);
+console.log(persona.edad);
+console.log(persona.clave);
+```
+
+![assets-git/53.png](assets-git/53.png)
+
+pero si quiero dejar de utilizar la palabra `persona.` desestructuro el objeto de la siguiente forma y es muy común encontrarla en React
+
+`const {} = persona;`
+
+Lo que ahora coloque dentro de los corchetes va a ser lo que quiero obtener de ese objeto por ejemplo nombre
+
+`const {nombre} = persona;`
+
+![assets-git/54.png](assets-git/54.png)
+
+si quiero obtener los otros valores agrego las otras propiedades no es necesario que tengan algun tipo de orden
+
+`const {edad, clave, nombre} = persona;`
+
+![assets-git/55.png](assets-git/55.png)
+
+Ahora se puede crear una función de flecha que se llame `retornaPersona`, la cual va a recibir una `persona`, dentro de esta hacemos un console.log de persona que es lo que esta recibiendo como parametro y por fuera de esta se llama a la funcion pasando como parametro a persona
+
+```
+const persona = {
+    nombre: 'Tony',
+    edad: 45,
+    clave: 'Ironman',
+}
+
+// const {edad, clave, nombre} = persona;
+
+// console.log(nombre);
+// console.log(edad);
+// console.log(clave);
+
+const retornaPersona = ( persona ) => {
+
+    console.log(persona);
+}
+
+retornaPersona( persona );
+```
+
+![assets-git/56.png](assets-git/56.png)
+
+y si nuevamente tengo la desestructuración de la persona tambien puedo hacer un `console.log` de cada propiedad
+
+![assets-git/57.png](assets-git/57.png)
+
+pero tambien se puede destructurar en los parametros de la función 
+
+```
+const persona = {
+    nombre: 'Tony',
+    edad: 45,
+    clave: 'Ironman',
+}
+
+// const {edad, clave, nombre} = persona;
+
+// console.log(nombre);
+// console.log(edad);
+// console.log(clave);
+
+const retornaPersona = ( { nombre, clave} ) => {
+
+    console.log( clave, nombre);
+}
+
+retornaPersona( persona );
+```
+
+![assets-git/58.png](assets-git/58.png)
+
+tambien se pueden asignar valores que vienen por defecto por ejemplo asignar un rango
+
+```
+const persona = {
+    nombre: 'Tony',
+    edad: 45,
+    clave: 'Ironman',
+}
+
+// const {edad, clave, nombre} = persona;
+
+// console.log(nombre);
+// console.log(edad);
+// console.log(clave);
+
+const retornaPersona = ( { nombre, clave, rango} ) => {
+
+    console.log( clave, nombre, rango);
+}
+
+retornaPersona( persona );
+```
+
+Pero si se mira en el navegador rango es undefined porque no se ha definido como propiedad.
+
+![assets-git/59.png](assets-git/59.png)
+
+pero si a continuacion se agrega un `=` a `rango` y se asigna `capitán` este se va a imprimir
+
+![assets-git/60.png](assets-git/60.png)
+
+Pero si se asigna al objeto rango, va a tomar el valor del objeto
+
+```
+const persona = {
+    nombre: 'Tony',
+    edad: 45,
+    clave: 'Ironman',
+    rango: 'Ingeniero',
+}
+
+// const {edad, clave, nombre} = persona;
+
+// console.log(nombre);
+// console.log(edad);
+// console.log(clave);
+
+const retornaPersona = ( { nombre, clave, rango = 'Capitán'} ) => {
+
+    console.log( clave, nombre, rango);
+}
+
+retornaPersona( persona );
+```
+
+![assets-git/61.png](assets-git/61.png)
+
+tambien si hago un `return` dentro de la funcion de flecha y establezco nuevos pares de valores y lo obtengo en otra constante puedo obtener los valores de `persona` asi:
+
+```
+const persona = {
+    nombre: 'Tony',
+    edad: 45,
+    clave: 'Ironman',
+    rango: 'Ingeniero',
+}
+
+// const {edad, clave, nombre} = persona;
+
+// console.log(nombre);
+// console.log(edad);
+// console.log(clave);
+
+const retornaPersona = ( { edad, nombre, clave, rango = 'Capitán'} ) => {
+
+    // console.log( clave, nombre, rango);
+
+    return{
+        nombreClave: clave,
+        agnos: edad,
+    }
+}
+
+const avenger = retornaPersona( persona );
+
+console.log(avenger)
+```
+
+![assets-git/62.png](assets-git/62.png)
+
+Si ahora cambio el nombre de `retornaPersona` por `usecontext` sigo obteniendo el mismo valor
+
+![assets-git/63.png](assets-git/63.png)
+
+Y si lo quiero desestructurar nuevamente, hago la constante que recibe al objeto con las propiedades = a la funcion que recibe el parametro `persona`
+
+```
+const persona = {
+    nombre: 'Tony',
+    edad: 45,
+    clave: 'Ironman',
+    rango: 'Ingeniero',
+}
+
+// const {edad, clave, nombre} = persona;
+
+// console.log(nombre);
+// console.log(edad);
+// console.log(clave);
+
+const usecontext = ( { edad, nombre, clave, rango = 'Capitán'} ) => {
+
+    // console.log( clave, nombre, rango);
+
+    return{
+        nombreClave: clave,
+        agnos: edad,
+    }
+}
+
+const {nombreClave, agnos} = usecontext( persona );
+
+console.log(nombreClave, agnos);
+```
+
+![assets-git/64.png](assets-git/64.png)
+
+Como un objeto recibe a otro objeto, a continuación se va a agregar un nuevo objeto que retorna la funcion `usecontext` que va a aser `latlng` y luego se va a hacer la extraccion del objeto 
+
+```
+const persona = {
+    nombre: 'Tony',
+    edad: 45,
+    clave: 'Ironman',
+    rango: 'Ingeniero',
+}
+
+// const {edad, clave, nombre} = persona;
+
+// console.log(nombre);
+// console.log(edad);
+// console.log(clave);
+
+const usecontext = ( { edad, nombre, clave, rango = 'Capitán'} ) => {
+
+    // console.log( clave, nombre, rango);
+
+    return{
+        nombreClave: clave,
+        agnos: edad,
+        latlng: {
+            lat: 14.235,
+            lng: 45.245,
+        }
+    }
+}
+
+const {nombreClave, agnos, latlng} = usecontext( persona );
+
+console.log(nombreClave, agnos);
+console.log(latlng);
+```
+
+![assets-git/65.png](assets-git/65.png)
+
+pero si yo solo quiero obtener los valores, sin que se muestren como un objeto, cuando se hace la desestructuración en `usecontext` al objeto `latlng` debo agregarle `:{ propiedades que quiero extraer}` y ya no puedo hacer un `console.log` del objeto si no, de las propiedades
+
+```
+const persona = {
+    nombre: 'Tony',
+    edad: 45,
+    clave: 'Ironman',
+    rango: 'Ingeniero',
+}
+
+// const {edad, clave, nombre} = persona;
+
+// console.log(nombre);
+// console.log(edad);
+// console.log(clave);
+
+const usecontext = ( { edad, nombre, clave, rango = 'Capitán'} ) => {
+
+    // console.log( clave, nombre, rango);
+
+    return{
+        nombreClave: clave,
+        agnos: edad,
+        latlng: {
+            lat: 14.235,
+            lng: 45.245,
+        }
+    }
+}
+
+const {nombreClave, agnos, latlng: { lat, lng}} = usecontext( persona );
+
+console.log(nombreClave, agnos);
+console.log(lat, lng);
+```
+
+![assets-git/66.png](assets-git/66.png)
+
+normalmente se puede encontrar la desestructuración del objeto que esta dentro de otro objeto de la siguiente forma pero el resultado sera el mismo que esta en la imagen anterior
+
+```
+const {nombreClave, agnos, latlng,/* : { lat, lng} */} = usecontext( persona );
+const { lat, lng} = latlng;
+console.log(nombreClave, agnos);
+console.log(lat, lng);
+```
+
+![assets-git/67.png](assets-git/67.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
