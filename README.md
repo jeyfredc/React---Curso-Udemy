@@ -20,6 +20,8 @@
 
 [Desestructuración de objetos](#Desestructuración-de-objetos)
 
+[Import, export y funciones comunes de arreglos](#Import-export-y-funciones-comunes-de-arreglos)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -1301,7 +1303,118 @@ console.log( nombre );
 setNombre();
 ```
 
-La solucion se puede encontrar en el archivo [07-desestructuracion-array.js]()
+La solucion se puede encontrar en el archivo [07-desestructuracion-array.js](https://github.com/jeyfredc/React---Curso-Udemy/blob/master/02-intro-javascript/src/bases/07-desesctructuracion-arreglos.js)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Import, export y funciones comunes de arreglos
+
+A continuación dentro de la carpeta src crear una subcarpeta que se llame data y crear un archivo que se llame **heores.js** y pegar la siguiente información.
+
+```
+const heroes = [
+    {
+        id: 1,
+        name: 'Batman',
+        owner: 'DC'
+    },
+    {
+        id: 2,
+        name: 'Spiderman',
+        owner: 'Marvel'
+    },
+    {
+        id: 3,
+        name: 'Superman',
+        owner: 'DC'
+    },
+    {
+        id: 4,
+        name: 'Flash',
+        owner: 'DC'
+    },
+    {
+        id: 5,
+        name: 'Wolverine',
+        owner: 'Marvel'
+    },
+];
+```
+
+Lo que queremos hacer es traer este archivo y usarlo en **index.js**, para importarlo nos debemos dirigir a este archivo y hacer un import de la constante que necesito que es heroes, la ubicación del archivo es relativa en donde me encuentre, `./` quiere decir que voy a buscar dentro de las carpetas que estan al mismo nivel que **index.js** si quisiera irme una carpeta atras tendria que hacer `../` y empezar a buscar lo que necesito traer.
+
+```
+import { heroes } from './data/heroes'
+```
+
+Si hago un `console.log( heroes );` lo que espero es que me retorne el arreglo de heroes, pero en este caso obtengo `undefined`
+
+![assets-git/75.png](assets-git/75.png)
+
+Si ocurre esto, entonces a continuación me debo dirigir al archivo de heroes y exportar la constante de esta forma
+
+```
+export const heroes = [
+    {
+        id: 1,
+        name: 'Batman',
+        owner: 'DC'
+    },
+    {
+        id: 2,
+        name: 'Spiderman',
+        owner: 'Marvel'
+    },
+    {
+        id: 3,
+        name: 'Superman',
+        owner: 'DC'
+    },
+    {
+        id: 4,
+        name: 'Flash',
+        owner: 'DC'
+    },
+    {
+        id: 5,
+        name: 'Wolverine',
+        owner: 'Marvel'
+    },
+];
+```
+
+y con esto en la consola del navegador ya recibo todos los heroes
+
+![assets-git/76.png](assets-git/76.png)
+
+Ahora para hacer practica en el archivo **index.js** se va a crear un ejercicio, para traer el personaje 2 utilizando el metodo [find](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/Array/find), para esto se deja la documentación y el ejercicio a realizar. Por tal motivo se debe buscar la forma para resolverlo y traer el id 2 el cual seria Spiderman.
+
+```
+import { heroes } from './data/heroes';
+
+const getHeroeById = (id) => {
+    return heroes.find();
+}
+
+console.log( getHeroeById(2));
+```
+
+la solucion la puedes encontrar en [08-import-import-export]()
+**Nota:** Lo que este dentro del archivo del repositorio lo deben llevar para el index para poder probar el codigo
+
+la otra tarea es buscar en la documentación de mozilla como usar `filter`, por tanto se deja planteado un ejercicio tambien para resolver. Aclarando que `find` solo sirve para traer un solo elemento por tanto se debe hacer un cambio en la siguiente función para traer todos los elementos que pertenezcan a DC
+
+```
+const getHeroesByOwner = ( owner) => heroes.find( (heroe) => heroe.id === id ); 
+
+console.log( getHeroesByOwner('DC'));
+```
+
+El resultado de los 2 ejercicios debe ser el siguiente
+
+![assets-git/77.png](assets-git/77.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
