@@ -22,6 +22,8 @@
 
 [Import, export y funciones comunes de arreglos](#Import-export-y-funciones-comunes-de-arreglos)
 
+[Múltiples exportaciones y exportaciones por defecto](#Múltiples-exportaciones-y-exportaciones-por-defecto)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -1418,6 +1420,73 @@ El resultado de los 2 ejercicios debe ser el siguiente
 ![assets-git/77.png](assets-git/77.png)
 
 **Nota:** Una forma facil para importar un archivo es que se escribe la referencia del archivo al que quiero ir por ejemplo escribo solo la palabra `heroes` y luego presiono `ctrl + espacio`, si aparece la opcion en las sugerencias de vsCode presiono `tab` y se importa de manera automatica la ruta
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Múltiples exportaciones y exportaciones por defecto
+
+Continuando con el mismo archivo del capitulo anterior en **index.js**, existen otras formas de exportar, en este caso se va hacer un exportacion por defecto, en el archivo de **heroes.js** se deja la siguiente forma
+ 
+```
+export default [
+    {
+        id: 1,
+        name: 'Batman',
+        owner: 'DC'
+    },
+    {
+        id: 2,
+        name: 'Spiderman',
+        owner: 'Marvel'
+    },
+    {
+        id: 3,
+        name: 'Superman',
+        owner: 'DC'
+    },
+    {
+        id: 4,
+        name: 'Flash',
+        owner: 'DC'
+    },
+    {
+        id: 5,
+        name: 'Wolverine',
+        owner: 'Marvel'
+    },
+];
+```
+
+En primer lugar la consola del navegador va a mostrar un error
+
+![assets-git/78.png](assets-git/78.png)
+
+pero luego que pasemos al archivo **index.js** y quitemos los corchetes de `import { heroes }` el codigo va a continuar funcionando como antes
+
+![assets-git/79.png](assets-git/79.png)
+
+pero no quiere decir que `heroes` sea una referencia del archivo **heroes.js**, si estas en linux y presionas `F2` cambias por otro nombre por ejemplo superHeroes, cambias todas las variables y el archivo va a seguir funcionando.
+Si estas en windows presionas `windows + F2`.
+
+![assets-git/80.png](assets-git/80.png)
+
+Pero por lo general una exportación y sobre todo en React se encuentra  el `export default` en la ultima parte del documento asi, modificando esta vez sobre **heroes.js** y regresando todo como estaba
+
+![assets-git/81.png](assets-git/81.png)
+
+Tambien se pueden importar constantes, en este caso se crea la constante owners en el archivo **heroes.js**
+
+`export const owners = ['DC' , 'Marvel'];`
+
+En este caso tendria una exportacion por defecto + una exportacion individual. Entonces en **index.js** debo agregar la exportacion por defecto seguido de una coma y la desestructuracion de ese archivo o objeto que viene de heroes
+
+`import heroes, { owners }  from './data/heroes';`
+
+y si hago un `console.log( owners);` pueedo ver como esta importando de manera correcta esa exportación individual
+
+![assets-git/82.png](assets-git/82.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
