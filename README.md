@@ -1175,3 +1175,134 @@ console.log(lat, lng);
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
+
+## Desestructuración de arreglos
+
+A continuación, una de las formas mas comunes de desestructurar un objeto, es accediendo por su posición
+
+por ejemplo
+
+```
+const personajes = ['Iron Man', 'Capitan America', 'Spiderman'];
+
+console.log(personajes[0])
+console.log(personajes[1])
+console.log(personajes[2])
+```
+
+![assets-git/68.png](assets-git/68.png)
+
+pero no siempre se quiere acceder de esa forma a un elemento de un arreglo, existe otra forma y es definiendo otra constante que apunte al arreglo y llamando por posicion segun se requiera
+
+```
+const personajes = ['Iron Man', 'Capitan America', 'Spiderman'];
+
+// console.log(personajes[0])
+// console.log(personajes[1])
+// console.log(personajes[2])
+
+const [p1] = personajes;
+
+console.log(p1);
+```
+
+![assets-git/69.png](assets-git/69.png)
+
+El que haya colocado `p1`, no necesariamente quiere decir que por ser `p1` siempre vaya a acceder a `Iron Man`, por ejemplo si quiero acceder con `p1` a `Capitan America`, simplemente antepongo una coma antes y con esto ya tengo acceso a `Capitan America`
+
+```
+const personajes = ['Iron Man', 'Capitan America', 'Spiderman'];
+
+// console.log(personajes[0])
+// console.log(personajes[1])
+// console.log(personajes[2])
+
+const [ , p1] = personajes;
+
+console.log(p1);
+```
+
+![assets-git/70.png](assets-git/70.png)
+
+y asi mismo sera para acceder al personaje 3.
+
+O tambien se puede ignorar un elemento y acceder a los otros 2
+
+```
+const personajes = ['Iron Man', 'Capitan America', 'Spiderman'];
+
+// console.log(personajes[0])
+// console.log(personajes[1])
+// console.log(personajes[2])
+
+const [ , p2, p3] = personajes;
+
+console.log(`${p2}, ${p3}`);
+```
+
+![assets-git/71.png](assets-git/71.png)
+
+Tambien se puede desestructurar una función como la siguiente, la cual se llama `retornaArreglo`
+
+```
+const retornaArreglo = () => {
+    return ['ABC' , 123];
+}
+
+const arr = retornaArreglo()
+console.log(arr);
+```
+
+![assets-git/72.png](assets-git/72.png)
+
+Si quiero obtener los campos y no retornarlo en un arreglo la desestructuro en letras y numeros de esta forma
+
+```
+const retornaArreglo = () => {
+    return ['ABC' , 123];
+}
+
+const [letras, numeros] = retornaArreglo()
+console.log(letras, numeros);
+```
+
+![assets-git/73.png](assets-git/73.png)
+
+Ahora un ejercicio, se crea una constante llamada estados que retorna un arreglo en el cual estan un valor y una función
+
+```
+const estados = (valor) => {
+    return [valor, () => { console.log('Hola Mundo')}];
+}
+
+const arr = estados('Iron Man');
+console.log(arr);
+```
+
+![assets-git/74.png](assets-git/74.png)
+
+La tarea consiste en hacer un console.log donde la primera posicion que se recibe es nombre y la funcion se llama en `setNombre();`
+
+Transforma el siguiente codigo para que funcione
+
+```
+// Tarea
+// 1. El primer valor del arr se llamara nombre
+// 2. se llamara setNombre
+
+const estados = (valor) => {
+    return [valor, () => { console.log('Hola Mundo')}];
+}
+
+const arr = estados('Iron Man');
+
+console.log( nombre );
+
+setNombre();
+```
+
+La solucion se puede encontrar en el archivo [07-desestructuracion-array.js]()
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
