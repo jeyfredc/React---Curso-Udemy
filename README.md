@@ -1353,7 +1353,7 @@ Si hago un `console.log( heroes );` lo que espero es que me retorne el arreglo d
 
 ![assets-git/75.png](assets-git/75.png)
 
-Si ocurre esto, entonces a continuación me debo dirigir al archivo de heroes y exportar la constante de esta forma
+Si ocurre esto, entonces a continuación me debo dirigir al archivo de **heroes.js** y exportar la constante de esta forma
 
 ```
 export const heroes = [
@@ -1401,7 +1401,8 @@ const getHeroeById = (id) => {
 console.log( getHeroeById(2));
 ```
 
-la solucion la puedes encontrar en [08-import-import-export]()
+la solucion la puedes encontrar en [08-import-import-export](https://github.com/jeyfredc/React---Curso-Udemy/blob/master/02-intro-javascript/src/bases/08-import-import-export.js)
+
 **Nota:** Lo que este dentro del archivo del repositorio lo deben llevar para el index para poder probar el codigo
 
 la otra tarea es buscar en la documentación de mozilla como usar `filter`, por tanto se deja planteado un ejercicio tambien para resolver. Aclarando que `find` solo sirve para traer un solo elemento por tanto se debe hacer un cambio en la siguiente función para traer todos los elementos que pertenezcan a DC
@@ -1415,6 +1416,8 @@ console.log( getHeroesByOwner('DC'));
 El resultado de los 2 ejercicios debe ser el siguiente
 
 ![assets-git/77.png](assets-git/77.png)
+
+**Nota:** Una forma facil para importar un archivo es que se escribe la referencia del archivo al que quiero ir por ejemplo escribo solo la palabra `heroes` y luego presiono `ctrl + espacio`, si aparece la opcion en las sugerencias de vsCode presiono `tab` y se importa de manera automatica la ruta
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
