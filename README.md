@@ -28,6 +28,8 @@
 
 [Fetch API](#Fetch-API)
 
+[Async-Await](#Async-Await)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -1994,10 +1996,84 @@ peticion
 .catch(console.warn)
 ```
 
-y se obtienen gifs diferentes cada vez que se recargue el nabegador 
+y se obtienen gifs diferentes cada vez que se recargue el navegador 
 
 ![assets-git/108.png](assets-git/108.png)
 
+## Async-Await
+
+Async Await, permite ser mas claro a la hora de construir una función como la del capitulo anterior
+
+En este ejemplo se va a obtener la misma url que pertenece a data => images => downsized => url
+
+para esto creamos una funcion llamada getImagen y para establecer la función despues del `=` llamamos a `async`, si no se hace esto no va a funcionar `await` y empezamos a obtener por dentro de esta todos los datos que obteniamos con `fetch` el `apiKey`, la `respuesta`, la `data` y asi es como se empieza a traer elemento por elemento hasta obtener la url. `await` se usa para esperar que se resuelva la promesa y de esta forma se van trayendo todos los datos
+
+```
+const getImagen = async() => {
+
+    const apiKey = 'soVdva8bjB8shZXmy18BLAE5wCSgYZZv';
+    const resp = await fetch(`http://api.giphy.com/v1/gifs/random?api_key=${apiKey}`)
+    const {data} = await resp.json();
+    const {url} = await data.images.downsized;
+    console.log(url)
+
+}
+
+getImagen()
+```
+
+Con esta parte ya es posible obtener la url, recordar que es dinamica, porque se muestran diferentes gif cuando se renderizan
+
+![assets-git/109.png](assets-git/109.png)
+
+y ahora solo queda renderizar la imagen, que es igual a como se hizo en el capitulo anterior
+
+```
+const getImagen = async() => {
+
+    const apiKey = 'soVdva8bjB8shZXmy18BLAE5wCSgYZZv';
+    const resp = await fetch(`http://api.giphy.com/v1/gifs/random?api_key=${apiKey}`)
+    const {data} = await resp.json();
+    const {url} = await data.images.downsized;
+    console.log(url)
+
+    const img = document.createElement('img');
+    img.src = url;
+
+    document.body.append( img );
+
+}
+
+getImagen()
+```
+
+![assets-git/110.png](assets-git/110.png)
+
+Lo ultimo que faltaria por explicar es que con **Async-Await** se puede manejar errores con **try catch**, que consiste en que el `try{}` intenta obtener todo el cuerpo que esta dentro de los `{}` y el `catch{error}` captura un error y lo maneja para que el navegador continue funcionando normalmente en caso de no encontrar algo.
+
+```
+const getImagen = async() => {
+
+    try {
+        const apiKey = 'soVdva8bjB8shZXmy18BLAE5wCSgYZZv';
+        const resp = await fetch(`http://api.giphy.com/v1/gifs/random?api_key=${apiKey}`)
+        const {data} = await resp.json();
+        const {url} = await data.images.downsized;
+        console.log(url)
+    
+        const img = document.createElement('img');
+        img.src = url;
+    
+        document.body.append( img );
+    } catch (error) {
+        console.error(error)
+    }
+}
+
+getImagen()
+```
+
+![assets-git/111.png](assets-git/111.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
