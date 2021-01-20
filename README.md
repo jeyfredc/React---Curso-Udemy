@@ -24,6 +24,8 @@
 
 [Múltiples exportaciones y exportaciones por defecto](#Múltiples-exportaciones-y-exportaciones-por-defecto)
 
+[Promesas](#Promesas)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -1487,6 +1489,315 @@ En este caso tendria una exportacion por defecto + una exportacion individual. E
 y si hago un `console.log( owners);` pueedo ver como esta importando de manera correcta esa exportación individual
 
 ![assets-git/82.png](assets-git/82.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Promesas
+
+Las promesas en la vida real es algo que se propone realizar y al final se cumple, exactamente pasa eso con las promesas en javaScript.
+
+La forma en como funcionan es que primero se ejecuta todo lo que exista de manera sincrona en la pila de tareas y la promesa se cumple al final, es decir de manera asincrona. Para ver como funciona pueden investigar mas en la [documentación](https://developer.mozilla.org/es/docs/Web/JavaScript/Referencia/Objetos_globales/Promise).
+
+Las promesas llevan como argumento un callback y se estructura de la siguiente forma, dentro de estos estan `resolve` que es lo que resuelve el callback y `reject` que es cuando la promesa no se puede cumplir 
+
+```
+const promesa = new Promise((resolve, reject) => {
+
+
+});
+```
+
+Si se agrega un callback como lo es la funcion `setTimeOut` obtenemos una respuesta por consola de que algo esta ocurriendo 2 segundos despues 
+
+```
+const promesa = new Promise((resolve, reject) => {
+
+    setTimeout(() => {
+        console.log('2 segundos después')
+    }, 2000)
+});
+```
+
+![assets-git/83.png](assets-git/83.png)
+
+Pero aun no existe el modo de reaccionar o esperar cuando la promesa se termine, como realizar una acción. Existen 3 metodos, el primero es `then` que significa que la promesa se hizo correctamente, `catch` que captura un error y `finally` que es algo que se ejecuta despues del `then` y despues del `catch`, usualmente no es usado, pero en algunos proyectos se puede requerir.
+
+Por el momento la promesa funcionara de la siguiente forma, se debe ejecutar dentro de un `resolve` porque `then` esta esperando una respuesta, cuando `then` detecta que la función se cumplio lanza el mensaje que la función ya se ejecuto
+
+```
+const promesa = new Promise((resolve, reject) => {
+
+    setTimeout(() => {
+        resolve(console.log('2 segundos después'))
+    }, 2000)
+});
+
+promesa.then(() => {
+    console.log('La promesa se cumplio')
+})
+```
+
+![assets-git/84.png](assets-git/84.png)
+
+Esto tambien se puede hacer por ejemplo con los archivos de los capitulos pasados, si estan guardados en archivos para hacer la importación de la función `getHeroById`.
+
+```
+const promesa = new Promise((resolve, reject) => {
+
+    setTimeout(() => {
+        /* resolve(console.log('2 segundos después')) */
+
+        //Tarea
+        // Importar 
+        const heroe = getHeroeById(2);
+        console.log(heroe)
+    }, 2000)
+});
+
+promesa.then(() => {
+    console.log('La promesa se cumplio')
+})
+```
+
+primero hay que importar el archivo correctamente al **index.js**
+
+`import {getHeroeById} from './bases/08-import-export';`
+
+el archivo `08-import-export` contiene lo siguiente, es el de el capitulo anterior, pero se corrigio el acceso a la importación porque dejo de llamarse **index** en las clases anteriores
+
+```
+import heroes from '../data/heroes';
+
+export const getHeroeById = (id) => {
+    return heroes.find(element => element.id === id );
+}
+
+/* console.log( getHeroeById(2)); */
+
+export const getHeroesByOwner = ( owner) => heroes.filter( (heroe) => heroe.owner === owner ); 
+
+/* console.log( getHeroesByOwner('DC')); */
+```
+
+mientras tanto el **index.js** esta de esta forma, por el momento no se esta llamando `resolve` o `reject` y es por esta razon que la consola en el navegador trae a un objeto que contiene al heroe
+
+```
+import {getHeroeById} from './bases/08-import-export';
+
+
+const promesa = new Promise((resolve, reject) => {
+
+    setTimeout(() => {
+        /* resolve(console.log('2 segundos después')) */
+
+        //Tarea
+        // Importar 
+        const heroe = getHeroeById(2);
+        console.log(heroe)
+    }, 2000)
+});
+
+promesa.then(() => {
+    console.log('La promesa se cumplio')
+})
+```
+
+![assets-git/85.png](assets-git/85.png)
+
+Ahora lo que se puede hacer es mandar al heroe en el `then` de la `promesa`
+
+para esto se utiliza `resolve(heroe)` en la promesa y al hacer esto tambien se puede pasar en el argumento de `promesa.then` para llamarlo en el `console.log` de esta forma
+
+```
+import {getHeroeById} from './bases/08-import-export';
+
+
+const promesa = new Promise((resolve, reject) => {
+
+    setTimeout(() => {
+        /* resolve(console.log('2 segundos después')) */
+
+        //Tarea
+        // Importar 
+        const heroe = getHeroeById(2);
+        resolve(heroe)
+    }, 2000)
+});
+
+promesa.then((heroe) => {
+    console.log('heroe', heroe)
+})
+```
+
+![assets-git/86.png](assets-git/86.png)
+
+pero tampoco importa si la constante de heroe en la promesa se cambia por otra palabra como `personaje` por ejemplo, el `heroe` de esa constante no tiene que ver nada con el `heroe` que se esta pasando en `promesa.then`
+
+```
+import {getHeroeById} from './bases/08-import-export';
+
+
+const promesa = new Promise((resolve, reject) => {
+
+    setTimeout(() => {
+        /* resolve(console.log('2 segundos después')) */
+
+        //Tarea
+        // Importar 
+        const personaje = getHeroeById(2);
+        resolve(personaje)
+    }, 2000)
+});
+
+promesa.then((heroe) => {
+    console.log('heroe', heroe)
+})
+```
+
+![assets-git/87.png](assets-git/87.png)
+
+si agrega `reject` en ves de `resolve`, va a aparecer un error en la consola del navegador
+
+```
+import {getHeroeById} from './bases/08-import-export';
+
+
+const promesa = new Promise((resolve, reject) => {
+
+    setTimeout(() => {
+        /* resolve(console.log('2 segundos después')) */
+
+        //Tarea
+        // Importar 
+        const personaje = getHeroeById(2);
+        reject(personaje)
+    }, 2000)
+});
+
+promesa.then((heroe) => {
+    console.log('heroe', heroe)
+})
+```
+
+![assets-git/88.png](assets-git/88.png)
+
+Esto quiere decir que se debe capturar el error asi que si se comenta al personaje en el `reject` y ahora se manda un mensaje en `promesa.then` se debe capturar el error con un `.catch` que generalmente es usado como se muestra aqui
+
+```
+import {getHeroeById} from './bases/08-import-export';
+
+
+const promesa = new Promise((resolve, reject) => {
+
+    setTimeout(() => {
+        /* resolve(console.log('2 segundos después')) */
+
+        //Tarea
+        // Importar 
+        const personaje = getHeroeById(2);
+        /* reject(personaje) */
+        reject('No se pudo encontrar al heroe')
+    }, 2000)
+});
+
+promesa.then((heroe) => {
+    console.log('heroe', heroe)
+})
+.catch( err => console.error( err ));
+```
+
+![assets-git/89.png](assets-git/89.png)
+
+**Nota:** en el `catch` se puede enviar `console.error` para que en el navegador se muestre como un error o un `console.warn` para que salga como una advertencia.
+
+Tambien se puede pasar el id como argumento de una función, y ahora hacer que la constante personaje reciba el id directamente de esta forma
+
+```
+const getHeroeByIdAsync = (id) => {
+    const promesa = new Promise((resolve, reject) => {
+
+        setTimeout(() => {
+            const personaje = getHeroeById(id);
+            resolve(personaje)
+            // reject('No se pudo encontrar al heroe')
+        }, 2000)
+    });    
+}
+
+getHeroeByIdAsync(4)
+```
+
+pero cuando se hace asiy se coloca un punto delante de `getHeroeByIdAsync(4)` no hay acceso a la promesa, pero si se quita la constante promesa y en vez de eso se cambia por un return de la promesa, despues de colocar el punto se puede acceder a los metodos de la promesa
+
+```
+const getHeroeByIdAsync = (id) => {
+    return new Promise((resolve, reject) => {
+
+        setTimeout(() => {
+            const personaje = getHeroeById(id);
+            resolve(personaje)
+            // reject('No se pudo encontrar al heroe')
+        }, 2000)
+    });    
+}
+
+getHeroeByIdAsync(4).
+```
+
+![assets-git/90.png](assets-git/90.png)
+
+Ahora nuevamente es posible usar el `.then` para obtener al heroe 
+
+```
+const getHeroeByIdAsync = (id) => {
+    return new Promise((resolve, reject) => {
+
+        setTimeout(() => {
+            const personaje = getHeroeById(id);
+            resolve(personaje)
+            // reject('No se pudo encontrar al heroe')
+        }, 2000)
+    });    
+}
+
+getHeroeByIdAsync(4)
+    .then( heroe => console.log('Heroe', heroe))
+```
+
+![assets-git/91.png](assets-git/91.png)
+
+pero ahora hay que capturar el error en caso que no se encuentre al heroe.
+
+La condición dice que si encuentra el heroe, resuelva e imprimalo por consola, pero si no, imprima la advertencia en la consola, para esto como argumento de la función se pasa un numero de personaje que no se ha creado
+
+```
+const getHeroeByIdAsync = (id) => {
+    return new Promise((resolve, reject) => {
+
+        setTimeout(() => {
+            const personaje = getHeroeById(id);
+            if(personaje){
+            resolve(personaje)
+            }else{
+                reject('No se pudo encontrar al heroe')
+            }
+        }, 2000)
+    });    
+}
+
+getHeroeByIdAsync(12)
+    .then( heroe => console.log('Heroe', heroe))
+    .catch( err => console.warn(err))
+```
+
+![assets-git/92.png](assets-git/92.png)
+
+pero si se pasa como argumento un heroe que si exista va a resolver
+
+![assets-git/93.png](assets-git/93.png)
+
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
