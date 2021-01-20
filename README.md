@@ -26,6 +26,8 @@
 
 [Promesas](#Promesas)
 
+[Fetch API](#Fetch-API)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -1797,6 +1799,204 @@ getHeroeByIdAsync(12)
 pero si se pasa como argumento un heroe que si exista va a resolver
 
 ![assets-git/93.png](assets-git/93.png)
+
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Fetch API
+
+En el siguiente [enlace](https://developer.mozilla.org/es/docs/Web/API/Fetch_API) se encuentra toda la documentación acerca de lo que es Fetch API que es algo que viene en los navegadores web y va a permitirnos realizar peticiones http a endpoints directamente sin importar alguna libreria.
+
+En este [enlace](https://developers.giphy.com/) encontramos giphy developers, para poder traer gifs animados y poder interactuar con ellos desde React.
+
+Como no es un endpoint abierto debemos generar una APIkey y para esto se debe abrir una cuenta.
+
+Asi que empezar por dar clic en donde dice **Get Started**.
+
+Luego dar clic en **Login** y empezar a crear la cuenta, que se puede crear a traves de una cuenta de facebook o apple.
+
+Despues de haber creado la cuenta seleccionar **Create an App**, se abrir una ventana modal, donde se debe seleccionar **API** y luego hacer clic sobre **Next Step**,
+
+Los campos de formulario que aparecen se deben llenar, se puede colocar cualquier nombre y descripción y luego aceptar los terminos y posteriormente seleccionar **Create App**
+
+![assets-git/94.png](assets-git/94.png)
+
+Luego se va abrir una ventana donde aparece el **API Key**, simplemente hay que copiar la que se genero abrir **index.js** y luego colocar una constante que guarde el **API Key**
+
+![assets-git/95.png](assets-git/95.png)
+
+**Nota:** Realizar este proceso tal como se describe y evitar utilizar la que se va a colocar en el **index.js** por si en algun momento se llega a desactivar
+
+**index.js** por el momento tiene esto 
+
+`const apiKey = 'soVdva8bjB8shZXmy18BLAE5wCSgYZZv';`
+
+Luego regresamos a la pagina y buscamos la parte de la documentación y el menu lateral buscamos donde diga **Random Endpoint** y copíamos el **gif URL**
+
+![assets-git/96.png](assets-git/96.png)
+
+Luego lo abrimos en otra pestaña, va a salir un mensaje que dice **"No API key found in request"**
+
+![assets-git/97.png](assets-git/97.png)
+
+para que funcione en la url del navegador despues de la palabra random lo siguiente `?api_key=apiKey` lo que esta como **apiKey** es lo que nos genero la misma aplicacion que en mi caso lo pongo de esta forma 
+
+`http://api.giphy.com/v1/gifs/random?api_key=soVdva8bjB8shZXmy18BLAE5wCSgYZZv`
+
+Despues de buscarla en el navegador, se va a obtener toda la data que proporciona la **API**
+
+![assets-git/98.png](assets-git/98.png)
+
+lo que vamos a obtener despues es lo que esta dentro de data ->images y despues lo que se quiera obtener dentro de esta.
+
+Regresando al **index.js** empezamos a utilizar fetch y para esto creamos una constante llamada petición, donde pasamos `fetch` y dentro de este se copia toda la url, como ya el `apiKey` estaba en el archivo lo llamamos mediante templates literals
+
+```
+const apiKey = 'soVdva8bjB8shZXmy18BLAE5wCSgYZZv';
+
+const peticion = fetch(`http://api.giphy.com/v1/gifs/random?api_key=${apiKey}`)
+```
+
+Si mantenemos el cursor del mouse sobre la palabra fetch, se abre en la parte de arriba la descripcion de la función fetch y despues de los : al final aparece `Promise<Response>`, esto quiere decir que retorna una promesa y lo que esta dentro de `<Response>` que retorna o resuelve
+
+![assets-git/99.png](assets-git/99.png)
+
+como es una promesa tambien puedo hacer uso de `.then` y dentro de esta obtener una respuesta `resp`, luego abrir corchetes y hacer un console.log de la respuesta para ver que datos esta retornando
+
+```
+const apiKey = 'soVdva8bjB8shZXmy18BLAE5wCSgYZZv';
+
+const peticion = fetch(`http://api.giphy.com/v1/gifs/random?api_key=${apiKey}`)
+
+peticion.then( resp => {
+    console.log(resp);
+})
+```
+
+![assets-git/100.png](assets-git/100.png)
+
+tambien es buena practica hacer un .catch en el caso que exista un error del **API** y se puede establecer solo como un `console.warn`
+
+```
+const apiKey = 'soVdva8bjB8shZXmy18BLAE5wCSgYZZv';
+
+const peticion = fetch(`http://api.giphy.com/v1/gifs/random?api_key=${apiKey}`)
+
+peticion.then( resp => {
+    console.log(resp);
+})
+.catch(console.warn)
+```
+
+Por el momento del lado derecho de la pantalla vemos que `ok` esta en true y el `status` que se retorna es 200, lo que nos interesa es lo que esta dentro de `body`, por tanto debemos hacer otra promesa dentro del `.then` llamando a respuesta con el metodo `json()` el cual devuelve otra promesa. Quiere decir que tambien se puede agregar un `.then` para empezar a imprimir la data que nos habia arrojado la pagina anteriormente
+
+```
+const apiKey = 'soVdva8bjB8shZXmy18BLAE5wCSgYZZv';
+
+const peticion = fetch(`http://api.giphy.com/v1/gifs/random?api_key=${apiKey}`)
+
+peticion.then( resp => {
+    resp.json().then( data => {
+        console.log(data);
+    })
+})
+.catch(console.warn)
+```
+
+![assets-git/101.png](assets-git/101.png)
+
+Existe otra forma de presentar el codigo para obtener la misma petición al **API** que es mucho mas legible y facil de mantener, se le llama promesas en cadena, como el primer `then` retorna una promesa, esa promesa es pasada al siguiente `then`
+
+```
+const apiKey = 'soVdva8bjB8shZXmy18BLAE5wCSgYZZv';
+
+const peticion = fetch(`http://api.giphy.com/v1/gifs/random?api_key=${apiKey}`)
+
+peticion
+.then( resp => resp.json())
+.then( data => {
+    console.log(data)
+})
+.catch(console.warn)
+```
+
+![assets-git/102.png](assets-git/102.png)
+
+y como viene la data dentro de otra data, se podria hacer un `console.log(data.data)` o desestructurar la data encerrarla entre parentesis y corchetes y de esta forma se obtiene el mismo resultado
+
+```
+const apiKey = 'soVdva8bjB8shZXmy18BLAE5wCSgYZZv';
+
+const peticion = fetch(`http://api.giphy.com/v1/gifs/random?api_key=${apiKey}`)
+
+peticion
+.then( resp => resp.json())
+.then( ({data}) => {
+    console.log(data)
+    // console.log(datad.data)
+})
+.catch(console.warn)
+```
+
+![assets-git/103.png](assets-git/103.png)
+
+Lo que en el momento interesa obtener son los `images` por tanto se hace un `console.log(data.images)`
+
+![assets-git/104.png](assets-git/104.png)
+
+Ahora esta el acceso a todas las urls de images, dentro de esta se puede buscar cualquiera por ejemplo `downsized` y luego vamos a querer obtener la `url` que se obtiene de `downsized`
+
+![assets-git/105.png](assets-git/105.png)
+
+si funciona el gif, se puede copiar la url obtenida, que en mi caso salio esta [https://media1.giphy.com/media/ki1NNcU9xZcwXDroCd/giphy-downsized.gif?cid=42b994492396160304f06de95df68983ed648b99230fdd0e&rid=giphy-downsized.gif](https://media1.giphy.com/media/ki1NNcU9xZcwXDroCd/giphy-downsized.gif?cid=42b994492396160304f06de95df68983ed648b99230fdd0e&rid=giphy-downsized.gif) y pegarla en cualquier otra pestaña del navegador
+
+para extraer el `url` se debe agregar una constante, utilizando la destructuración de objetos de esta forma
+
+```
+const apiKey = 'soVdva8bjB8shZXmy18BLAE5wCSgYZZv';
+
+const peticion = fetch(`http://api.giphy.com/v1/gifs/random?api_key=${apiKey}`)
+
+peticion
+.then( resp => resp.json())
+.then( ({data}) => {
+    const { url } = data.images.downsized;
+    console.log(url)
+})
+.catch(console.warn)
+```
+
+![assets-git/107.png](assets-git/107.png)
+
+Ahora para presentar esta imagen en un html y verla renderizada en el navegador creamos una constante llamada img esta crea un elemento o etiqueta de tipo imagen, y a traves de `img.src` se hace igual a la url extraida.
+
+Despues con el metodo `append()` se manda la imagen y de esta forma queda renderizada
+
+```
+const apiKey = 'soVdva8bjB8shZXmy18BLAE5wCSgYZZv';
+
+const peticion = fetch(`http://api.giphy.com/v1/gifs/random?api_key=${apiKey}`)
+
+peticion
+.then( resp => resp.json())
+.then( ({data}) => {
+    const { url } = data.images.downsized;
+    // console.log(url)
+
+    const img = document.createElement('img');
+    img.src = url;
+
+    document.body.append( img );
+
+})
+.catch(console.warn)
+```
+
+y se obtienen gifs diferentes cada vez que se recargue el nabegador 
+
+![assets-git/108.png](assets-git/108.png)
 
 
 <div align="right">
