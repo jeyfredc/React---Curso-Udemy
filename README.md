@@ -2152,3 +2152,7 @@ const mensaje = (activo) && 'El mensaje esta en true por tanto esta Activo'
 
 console.log(mensaje)
 ```
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
