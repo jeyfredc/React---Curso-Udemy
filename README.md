@@ -30,6 +30,8 @@
 
 [Async-Await](#Async-Await)
 
+[Operador condicional ternario](#Operador-condicional-ternario)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -2078,3 +2080,75 @@ getImagen()
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
+
+## Operador condicional ternario
+
+Una forma común y facil de ver una condicion if es la siguiente
+
+```
+const activo= true;
+
+let mensaje = '';
+
+if( activo){
+    mensaje = 'El mensaje esta en true por tanto esta Activo'
+}else{
+    mensaje = 'Estoy en false ahora me muestro en la pantalla pero estoy inactivo'
+}
+
+console.log(mensaje)
+```
+
+cuando se imprime por consola muestra el mensaje cuando esta en `true`
+
+![assets-git/112.png](assets-git/112.png)
+
+pero si hago la negación de la verdad `if(!activo)`, aparece el otro mensaje
+
+![assets-git/113.png](assets-git/113.png)
+
+Para reducir todo el codigo se puede declarar una constante que lleve toda la condición, por tal motivo se comenta todo lo anterior.
+
+Se declara la constante mensaje, la condicion esta dentro de parentesis `(activo)` el signo de pregunta indica que si esta en `true` se cumpla lo que sigue delante del signo `?` y los `:` indican que es el `else` o de lo contrario y se cumple todo lo que sigue delante de ente.
+
+```
+const activo= true;
+
+const mensaje = (activo) ? 'El mensaje esta en true por tanto esta Activo' : 'Estoy en false ahora me muestro en la pantalla pero estoy inactivo';
+
+console.log(mensaje)
+```
+
+![assets-git/114.png](assets-git/114.png)
+
+y tambien se niega de la misma forma solo que antes no lo antecede un if, es decir `(!activo)` y con esto se cumple la otra condición.
+
+![assets-git/115.png](assets-git/115.png)
+
+otra forma en la que se puede encontrar un ternario es que en vez de que despues de los dos puntos exista un mensaje solo aparezca un `null`
+
+```
+const activo= true;
+
+// const mensaje = (!activo) ? 'El mensaje esta en true por tanto esta Activo' : 'Estoy en false ahora me muestro en la pantalla pero estoy inactivo';
+const mensaje = (!activo) ? 'El mensaje esta en true por tanto esta Activo' : null;
+
+
+console.log(mensaje)
+```
+
+![assets-git/116.png](assets-git/116.png)
+
+y la ultima forma de encontrar es encontrarlo como si se utilizaran tablas de la verdad como decir verdadero y verdadero entonces verdadero, si se niega va a dar `false`
+
+```
+const activo= true;
+
+// const mensaje = (!activo) ? 'El mensaje esta en true por tanto esta Activo' : 'Estoy en false ahora me muestro en la pantalla pero estoy inactivo';
+// const mensaje = (!activo) ? 'El mensaje esta en true por tanto esta Activo' : null;
+
+const mensaje = (activo) && 'El mensaje esta en true por tanto esta Activo'
+
+
+console.log(mensaje)
+```
