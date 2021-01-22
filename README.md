@@ -46,6 +46,8 @@
 
 [Impresión de variables en el HTML](#Impresión-de-variables-en-el-HTML)
 
+[Comunicación entre componentes-Props](#Comunicación-entre-componentes-Props)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -2592,6 +2594,169 @@ const primeraApp = () => {
 
 export default primeraApp;
 ```
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Comunicación entre componentes-Props
+
+Las propiedades son enviadas a los componentes, se conocen como propertys pero su abreviatura es **props**
+
+En el navegador abrir la consola y buscar en la barra señalada los componentes
+
+![assets-git/142.png](assets-git/142.png)
+
+dar un clic al componente **primeraAPP** y en la parte de abajo se van a presentar los **props**, a medida que un componente va teniendo hijos, se va presentado cada hijo de manera descendente
+
+![assets-git/143.png](assets-git/143.png)
+
+El componente padre en este momento se encuentra en **index.js**
+
+![assets-git/144.png](assets-git/144.png)
+
+y de ahi se puede enviar información al componente que es el archivo que se llamo como **PrimeraApp.js**
+
+![assets-git/145.png](assets-git/145.png)
+
+Antes de enviar información entre los parentesis de la función `PrimeraApp` mandamos props y luego hacemos un console.lod de props para ver que regresa en el navegador y lo miramos por consola
+
+```
+
+import './index.css'
+
+//Functional Components
+const primeraApp = (props) => {
+
+    console.log(props);
+    const saludo = 'Hola Mundo'
+
+    return (
+        <>
+        <h1>{saludo}</h1>
+            {/* {}<pre>{ JSON.stringify(saludo, null, 3) }</pre> */}
+            <p>Mi primera aplicación</p>
+        </>
+    )
+}
+
+export default primeraApp;
+```
+
+y ahora del lado derecho en la consola se imprime un objeto vacio `{}`
+
+![assets-git/146.png](assets-git/146.png)
+
+Pero si ahora vamos a **index.js** y al componente le mandamos una frase de la siguiente forma
+
+```
+import React from 'react';
+import ReactDom from 'react-dom';
+import PrimeraApp from './PrimeraApp';
+
+
+const divRoot = document.querySelector('#root');
+
+ReactDom.render( <PrimeraApp saludo="Hola, soy Iron Man"/> , divRoot );
+```
+
+si se guardan los cambios ahora tenemos por consola a `saludo`
+
+![assets-git/147.png](assets-git/147.png)
+
+Esta es la forma en como se envia informacion a un componente y si ahora nos vamos a la pestaña **components** del navegador en los props vemos el mismo saludo
+
+![assets-git/148.png](assets-git/148.png)
+
+pero si ahora quiero lanzar el saludo que estoy enviando al componente, en el render del h1 del archivo **PrimeraApp.js** mando la propiedad utilizando `{ props.saludo }`
+
+```
+
+import './index.css'
+
+//Functional Components
+const primeraApp = (props) => {
+
+    console.log(props);
+    const saludo = 'Hola Mundo'
+
+    return (
+        <>
+        <h1>{ props.saludo }</h1>
+            {/* {}<pre>{ JSON.stringify(saludo, null, 3) }</pre> */}
+            <p>Mi primera aplicación</p>
+        </>
+    )
+}
+
+export default primeraApp;
+```
+
+![assets-git/149.png](assets-git/149.png)
+
+Pero usualmente no se usa con la palabra props porque para eso existe la desestructuracion por tanto el props se llama de la siguiente forma entre los parentesis de la función PrimeraApp`{saludo}` y en el render del h1
+
+**Nota:** la constante se esta llamando con la primer letra en minúscula, a continuación para corregir ese error y hacer una buena practica de la convención del lenguaje la letra p en la constante y en el export se pasan a mayúscula
+
+```
+
+import './index.css'
+
+//Functional Components
+const PrimeraApp = ({ saludo }) => {
+
+
+    return (
+        <>
+        <h1>{ saludo }</h1>
+            {/* {}<pre>{ JSON.stringify(saludo, null, 3) }</pre> */}
+            <p>Mi primera aplicación</p>
+        </>
+    )
+}
+
+export default PrimeraApp;
+```
+
+![assets-git/150.png](assets-git/150.png)
+
+Los props tambien admite que no se envien desde el componente padre es decir desde **index.js**, por tal razon se va a comentar para que no se envie la información
+
+```
+import React from 'react';
+import ReactDom from 'react-dom';
+import PrimeraApp from './PrimeraApp';
+
+
+const divRoot = document.querySelector('#root');
+
+ReactDom.render( <PrimeraApp /* saludo="Hola, soy Iron Man" */ /> , divRoot );
+```
+
+y si se envia desde **PrimeraApp.js** un "Hola Mundo" en los props este tambien va a ser renderizado en el navegador, todo depende de como se quiera trabajar con estos
+
+```
+
+import './index.css'
+
+//Functional Components
+const PrimeraApp = ({ saludo = "Hola Mundo" }) => {
+
+
+    return (
+        <>
+        <h1>{ saludo }</h1>
+            {/* {}<pre>{ JSON.stringify(saludo, null, 3) }</pre> */}
+            <p>Mi primera aplicación</p>
+        </>
+    )
+}
+
+export default PrimeraApp;
+```
+
+![assets-git/151.png](assets-git/151.png)
+
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
