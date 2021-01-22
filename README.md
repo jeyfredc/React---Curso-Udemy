@@ -38,6 +38,10 @@
 
 [Estructura de directorios](#Estructura-de-directorios)
 
+[Contenido de la carpeta SRC](#Contenido-de-la-carpeta-SRC)
+
+[Primer Componente](#Primer-Componente)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -2270,9 +2274,136 @@ El archivo **package.json** son las configuraciones que va a tener la aplicació
 
 por ejemplo esta **"start"**, cuando ejecutamos **npm start** o **yarn start** desplegamos la aplicación en modo desarrollador, luego sigue **"build"** que es para producción, **"test"** sirve para ejecutar pruebas con el fin de tener la menor cantidad de errores posibles, **"eject"** se recomienda no utilizarlo a menos que no se sepa lo que se esta haciendo 
 
-el archivop **README.md** es donde se encuentran las instrucciones de como usar React y el acceso a la documentación
+el archivo **README.md** es donde se encuentran las instrucciones de como usar React y el acceso a la documentación
 
 el archivo **yarn.lock** no se debe manipular y este define todas las versiones de paquetes utilizados en la aplicación
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Contenido de la carpeta SRC
+
+Inicialmente cuando instalamos la aplicación React, por defecto se instalan los siguieentes archivos en la carpeta **src o source**, la cual es donde se van a manipular archivos la mayor parte del tiempo 
+
+![assets-git/126.png](assets-git/126.png)
+
+**App.css** es el archivo de estilos que ayuda a que el componente de **App.js** se vea asi, esta es la primer parte que se renderiza en el navegador
+
+![assets-git/125.png](assets-git/125.png)
+
+Luego esta el archivo **App.test.js**, en este caso no importa tanto el nombre `App` pero si importa **test.js** porque es lo que va a leer el archivo cuando ejecutemos **npm test**
+
+Luego esta el archivo de **index.css**, el cual es el archivo de estilos global de la aplicación
+
+El archivo **index.js**, es el punto inicial de la aplicacion, alli se carga el archivo **index.css**, compoenentes, etc y gracias a este obtenemos y lanzamos toda la configuracion para que el **index.html** que esta en la carpeta public funcione
+
+Esta el archivo **Logo.svg** el cual es el logo de React girando cuando abrimos la aplicación
+
+Esta el archivo **serviceWorker.js**, el cual sirve para hacer una PWA(Aplicación web progresiva)
+
+Pot ultimo esta el archivo de **setupTests.js**, el cual es el archivo que se ejecuta en el momento que se levantan por primera vez las pruebas 
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Hola Mundo en React
+
+Inicialmente borrar todos los archivos que se encuentran dentro de la carpeta **src** para empezar a construir uno por uno y ahora nuevamente en la carpeta **src** crear el archivo **index.js**
+
+dentro de este archivo construir una constante que se llame saludo y asignar etiquetas html h1 con la frase Hola Mundo
+
+`const saludo = <h1>Hola Mundo</h1>`
+
+la linea de codigo anterior es codigo en formato jsx pero para poder renderizarlo es necesario importar en este archivo a React y ReactDom, que es traducirlo al arbol de componentes que nos va a ayudar a renderizar en el navegador.
+
+Luego debemos crear la referencia al div `<div id="root"></div>` que esta en el archivo **index.html** de la carpeta public que es el punto de acceso para renderizar la aplicación. Para esto creamos otra constante la cual se llama divRoot y atraves de javascript la llamamos por su id
+
+`const divRoot = document.querySelector('#app')`;
+
+Haciendo uso de ReactDom, agregamos el metodo `render()` y en este pasamos los parametros, que son las constantes que se crearon y finalemente el **index.js** queda de esta forma.
+
+```
+import React from 'react';
+import ReactDom from 'react-dom';
+
+const saludo = <h1>Hola Mundo</h1>;
+
+const divRoot = document.querySelector('#root');
+
+ReactDom.render( saludo, divRoot );
+```
+
+y con esto tenemos nuestro primer Hola Mundo en el navegador 
+
+![assets-git/127.png](assets-git/127.png)
+
+## Primer Componente
+
+El archivo del capitulo anterior no es un componente por tanto se va a realizar y para eso tenemos que ubicar la carpeta **src** y alli crear el archivo **PrimeraApp.js**, como se menciono en un capitulo anterior los componentes llevan la primer letra en mayuscula por convención y funcionan con el sistema CamelCase.
+
+Existen dos tipos de componentes en React, los que estan basados en clases y los que estan basados en funciones, estos se trabajan actualmente con **Fuctional Components** y empezamos con el primero creando esta estructura de funcion y exportandola, dentro de esta hacemos un `return` del elemento html que queremos renderizar, en este tipo de archivos es donde debe ir el html
+
+```
+//Functional Components
+const primeraApp = () => {
+
+
+    return <h1>Hola Mundo</h1>
+}
+
+export default primeraApp;
+```
+
+Ahora nuevamente pasamos al **index.js** y eliminamos el codigo del capitulo anterior donde se pasaba el html e importamos el componente que acabamos de crear, los componentes son llamados de esta forma `<PrimeraApp />` e incluso es convención dejar el espacio entre la `p` y el `/`, para identificar que es un componente
+
+```
+import React from 'react';
+import ReactDom from 'react-dom';
+import PrimeraApp from './PrimeraApp';
+
+
+const divRoot = document.querySelector('#root');
+
+ReactDom.render( <PrimeraApp /> , divRoot );
+```
+
+![assets-git/128.png](assets-git/128.png)
+
+y ahora si queremos podemos añadirle estilos a esta pagina de Hola Mundo para esto creamos un archivo dentro de **src** que se llame **index.css** y le agregamos los siguientes estilos
+
+```
+
+html, body {
+    color: white;
+    background-color: #21232A;
+    font-family: "Helvetica Neue", Arial,Arial, Helvetica, sans-serif;
+    font-size: 1.3rem;
+    padding: 70px;
+}
+```
+
+para que se cargen los estilos agregados al componente debemos importar los estilos de esta forma, esto es la forma de importar estilos
+
+`import './index.css'`
+
+```
+
+import './index.css'
+
+//Functional Components
+const primeraApp = () => {
+
+    return <h1>Hola Mundo</h1>
+}
+
+export default primeraApp;
+```
+
+y con esto ya tenemos el primer componente con estilos
+
+![assets-git/129.png](assets-git/129.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
