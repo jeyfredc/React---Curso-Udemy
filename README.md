@@ -41,6 +41,7 @@
 [Contenido de la carpeta SRC](#Contenido-de-la-carpeta-SRC)
 
 [Primer Componente](#Primer-Componente)
+[Retornar elementos en el componente-Fragment](#Retornar-elementos-en-el-componente-Fragment)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
@@ -2404,6 +2405,102 @@ export default primeraApp;
 y con esto ya tenemos el primer componente con estilos
 
 ![assets-git/129.png](assets-git/129.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Retornar elementos en el componente-Fragment
+
+Hay que tener en cuenta que si por ejemplo se baja toda la etiqueta `h1` una linea mas abajo del `return`, inmediatamente el `h1` se va a marcar como en un color gris o apagado que significa que ya no se esta leyendo esa linea de codigo por tanto tendriamos un error en el navegador
+
+![assets-git/130.png](assets-git/130.png)
+
+el codigo que se quiere renderizar puede crecer mucho y llevar otros elementos como etiquetas de parrafo, contenedores, formularios, etc. para esto se deben utilizar los parentesis y la razon es que JavaScript solo reconoce un objeto, por tanto si se encierra y se agrega una linea abajo no va a existir algun problema y nuevamente obtenemos el componente renderizado
+
+```
+
+import './index.css'
+
+//Functional Components
+const primeraApp = () => {
+
+    return (
+    <h1>Hola Mundo</h1>
+    )
+}
+
+export default primeraApp;
+```
+
+![assets-git/131.png](assets-git/131.png)
+
+Si colocamos ahora una etiqueta de parrafo debajo del h1 va a existir otro problema y es que cuando estamos retornando elementos de html deben estar encapsulados o contenidos dentro de un contenedor
+
+asi que pueden estar contenidos dentro de una etiqueta div como se ve a continuación
+
+```
+import './index.css'
+
+//Functional Components
+const primeraApp = () => {
+
+    return (
+        <div>
+            <h1>Hola Mundo</h1>
+            <p>Mi primera aplicación</p>
+        </div>
+    )
+}
+
+export default primeraApp;
+```
+
+pero esto va a crear un elemento div mas en el navegador cuando miramos los elementos
+
+![assets-git/132.png](assets-git/132.png)
+
+Se pueden utilizar o no si se quiere carga una clase o estilo en ese `<div>` pero existe otra forma de quitar esos `<div>` adicionales y es utilizando el componente `Fragment` que proporciona React, se debe importar para poder usar y queda de esta forma
+
+```
+import React, { Fragment } from 'react';
+import './index.css'
+
+//Functional Components
+const primeraApp = () => {
+
+    return (
+        <Fragment>
+            <h1>Hola Mundo</h1>
+            <p>Mi primera aplicación</p>
+        </Fragment>
+    )
+}
+
+export default primeraApp;
+```
+
+con esto se logran quitar los div adicionales que se resaltan en la imagen, pero tambien existe una forma nativa de hacerlo sin necesidad de importar Fragment y es encerrando todo entre etiquetas vacias `<></>`
+
+```
+
+import './index.css'
+
+//Functional Components
+const primeraApp = () => {
+
+    return (
+        <>
+            <h1>Hola Mundo</h1>
+            <p>Mi primera aplicación</p>
+        </>
+    )
+}
+
+export default primeraApp;
+```
+
+![assets-git/133.png](assets-git/133.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
