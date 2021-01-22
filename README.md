@@ -41,7 +41,10 @@
 [Contenido de la carpeta SRC](#Contenido-de-la-carpeta-SRC)
 
 [Primer Componente](#Primer-Componente)
+
 [Retornar elementos en el componente-Fragment](#Retornar-elementos-en-el-componente-Fragment)
+
+[Impresión de variables en el HTML](#Impresión-de-variables-en-el-HTML)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
@@ -2501,6 +2504,94 @@ export default primeraApp;
 ```
 
 ![assets-git/133.png](assets-git/133.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Impresión de variables en el HTML
+
+Es posible llamar variables y renderizarlas dentro del componente HTML, pero no todo tipo de datos se puede renderizar, en el primer ejemplo se crea una constante llamada saludo y se le agrega alguna frase.
+
+```
+
+import './index.css'
+
+//Functional Components
+const primeraApp = () => {
+
+
+    const saludo = "Hola que tal a todos?"
+
+    return (
+        <>
+            <h1>saludo</h1>
+            <p>Mi primera aplicación</p>
+        </>
+    )
+}
+
+export default primeraApp;
+```
+
+Pero en este momento se va a ver la palabra saludo y no la frase que se agrego a la variable
+
+![assets-git/134.png](assets-git/134.png)
+
+Para que la constante saludo se pueda renderizar es necesario agregarla dentro de corchetes `{saludo}` asi se detecta el JavaScript y con esto tenemos la frase en el navegador `<h1>{ saludo }</h1>`
+
+![assets-git/135.png](assets-git/135.png)
+
+si se le pasa ahora un numero con o sin decimales tambien es posible que lo renderice
+
+![assets-git/136.png](assets-git/136.png)
+
+si se pasan valores booleanos es posible que tambien los renderice o tal vez no 
+
+![assets-git/137.png](assets-git/137.png)
+
+Los datos de tipo Booleano no los renderiza pero que tal si ahora se usa un array o arreglo
+
+![assets-git/138.png](assets-git/138.png)
+
+Los elementos se ven pegados en el navegador, pero la forma en como los presenta el h1 en los Elements de la consola es cada uno de ellos separados.
+
+Y si se usa un objeto tambien se puede renderizar
+
+![assets-git/139.png](assets-git/139.png)
+
+Pero en este caso ocurrio un error, no significa que no se pueda renderizar, el navegador arroja el siguiente error "Error: los objetos no son válidos como hijo de React (encontrado: objeto con claves {nombre, edad}). Si pretendía representar una colección de elementos secundarios, utilice un array o arreglo en su lugar."
+
+la forma para convertir el objeto a un string es parseandolo y para esto se utiliza a `JSON.stringify` 
+
+![assets-git/140.png](assets-git/140.png)
+
+Pero si se quiere presentar de una mejor manera se puede utilizar una etiqueta `<pre></pre>` para presentarlo como codigo y añadir otros argumentos a stringify, para dar un mejor formato al objeto
+
+![assets-git/141.png](assets-git/141.png)
+
+por ultimo se puede comentar el codigo que estabamos transformando a formato Json con `ctrl + shift + 7 o /` y dejar todo como estaba
+
+```
+import './index.css'
+
+//Functional Components
+const primeraApp = () => {
+
+
+    const saludo = 'Hola Mundo'
+
+    return (
+        <>
+        <h1>{saludo}</h1>
+            {/* {}<pre>{ JSON.stringify(saludo, null, 3) }</pre> */}
+            <p>Mi primera aplicación</p>
+        </>
+    )
+}
+
+export default primeraApp;
+```
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
