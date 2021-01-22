@@ -32,6 +32,8 @@
 
 [Operador condicional ternario](#Operador-condicional-ternario)
 
+[¿Qué son los componentes?](#¿Qué-son-los-componentes?)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -2156,3 +2158,21 @@ console.log(mensaje)
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
+
+## ¿Qué son los componentes?
+
+Un componente es una pequeña pieza de codigo encapsulada y re-utilizable que puede tener estado o no.
+
+Los componentes son código de html y javascript que se encuentran separados por ejemplo en la imagen a continuación cada componente representa un color distinto y una seccion distinta, y en el caso del contenido, este puede estar encapsulado dentro de las secciones del menú y podria tener una ruta protegida para que no todos puedan accedes, y el componente principal encapsula a toda la pagina, despues puede existir el componente para el menu y el menu a su vez tiene distintos componentes que son las secciones, etc. 
+
+![assets-git/117.png](assets-git/117.png)
+
+Es una convención nombrar cada componente con la primer letra en mayúscula y hacer uso de CamelCase.
+
+Lo siguiente que hay que entender es el manejo del estado, por ejemplo un formulario que tiene los campos de nombre, apellido y edad como el que se muestra a continuación tiene un estado inicial, este estado seria vacio, porque aun no tiene datos
+
+![assets-git/118.png](assets-git/118.png)
+
+Cuando los campos empiezan a recibir información ocurre el cambio de estado.
+
+Entonces un cambio de estado es como se encuentra la información del componente en un punto determinado del tiempo 
