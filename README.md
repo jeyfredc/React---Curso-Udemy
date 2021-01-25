@@ -48,6 +48,8 @@
 
 [Comunicación entre componentes-Props](#Comunicación-entre-componentes-Props)
 
+[PropTypes](#PropTypes)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -2757,6 +2759,102 @@ export default PrimeraApp;
 
 ![assets-git/151.png](assets-git/151.png)
 
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+ ## PropTypes
+
+ Existe una forma de obligar a que otros desarrolladores hagan uso de los props que establecemos, en el capitulo anterior se enviaba el saludo en el prop del mismo documento pero existe una forma para que esta sea opcional o requerido para esto borramos lo que enviabamos en saludo y verificamos la consola del navegador
+
+ ```
+
+import './index.css'
+
+//Functional Components
+const PrimeraApp = ({ saludo }) => {
+
+
+    return (
+        <>
+        <h1>{ saludo }</h1>
+            {/* {}<pre>{ JSON.stringify(saludo, null, 3) }</pre> */}
+            <p>Mi primera aplicación</p>
+        </>
+    )
+}
+
+export default PrimeraApp;
+ ```
+
+La consola no muestra ningun error porque el `saludo` no es obligatorio
+
+![assets-git/152.png](assets-git/152.png)
+
+pero se puede establecer un tipo de propiedad a los props haciendo la importacion de `PropTypes`, esta viene de esta forma `import PropTypes from 'prop-types';` y para establecer estas propiedades antes de hacer el export del componente se declara de la siguiente forma
+
+`NombreComponente.propTypes = {}`
+
+dentro del objeto se declara al prop de esta forma
+
+```
+NombreComponente.propTypes = {
+    nombre_del_prop: PropTypes.(se declara como el tipo de dato que se requiera)
+}
+```
+
+**Nota:** diferencia el propTypes que empieza con mayúscula y minúscula
+
+Hasta el momento si lo declaro de esta forma y lo declaro como un string sigue sin ser obligatorio
+
+```
+import './index.css'
+import PropTypes from 'prop-types';
+
+//Functional Components
+const PrimeraApp = ({ saludo }) => {
+
+
+    return (
+        <>
+        <h1>{ saludo }</h1>
+            {/* {}<pre>{ JSON.stringify(saludo, null, 3) }</pre> */}
+            <p>Mi primera aplicación</p>
+        </>
+    )
+}
+
+PrimeraApp.propTypes = {
+    saludo: PropTypes.string
+}
+
+export default PrimeraApp;
+```
+
+Pero si ahora me voy al archivo index y al prop le establezco un numero voy a obtener un error en la consola
+
+![assets-git/153.png](assets-git/153.png)
+
+El error dice que el tipo no es valido, que el prop de saludo proporcionado fue de tipo numero y el valor esperado era una cadena de caracteres o string, de tal forma que si regreso al saludo y nuevamente establezco un string, no deberia tener problemas y se deberia renderizar.
+
+Si quiero obligar a que un programador mande correctamente el tipo de props debo colocar un `.isRequired`
+
+```
+PrimeraApp.propTypes = {
+    saludo: PropTypes.string.isRequired
+}
+```
+
+y si quiero establecer mas propiedades tambien lo puedo hacer debajo de `saludo`
+
+En este ejemplo ya se establecio que la propiedad es requerida pero no la estoy enviando en index ni en otro lado 
+
+![assets-git/154.png](assets-git/154.png)
+
+Si a continuación le envio el string en **index.js** ya no va a aparecer un error pero se sabe que si no se agrega nada va a seguir saliendo el error por consola
+
+![assets-git/155.png](assets-git/155.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
