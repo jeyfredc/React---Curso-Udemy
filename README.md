@@ -56,6 +56,8 @@
 
 [Evento click (Eventos en general)](#Evento-click-(Eventos-en-general))
 
+[useState-Hook](#useState-Hook)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -3197,6 +3199,160 @@ export default CounterApp;
 ```
 
 ![assets-git/161.png](assets-git/161.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## useState-Hook
+
+A continuación empezamos usando el primer Hook de React basico que es el useState, todo esto se puede encontrar en la [documenatación](https://es.reactjs.org/docs/hooks-intro.html) oficial de React y vemos el manejo del estado.
+
+Para usar este Hook primero se debe importar en el componente que se requiera hacer `import React, {useState} from 'react';`
+
+**Nota:** Todo lo que empiece por `use` siginifica que es un Hook de React
+
+Este hook maneja un estado que recibe dos parametros, el estado inicial que se puede iniciar o tipar con un tipo de dato y el segundo parametro es una función que se usa para modificar el estado inicial, por ejemplo en `CounterApp` hacemos un llamado inicial al Hook para ver que es lo que trae
+
+```
+    const nombre = useState('Iron Man')
+
+    console.log(nombre)
+```
+
+```
+
+import './index.css'
+import React, {useState} from 'react';
+import PropTypes from 'prop-types';
+
+//Functional Components
+const CounterApp = ({ value }) => {
+
+    const nombre = useState('Iron Man')
+
+    console.log(nombre)
+
+    // handleAdd
+    const handleAdd = (e) => {
+        console.log('+1')
+    }
+
+
+    return (
+        <>
+        <h1>CounterApp</h1>
+            <p>{ value }</p>
+            <button onClick={handleAdd}> +1 </button>
+        </>
+    )
+}
+
+CounterApp.propTypes = {
+    value: PropTypes.number.isRequired
+}
+
+export default CounterApp;
+```
+
+Cuando verificamos la consola del navegador, vemos que el primer argumento trae el nombre, seguido despues de una coma se marca  una f que indica que el segundo argumento es una función.
+
+![assets-git/162.png](assets-git/162.png)
+
+Generalmente el `useState` se maneja con la desestructuración, es decir que se declara la constante y viene de esta forma 
+
+`const [estado, setEstado] = useState((estado inicial, puede ser cualquier tipo de dato))`
+
+la palabra `set` es una convención, no es obligatorio pero esta indica que es el modificador del estado
+
+Ahora declaramos una contador el cual su estado inicial es 2021
+
+```
+import './index.css'
+import React, {useState} from 'react';
+import PropTypes from 'prop-types';
+
+//Functional Components
+const CounterApp = ({ value }) => {
+
+    const [counter, setCounter] = useState(2021)
+
+    console.log(counter)
+
+    // handleAdd
+    const handleAdd = (e) => {
+        console.log('+1')
+    }
+
+
+    return (
+        <>
+        <h1>CounterApp</h1>
+            <p>{ value }</p>
+            <button onClick={handleAdd}> +1 </button>
+        </>
+    )
+}
+
+CounterApp.propTypes = {
+    value: PropTypes.number.isRequired
+}
+
+export default CounterApp;
+```
+
+![assets-git/163.png](assets-git/163.png)
+
+La consola genera un warning porque `setCounter` esta declarada pero aun no se esta usando, si queremos ver el estado podemos abrir la pestaña components y ver que `2021` tambien esta como un estado
+
+![assets-git/164.png](assets-git/164.png)
+
+A continuación no se va a hacer el llamado directamente al prop y se va inicializar el `counter` dentro de la etiqueta `<p>{ counter }</p>`, de esta forma no va a existir un cambio en como se ve pero ahora dentro del evento `handleAdd` se va a agregar el modificador, para que el numero 2021 pueda cambiar cada vez que hagamos click en el boton `+1`
+
+**Nota:** `isRequired` se quito de propTypes para que no sea obligatorio y la consola no muestre error
+
+```
+import './index.css'
+import React, {useState} from 'react';
+import PropTypes from 'prop-types';
+
+//Functional Components
+const CounterApp = ({ value }) => {
+
+    const [counter, setCounter] = useState(2021)
+
+    console.log(counter)
+
+    // handleAdd
+    const handleAdd = (e) => {
+        setCounter( counter + 1)
+    }
+
+
+    return (
+        <>
+        <h1>CounterApp</h1>
+            <p>{ counter }</p>
+            <button onClick={handleAdd}> +1 </button>
+        </>
+    )
+}
+
+CounterApp.propTypes = {
+    value: PropTypes.number
+}
+
+export default CounterApp;
+```
+
+Ahora cada vez que se haga click sobre el boton `+1` se va obtener un cambio de estado que se puede ver en la consola del navegador o en los Components
+
+![assets-git/165.png](assets-git/165.png)
+
+![assets-git/166.png](assets-git/166.png)
+
+**Nota:** Es necesario que el modificador este dentro del evento que se quiere ejecutar para que sea escuchado y se mofique el estado
+
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
