@@ -64,6 +64,8 @@
 
 [Primera prueba](#Primera-prueba)
 
+[Jest-Expect-toBe](#Jest-Expect-toBe)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -3636,3 +3638,77 @@ En este caso la prueba pasa porque `isActive` si es gual a `true`
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
+
+## Jest-Expect-toBe
+
+React al realizar la instalación de la aplicacion cuando ejecutamos `npx create-react-app 03-counter-app`, por defecto trae una libreria llamada **Jest** que es la que nos ayuda a realizar los test de prueba. A continuacion esta la documentación oficial en el siguiente [enlace](https://jestjs.io/), alli debemos seleccionar la opcion **Docs** y en el menu lateral izquierdo buscar el **API Reference** y seleccionar **Expect**.
+
+Al abrir **Expect** estan los diferentes metodos para ejecutar pruebas, en este ejemplo vamos a realizar una prueba de que 2 mensajes sean iguales.
+
+Para esto en **demo.test.js** la vamos a realizar una validación, lo comun es hacer lo siguiente
+
+```
+test('deben de ser iguales', () => {
+
+    // 1. Inicialización
+    const mensaje = 'Hola Mundo';
+
+    // 2. estímulo
+    const mensaje2 = `Hola Mundo`;
+
+    // 3. Observar el comportamiento
+    if(mensaje === mensaje2){
+        true
+    }else{
+        false
+    }
+})
+```
+
+Pero como estamos haciendo uso de la libreria Jest podemos ver el ejemplo donde utilizan [.tobe(value)](https://jestjs.io/docs/en/expect#tobevalue) este metodo sirve para comparar y nos ayuda a reducir codigo, entonces al utilizarlo dejamos el archivo de la siguiente forma
+
+```
+test('deben de ser iguales', () => {
+
+    // 1. Inicialización
+    const mensaje = 'Hola Mundo';
+
+    // 2. estímulo
+    const mensaje2 = `Hola Mundo`;
+
+    // 3. Observar el comportamiento
+    expect(mensaje).toBe(mensaje2)
+})
+
+```
+
+`expect()`, es el valor esperado. `.toBe()` es el valor con el que va a realizar la comparación, Si ambos son verdaderos la prueba debe pasar
+
+![assets-git/173.png](assets-git/173.png)
+
+Pero si el valor 2 es falso, la prueba debe lanzar el error y mostrar cual es el error 
+
+![assets-git/174.png](assets-git/174.png)
+
+Si se quiere organizar mejor las pruebas que se vayan realizando, se pueden encapsular los test dentro de una funcion `describe` que contenga los test que se requieran y lo muestre de una forma organizada en la consola, de esta forma
+
+```
+describe('Pruebas en el archivo demo.test.js ', () => {
+    
+    test('deben de ser iguales', () => {
+    
+        // 1. Inicialización
+        const mensaje = 'Hola Mundo';
+    
+        // 2. estímulo
+        const mensaje2 = `Hola Mundo`;
+    
+        // 3. Observar el comportamiento
+        expect(mensaje).toBe(mensaje2)
+    });
+
+});
+```
+
+De esta forma en la consola, aparece un titulo, que ejecuta solo prueba que esten contenidas alli
+
