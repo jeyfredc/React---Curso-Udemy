@@ -50,6 +50,8 @@
 
 [PropTypes](#PropTypes)
 
+[DefaultProps](#DefaultProps)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -2855,6 +2857,84 @@ En este ejemplo ya se establecio que la propiedad es requerida pero no la estoy 
 Si a continuación le envio el string en **index.js** ya no va a aparecer un error pero se sabe que si no se agrega nada va a seguir saliendo el error por consola
 
 ![assets-git/155.png](assets-git/155.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## DefaultProps
+
+Existen dos formas de enviar propiedades por defecto para esto se va a cambiar la etiqueta de parrafo que se tenia antes y se va a cambiar por un prop que diga subtitulo, la forma mas comun de enviar algo por defecto es haciendolo donde se declara el prop es decir de esta forma
+
+```
+import './index.css'
+import PropTypes from 'prop-types';
+
+//Functional Components
+const PrimeraApp = ({ saludo, subtitulo ="Soy un subtitulo" }) => {
+
+
+    return (
+        <>
+        <h1>{ saludo }</h1>
+            {/* {}<pre>{ JSON.stringify(saludo, null, 3) }</pre> */}
+            <p>{ subtitulo }</p>
+        </>
+    )
+}
+
+PrimeraApp.propTypes = {
+    saludo: PropTypes.string.isRequired
+}
+
+export default PrimeraApp;
+```
+
+Pero si voy a la pestaña Components no aparece el prop y aunque este bien puede que no se quiera que se vea de esta forma
+
+![assets-git/156.png](assets-git/156.png)
+
+Entonces a continuacion de los PropTypes puedo establecer los `defaultProps` y se hace de la siguiente forma
+
+```
+NombreComponente.defaultProps = {
+    prop: (valor por defecto)
+}
+```
+
+llevandolo al componente se veria de esta forma
+
+```
+import './index.css'
+import PropTypes from 'prop-types';
+
+//Functional Components
+const PrimeraApp = ({ saludo, subtitulo }) => {
+
+
+    return (
+        <>
+        <h1>{ saludo }</h1>
+            {/* {}<pre>{ JSON.stringify(saludo, null, 3) }</pre> */}
+            <p>{ subtitulo }</p>
+        </>
+    )
+}
+
+PrimeraApp.propTypes = {
+    saludo: PropTypes.string.isRequired
+}
+
+PrimeraApp.defaultProps = {
+    subtitulo: 'Soy un subtitulo'
+}
+
+export default PrimeraApp;
+```
+
+y asi tambien en la pestaña Components del navegador se va a mostrar el prop con su valor por defecto, tambien es valido si se quiere dejar vacio
+
+![assets-git/157.png](assets-git/157.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
