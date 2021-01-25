@@ -52,6 +52,10 @@
 
 [DefaultProps](#DefaultProps)
 
+[Componente CounterApp](#Componente-CounterApp)
+
+[Evento click (Eventos en general)](#Evento-click-(Eventos-en-general))
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -2939,3 +2943,95 @@ y asi tambien en la pestaña Components del navegador se va a mostrar el prop co
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
+
+## Componente CounterApp
+
+### Tarea
+
+1. Crear un nuevo componente dentro de la carpeta **SRC** llamado **CounterApp**
+
+2. El CounterApp debe de ser un **Functional Component**
+
+3. El contenido del **CounterApp** debe de ser:
+
+    ```
+    <h1>CounterApp</h1>
+    <h2> { value } </h2>
+    ```
+
+4. Donde `"value"` es una propiedad enviada desde el padre hacia el componente CounterApp (Debe ser númerica validada con PropTypes)
+
+5. Reemplazar en el **index.js** el componente `PrimeraApp` por `CounterApp` (no se olviden del `value` que debe de ser un número)
+
+6. Asegúrense de no tener errores ni warnings (Cualquier warning no usado, comentar el código)
+
+Lo primero que se debe hacer es crear el componente **CounterApp** para esto nos vamos a la carpeta **src** del proyecto y alli creamos el archivo **CounterApp.js**
+
+Dentro de este archivo creamos la estructura que se pide
+
+```
+
+import './index.css'
+import PropTypes from 'prop-types';
+
+//Functional Components
+const CounterApp = ({ value }) => {
+
+
+    return (
+        <>
+        <h1>CounterApp</h1>
+            <p>{ value }</p>
+        </>
+    )
+}
+
+CounterApp.propTypes = {
+    value: PropTypes.number.isRequired
+}
+
+export default CounterApp;
+```
+
+Ahora hay que dirigirnos a **index.js** y cambiar el componente **PrimeraApp** por **CounterApp** y establecer el prop `value` que va a recibir numeros y se los va a enviar al componente que acabamos de crear 
+
+```
+import React from 'react';
+import ReactDom from 'react-dom';
+/* import PrimeraApp from './PrimeraApp'; */
+import CounterApp from './CounterApp'
+
+
+const divRoot = document.querySelector('#root');
+
+ReactDom.render( <CounterApp value={2021} /> , divRoot );
+```
+
+![assets-git/158.png](assets-git/158.png)
+
+**Nota:** Si desde el principio escriben el snipet `rafcp` crea la estructura completa requerida de forma automatica
+
+```
+import React from 'react'
+import PropTypes from 'prop-types'
+
+const CounterApp = props => {
+    return (
+        <div>
+            
+        </div>
+    )
+}
+
+CounterApp.propTypes = {
+
+}
+
+export default CounterApp
+```
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Evento click (Eventos en general)
