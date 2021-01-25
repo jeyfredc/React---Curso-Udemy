@@ -10,10 +10,10 @@ ${4}
 Esta es una 
            frase distinta al nombre`
 
-console.log(nombreCompleto)
+// console.log(nombreCompleto)
 
-function getSaludo(nombre){
-    return 'Hola ' + nombre;
+export function getSaludo(nombre = 'Carlos'){
+    return 'Hola ' + nombre + '!';
 }
 
-console.log(`Este es un texto: ${getSaludo(nombre)}`)
+// console.log(`Este es un texto: ${getSaludo(nombre)}`)

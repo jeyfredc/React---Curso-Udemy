@@ -66,6 +66,8 @@
 
 [Jest-Expect-toBe](#Jest-Expect-toBe)
 
+[Pruebas en el archivo 02-template-string.js](#Pruebas-en-el-archivo-02-template-string.js)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -3713,6 +3715,171 @@ describe('Pruebas en el archivo demo.test.js ', () => {
 De esta forma en la consola, aparece un titulo, que ejecuta solo pruebas que esten contenidas alli
 
 ![assets-git/175.png](assets-git/175.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Pruebas en el archivo 02-template-string.js
+
+Es recomendable que si estamos haciendo pruebas por ejemplo sobre la carpeta **base** entonces en la carpeta de **test** se cree una interna con el mismo nombre para tener mas claro sobre que es lo que se esta haciendo la prueba.
+
+Dentro de **test** crear una carpeta que se llame **base** y dentro de esta crear un archivo que se llame **02-template-string.test.js**
+
+El archivo se va a crear con la siguiente estructura
+
+```
+describe('Pruebas en 02-template-string.js ', () => {
+    
+    test('should ', () => {
+        
+    })
+    
+})
+
+```
+
+Ahora pasamos a revisar el archivo **02-template-string.js** que venia en la carpeta de descargas, para poder hacer pruebas de este archivo se debe exportar la funcion `getSaludo` y comentar los `console.log` que vienen en este para no traerlos al ejecutar el test del archivo y queda de esta forma
+
+```
+const nombre = "pablito";
+const apellido = "clavo un clavito";
+
+//const nombreCompleto = nombre + " " + apellido
+
+const nombreCompleto = `
+${nombre}
+${apellido}
+${4}
+Esta es una 
+           frase distinta al nombre`
+
+// console.log(nombreCompleto)
+
+export function getSaludo(nombre){
+    return 'Hola ' + nombre;
+}
+
+// console.log(`Este es un texto: ${getSaludo(nombre)}`)
+```
+
+Nuevamente regresamos al archivo del test y alli colocamos la descripción en el test de lo que hace la funcion y empezamos a agregar cada una de las constantes 
+
+```
+import { getSaludo } from '../../base/02-template-string';
+
+
+describe('Pruebas en 02-template-string.js ', () => {
+    
+    test('getSaludo debe de retornar hola pablito', () => {
+        
+        const nombre = 'pablito';
+
+        const saludo = getSaludo( nombre );
+
+        expect( saludo ).toBe( 'Hola ' + nombre )
+    })
+    
+})
+```
+
+para que salgan ayudas como describe o el metodo toBe, despues de agregar un punto se puede importar la libreria de esta forma
+
+`import '@testing-library/jest-dom';`
+
+```
+import { getSaludo } from '../../base/02-template-string';
+import '@testing-library/jest-dom';
+
+describe('Pruebas en 02-template-string.js ', () => {
+    
+    test('getSaludo debe de retornar hola pablito', () => {
+        
+        const nombre = 'pablito';
+
+        const saludo = getSaludo( nombre );
+
+        expect( saludo ).toBe( 'Hola ' + nombre )
+    })
+    
+})
+
+```
+
+![assets-git/176.png](assets-git/176.png)
+
+Si tenemos duda de que es lo que hace saludo incluso antes de ejecutar expect y toBe podemos hacer un `console.log(saludo)` para ver que retorna
+
+Si ejecutamos un error como por ejemplo agregar un signo de admiración finalizando la frase `.toBe( 'Hola ' + nombre + '!')`
+
+tambien lo obtendremos como una prueba fallida
+
+![assets-git/177.png](assets-git/177.png)
+
+Puede pasar que al bajar las pruebas es decir en la terminal ejecutar `q` o el comando `ctrl + c` y despues ejecutar nuevamente `yarn test` o `npm run test` no abra el archivo al cual le estabamos realizando las pruebas o me quiera devolver a la prueba del demo, en este caso oprimo la tecla p y escribo el test que quiero buscar, lo selecciono y presiono enter para que lo abra
+
+![assets-git/178.png](assets-git/178.png)
+
+![assets-git/179.png](assets-git/179.png)
+
+Si se quiere tambien se puede hacer un ejercicio para ejecutar 2 pruebas con el mismo archivo.
+
+recibiendo el signo de admiración al final retornando a Pablito y el otro test es que si no hay argumento nombre, por default traiga `Hola Carlos!`, para esto se deben modificar los archivos, empezando por **02-template-string.js**
+
+```
+const nombre = "pablito";
+const apellido = "clavo un clavito";
+
+//const nombreCompleto = nombre + " " + apellido
+
+const nombreCompleto = `
+${nombre}
+${apellido}
+${4}
+Esta es una 
+           frase distinta al nombre`
+
+// console.log(nombreCompleto)
+
+export function getSaludo(nombre = 'Carlos'){
+    return 'Hola ' + nombre + '!';
+}
+
+// console.log(`Este es un texto: ${getSaludo(nombre)}`)
+```
+
+y ahora los 2 test del archivo **02-template-string-test.js**
+
+```
+import { getSaludo } from '../../base/02-template-string';
+import '@testing-library/jest-dom';
+
+describe('Pruebas en 02-template-string.js ', () => {
+    
+    test('getSaludo debe de retornar Hola Pablito!', () => {
+        
+        const nombre = 'Pablito';
+
+        const saludo = getSaludo( nombre );
+
+        expect( saludo ).toBe( 'Hola ' + nombre + '!')
+    })
+
+    // getSaludo debe de retorna Hola Carlos! si no hay argumentro nombre
+    test('getSaludo debe de retornar Hola Carlos! si no hay argumentro nombre', () => {
+        
+
+        const saludo = getSaludo( );
+
+        expect( saludo ).toBe( 'Hola Carlos!')
+    })
+})
+
+```
+
+Al realizar esto, los 2 test, pasan
+
+![assets-git/180.png](assets-git/180.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
