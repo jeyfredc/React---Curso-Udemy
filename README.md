@@ -3710,5 +3710,10 @@ describe('Pruebas en el archivo demo.test.js ', () => {
 });
 ```
 
-De esta forma en la consola, aparece un titulo, que ejecuta solo prueba que esten contenidas alli
+De esta forma en la consola, aparece un titulo, que ejecuta solo pruebas que esten contenidas alli
 
+![assets-git/175.png](assets-git/175.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
