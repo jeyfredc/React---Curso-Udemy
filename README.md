@@ -3357,3 +3357,150 @@ Ahora cada vez que se haga click sobre el boton `+1` se va obtener un cambio de 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
+
+## handleSubstract y handleReset
+
+### Tarea
+
+1. Agregar dos etiquetas de boton mas a l componente la primera va a ser `<button>Reset</button>` el segundo va a ser `<button>-1</button>`
+
+2. Crear los useState para que el boton Reset regrese a su estado inical y el boton -1 reste lo que tenga el valor en el momento
+
+3. el useState del boton Reset va a recibir en su estado al prop que fue nombrado como `value`
+
+Lo primero que se hace es crear los botones
+
+```
+
+import './index.css'
+import React, {useState} from 'react';
+import PropTypes from 'prop-types';
+
+//Functional Components
+const CounterApp = ({ value }) => {
+
+    const [counter, setCounter] = useState(2021)
+
+    // handleAdd
+    const handleAdd = (e) => {
+        setCounter( counter + 1)
+    }
+
+
+    return (
+        <>
+        <h1>CounterApp</h1>
+            <p>{ counter }</p>
+            <button onClick={handleAdd}> +1 </button>
+            <button> Reset</button>
+            <button> -1 </button>
+        </>
+    )
+}
+
+CounterApp.propTypes = {
+    value: PropTypes.number
+}
+
+export default CounterApp;
+
+```
+
+Despues se debe crear la funcion handleReset para que al dar click sobre el boton Reset el numero se reinicie a 2021, entonces el estado se cambia y en vez de recibir el numero 2021 ahora recibe el `value`
+
+```
+import './index.css'
+import React, {useState} from 'react';
+import PropTypes from 'prop-types';
+
+//Functional Components
+const CounterApp = ({ value }) => {
+
+    const [counter, setCounter] = useState(value)
+
+    // handleAdd
+    const handleAdd = (e) => {
+        setCounter( counter + 1)
+    }
+
+    // handleReset
+    const handleReset = (e) => {
+        setCounter( value)
+    }
+
+
+    return (
+        <>
+        <h1>CounterApp</h1>
+            <p>{ counter }</p>
+            <button onClick={handleAdd}> +1 </button>
+            <button onClick={handleReset}> Reset</button>
+            <button> -1 </button>
+        </>
+    )
+}
+
+CounterApp.propTypes = {
+    value: PropTypes.number
+}
+
+export default CounterApp;
+
+```
+
+Probar y ver si funciona aumentando el estado y luego dando click sobre el boton Reset y verificar si se reinicia el valor a 2021
+
+POr ultimo crear la funcion handleSubstract para empezar a disminuir el estado inicial
+
+```
+import './index.css'
+import React, {useState} from 'react';
+import PropTypes from 'prop-types';
+
+//Functional Components
+const CounterApp = ({ value }) => {
+
+    const [counter, setCounter] = useState(value)
+
+    // handleAdd
+    const handleAdd = (e) => {
+        setCounter( counter + 1)
+    }
+
+    // handleReset
+    const handleReset = (e) => {
+        setCounter( value)
+    }
+
+    // handleSubstract
+    const handleSubstract = (e) => {
+        setCounter( counter - 1)
+    }
+
+
+    return (
+        <>
+        <h1>CounterApp</h1>
+            <p>{ counter }</p>
+            <button onClick={handleAdd}> +1 </button>
+            <button onClick={handleReset}> Reset</button>
+            <button onClick={handleSubstract}> -1 </button>
+        </>
+    )
+}
+
+CounterApp.propTypes = {
+    value: PropTypes.number
+}
+
+export default CounterApp;
+
+```
+
+Los 3 botones deben quedar habilitados y funcionando correctamente
+
+![assets-git/167.png](assets-git/167.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
