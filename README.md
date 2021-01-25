@@ -62,6 +62,8 @@
 
 [Introducción a las pruebas unitarias y de integración](#Introducción-a-las-pruebas-unitarias-y-de-integración)
 
+[Primera prueba](#Primera-prueba)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -3555,6 +3557,81 @@ Los pasos a establecer se conocen como AAA(Arrange,Act,Assert)
 - Hay que probar todo
 
 Descargar los siguientes [archivos](https://github.com/jeyfredc/React---Curso-Udemy/raw/master/base.rar) y copiar la carpeta dentro de **src** para empezar a realizar las primeras pruebas
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Primera prueba
+
+Para iniciar esto es lo que debemos tener en la carpeta **src**
+
+![assets-git/168.png](assets-git/168.png)
+
+Ahora dentro de la carpeta **src** crear otra carpeta que tenga por nombre **test** o **tests** y dentro de esta carpeta crear un archivo que se llame **demo.test.js** y agregamos un `console.log('Hola Mundo');`
+
+Despues abrimos si se quiere una nueva terminal, se hace la ubicacion del proyecto y ahora ejecutar `npm run test` o `yarn test`
+
+![assets-git/169.png](assets-git/169.png)
+
+Esto va abrir la consola y va a lanzar el siguiente error **Test suite failed to run**
+
+![assets-git/170.png](assets-git/170.png)
+
+Esto error significa que no estamos haciendo un test sobre el archivo **demo.test.js**, seguido de esto dice en otra linea se indica que el test suite debe contener por lo menos una prueba.
+
+Como se puede observar el ejecutar el comando `npm run test` o `yarn test`, hace que inmediatamente se reconozca que existe un archivo que esta hecho para realizar test
+
+alli tambien hay otras opciones que son las siguientes
+
+**Watch Usage**
+
+ › Press a to run all tests.-> Para correr todas las pruebas
+ › Press f to run only failed tests. -> Para correr solo las pruebas que fallaron
+ › Press q to quit watch mode. -> Para salir
+ › Press p to filter by a filename regex pattern. -> Para filtrar por una expresión regular
+ › Press t to filter by a test name regex pattern. -> Para filtrar pruebas en base a una expresión regular
+ › Press Enter to trigger a test run.
+
+para ejecutar una prueba se puede escribir un snipet sobre **demo.test.js** solo escribiendo la palabra test y presionando tab en el teclado, aparece automaticamente esta estructura
+
+```
+test('should', () => {
+    
+})
+
+```
+
+La cual se va a cambiar, lo que esta como string es decir `'should'` lo vamos a renombrar en base al tipo de prueba que vamos hacer por ejemplo
+
+```
+test('debe de ser true', () => {
+    
+})
+
+```
+Y en este caso vemos que paso la prueba, si presionamos la tecla w van a salir las opciones de los comandos descritos anteriormente
+
+![assets-git/171.png](assets-git/171.png)
+
+Ahora hacemos un pequeño codigo para hacer una prueba
+
+```
+test('debe de ser true ', () => {
+
+    const isActive = true;
+    
+    if(isActive){
+        console.log('Esta activo')
+    }else{
+        console.error('No esta activo')
+    }
+})
+```
+
+En este caso la prueba pasa porque `isActive` si es gual a `true`
+
+![assets-git/172.png](assets-git/172.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
