@@ -3035,3 +3035,169 @@ export default CounterApp
 </div>
 
 ## Evento click (Eventos en general)
+
+Antes de empezar en este [enlace](https://es.reactjs.org/docs/events.html) se encuentran los eventos soportados por React, estan directamente en la documentación oficial, donde se pueden encontrar todo tipo de eventos incluidos los de formulario, no estan dentro de la lista de eventos pero en la pagina se pueden conseguir
+
+![assets-git/159.png](assets-git/159.png)
+
+Continuando con el proyecto, en el archivo **CounterApp.js** debajo del subtitulo se puede agregar un boton que diga `+1` 
+
+```
+import './index.css'
+import PropTypes from 'prop-types';
+
+//Functional Components
+const CounterApp = ({ value }) => {
+
+
+    return (
+        <>
+        <h1>CounterApp</h1>
+            <p>{ value }</p>
+            <button> +1 </button>
+        </>
+    )
+}
+
+CounterApp.propTypes = {
+    value: PropTypes.number.isRequired
+}
+
+export default CounterApp;
+
+```
+
+y luego pasar a estilizarlo con css en el archivo **index.css**
+
+```
+
+html, body {
+    color: white;
+    background-color: #21232A;
+    font-family: "Helvetica Neue", Arial,Arial, Helvetica, sans-serif;
+    font-size: 1.3rem;
+    padding: 70px;
+}
+
+button {
+    font-size: 1.3rem;
+    margin-right: 10px;
+    padding: 10px;
+}
+```
+
+De momento el resultado seria un boton que dice +1 al cual se le puede dar click pero no ocurre ningun cambio por ahora
+
+![assets-git/160.png](assets-git/160.png)
+
+Ahora se puede colocar directamente en el boton un evento el cual seria de tipo `onClick` como se establece en los eventos que proporciona la `documentación` y existen varias formas de hacer que este evento funcione.
+
+El primero es añadir el `onClick` y dentro de este y entre corchetes ejecutar una funcion de esta forma
+
+```
+
+import './index.css'
+import PropTypes from 'prop-types';
+
+//Functional Components
+const CounterApp = ({ value }) => {
+
+
+    return (
+        <>
+        <h1>CounterApp</h1>
+            <p>{ value }</p>
+            <button onClick={ function () {console.log('+1')}}> +1 </button>
+        </>
+    )
+}
+
+CounterApp.propTypes = {
+    value: PropTypes.number.isRequired
+}
+
+export default CounterApp;
+
+```
+
+para que cuando hagamos click sobre el boton `+1` por consola cada vez que hagamos click salga la palabra +1
+
+![assets-git/161.png](assets-git/161.png)
+
+Si se hace con una arrow function o funcion de flecha va a funcionar de la misma manera
+
+```
+<button onClick={ ()=> {console.log('+1')}}> +1 </button>
+```
+
+tambien se puede extraer la función antes de hacer el render y luego llamarla en el boton de esta forma, se crea una función con el nombre que se quiera en este caso `handleAdd` y hace exactamente lo mismo que se venia haciendo solo que ahora se llama a la funcion recibiendo un evento `e`
+
+```
+
+import './index.css'
+import PropTypes from 'prop-types';
+
+//Functional Components
+const CounterApp = ({ value }) => {
+
+    // handleAdd
+    const handleAdd = (e) => {
+        console.log('+1')
+    }
+
+
+    return (
+        <>
+        <h1>CounterApp</h1>
+            <p>{ value }</p>
+            <button onClick={ (e)=> {handleAdd(e)}}> +1 </button>
+        </>
+    )
+}
+
+CounterApp.propTypes = {
+    value: PropTypes.number.isRequired
+}
+
+export default CounterApp;
+
+```
+
+pero si se quiere simplificar el codigo se puede quitar la funcion de flecha del evento onClick y llamar a la funcion sin pasar el argumento
+
+```
+
+import './index.css'
+import PropTypes from 'prop-types';
+
+//Functional Components
+const CounterApp = ({ value }) => {
+
+    // handleAdd
+    const handleAdd = (e) => {
+        console.log('+1')
+    }
+
+
+    return (
+        <>
+        <h1>CounterApp</h1>
+            <p>{ value }</p>
+            <button onClick={handleAdd}> +1 </button>
+        </>
+    )
+}
+
+CounterApp.propTypes = {
+    value: PropTypes.number.isRequired
+}
+
+export default CounterApp;
+
+```
+
+![assets-git/161.png](assets-git/161.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
