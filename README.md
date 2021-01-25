@@ -68,6 +68,8 @@
 
 [Pruebas en el archivo 02-template-string.js](#Pruebas-en-el-archivo-02-template-string.js)
 
+[toEqual](#toEqual)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -3880,6 +3882,198 @@ describe('Pruebas en 02-template-string.js ', () => {
 Al realizar esto, los 2 test, pasan
 
 ![assets-git/180.png](assets-git/180.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## toEqual
+
+Para este capitulo se van hacer pruebas sobre el ejercicio **05-funciones.js**, iniciamos modificandolo para que quede de esta forma y haciendo el export de la funcion `getUser`
+
+```
+
+export const getUser = () => 
+    ({
+    id: 'zxh123',
+    username: 'camilo2004',
+    })
+
+// console.log(getUser())
+
+// Tarea
+// 1. Tranformar a una función de flecha
+// 2. Tiene que retornar un objeto implicito
+// 3. Realizar pruebas
+
+function getUsuarioActivo( nombre ) {
+    return{
+        id: 'abc567',
+        username: nombre
+    }
+};
+
+const usuarioActivo = getUsuarioActivo('Gonzalo');
+
+// console.log( usuarioActivo);
+
+const getusuarioActivo2 = (nombre) => (
+    {
+        id: 'abc567',
+        username: nombre
+    }
+)
+const usuarioActivo2 = getusuarioActivo2('Rafael');
+
+// console.log( usuarioActivo2 )
+```
+
+Luego dentro de la carpeta tests, creamos un nuevo archivo que se llame **05-funciones.test.js** y dentro de este creamos la estructura basica, queremos comprobar que la funcion getUser retorne un objeto
+
+```
+import '@testing-library/jest-dom';
+
+describe('Pruebas en 05-funciones.js', () => {
+    test('getUser debe de retornar un objeto', () => {
+        
+    })
+    
+})
+
+```
+
+Ahora debemos crear una constante que sea igual a lo que retorna getUser
+
+```
+import '@testing-library/jest-dom';
+
+describe('Pruebas en 05-funciones.js', () => {
+    test('getUser debe de retornar un objeto', () => {
+        
+        const userTest = {
+                id: 'zxh123',
+                username: 'camilo2004',
+        }
+    })
+    
+})
+
+```
+
+despues crear la constante que obtiene a la función `getUser()` y para esto se debe importar del archivo
+
+```
+import '@testing-library/jest-dom';
+import { getUser } from '../../base/05-funciones';
+
+
+describe('Pruebas en 05-funciones.js', () => {
+    test('getUser debe de retornar un objeto', () => {
+        
+        const userTest = {
+                id: 'zxh123',
+                username: 'camilo2004',
+        }
+
+        const user = getUser();
+    })
+    
+})
+```
+
+Por ultimo usamos el metodo toEqual porque el metodo toBe, no sirve para comparar objetos y tampoco se puede hacer una comparacion de que un objeto sea igual a un objeto porque sus referencias apuntan a espacios de memoria distintos, para esto primero sea una prueba en la consola del navegador
+
+![assets-git/181.png](assets-git/181.png)
+
+Ahora se hace el ejemplo dejando toBe, para ver que error saca el test
+
+```
+import '@testing-library/jest-dom';
+import { getUser } from '../../base/05-funciones';
+
+
+describe('Pruebas en 05-funciones.js', () => {
+    test('getUser debe de retornar un objeto', () => {
+        
+        const userTest = {
+                id: 'zxh123',
+                username: 'camilo2004',
+        }
+
+        const user = getUser();
+
+        expect( user ).toBe( userTest );
+    })
+    
+})
+
+```
+
+![assets-git/182.png](assets-git/182.png)
+
+en la terminal se lanza una sugerencia **If it should pass with deep equality, replace "toBe" with "toStrictEqual"** la cual traduce lo siguiente **"Si debe pasar con igualdad profunda, reemplace "toBe" por "toStrictEqual"**
+
+Por tal razon el metodo que se va a usar es en vez de `toBe`, `toEqual` ya que este ayuda a comparar los objetos
+
+![assets-git/183.png](assets-git/183.png)
+
+Ahora para hacer otro ejercicio se va a realizar una prueba sobre `getUsuarioActivo()` del archivo **05-funciones.js**. para que retorne un objeto en esta se pasa un parametro en la funcion que tambien se recibe en el username de la misma.
+
+Lo primero que se debe hacer es exportar la funcion en el archivo **05-funciones.js**
+
+```
+export const getUser = () => 
+    ({
+    id: 'zxh123',
+    username: 'camilo2004',
+    })
+
+
+export const getusuarioActivo2 = (nombre) => (
+    {
+        id: 'abc567',
+        username: nombre
+    }
+)
+```
+
+Despues se debe importar en el test, crear el test y pasar un argumento sobre la constante que se cree y reciba a `getusuarioActivo2()`
+
+```
+import '@testing-library/jest-dom';
+import { getUser, getusuarioActivo2 } from '../../base/05-funciones';
+
+
+describe('Pruebas en 05-funciones.js', () => {
+    test('getUser debe de retornar un objeto', () => {
+        
+        const userTest = {
+                id: 'zxh123',
+                username: 'camilo2004',
+        }
+
+        const user = getUser();
+
+        expect( user ).toEqual( userTest );
+    })
+
+    test('getUsuarioActivo debe de retornar un objeto', () => {
+        
+        const nombre = "Jeyfred";
+
+        const userActivo = getusuarioActivo2(nombre);
+
+        expect( userActivo ).toEqual({
+            id: 'abc567',
+            username: nombre
+        }  );
+    })
+    
+})
+
+```
+
+![assets-git/184.png](assets-git/184.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
