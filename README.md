@@ -58,6 +58,10 @@
 
 [useState-Hook](#useState-Hook)
 
+[handleSubstract y handleReset](#handleSubstract-y-handleReset)
+
+[Introducción a las pruebas unitarias y de integración](#Introducción-a-las-pruebas-unitarias-y-de-integración)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -3504,3 +3508,50 @@ Los 3 botones deben quedar habilitados y funcionando correctamente
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
+
+
+## Introducción a las pruebas unitarias y de integración
+
+**Pruebas Unitarias:** Estan enfocadas en pequeñas funcionalidades 
+
+**Ejemplo:** Un coche tiene 4 llantas, la prueba unitaria se centraria en escoger una de las llantas y empezar a realizarse pruebas, puede ser una prueba de desgaste, rendimiento, ajuste de piezas, etc.
+
+**Pruebas de Integración** Enfocadas en cómo reaccionan varias piezas en conjunto
+
+**Ejemplo:** La prueba se centraria no en hacer pruebas a una sola llanta, si no a las 4, en este caso ya se trata de un conjunto de piezas que tienen que funcionar de manera optima.
+
+las caracteristicas de las pruebas son las siguientes:
+
+1. Fáciles de escribir
+
+2. Fáciles de leer
+
+3. Confiables
+
+4. Rápidas
+
+5. Prinicipalmente unitarias
+
+Usualmente se empieza con pequeñas partes, si todas las partes pequeñas se encuentran probadas, la prueba de integración deberia confirmarse y no deberia ocurrir lo contrario, es decir realizar pruebas unitarias dentro de las pruebas de integración.
+
+Los pasos a establecer se conocen como AAA(Arrange,Act,Assert)
+
+- **Arrange (Areglar):** Es el paso en el cual se establece el estado inicial conocido como el sujeto a probar donde se inicializan variables, se hacen las importaciones necesarias y en general se prepara el sujeto a probar
+
+- **Act (Actuar):** Es donde se aplican acciones o estimulos al sujeto de pruebas, se hace el llamado a los metodos, simular click y realizar acciones sobre el paso anterior
+
+- **Assert (Afirmar):** Es donde se observa el comportamiento resultante es decir si los resultados son los esperados 
+
+### Mitos sobre las pruebas
+
+- Hacen que la aplicación no tenga errores
+
+- Las pruebas no pueden fallas
+
+- Hacen más lenta la aplicación
+
+- Es una pérdida de tiempo
+
+- Hay que probar todo
+
+Descargar los siguientes [archivos]() y copiar la carpeta dentro de **src** para empezar a realizar las primeras pruebas
