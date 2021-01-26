@@ -78,6 +78,8 @@
 
 [Pruebas con async-await](#Pruebas-con-async-await)
 
+[Pruebas sobre componentes de React](#Pruebas-sobre-componentes-de-React)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -4684,6 +4686,125 @@ describe('Pruebas con async-await y Fetch', () => {
 
 ![assets-git/198.png](assets-git/198.png)
 
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Pruebas sobre componentes de React
+
+En este capitulo se hace prueba del componente `<PrimerApp >` por tanto lo primero que debemos hacer es dirigirnos a **index.js** y nuevamente hacer que retorne `primeraApp` por tanto dejamos el archivo de la siguiente forma
+
+```
+import React from 'react';
+import ReactDom from 'react-dom';
+import PrimeraApp from './PrimeraApp';
+// import CounterApp from './CounterApp'
+
+
+const divRoot = document.querySelector('#root');
+
+// ReactDom.render( <CounterApp value={2021} /> , divRoot );
+ReactDom.render( <PrimeraApp /> , divRoot );
+
+```
+
+Ahora nos dirigimos a la carpeta **tests** y alli creamos el archivo de prueba el cual se llemara **PrimeraApp.test.js**, lleva la siguiente estructura
+
+```
+import '@testing-library/jest-dom';
+
+describe('Pruebas en <PrimeraApp />', () => {
+
+    test('Debe de mostrar el mensaje "Hola, Soy Iron Man"', () => {
+        
+    })
+    
+    
+})
+```
+
+el mensaje que se quiere evaluar es `"Hola, Soy Iron Man"`, por tanto se debe crear una constante saludo que contenga la misma frase y despues una constante wrapper que va a utilizar a render el cual ayuda a renderizar el componente.
+
+**Nota:** Tanto `render` como `PrimeraApp` se deben de importar, el archivo queda asi:
+
+```
+import '@testing-library/jest-dom';
+import { render } from '@testing-library/react'
+import PrimeraApp from '../PrimeraApp';
+
+describe('Pruebas en <PrimeraApp />', () => {
+
+    test('Debe de mostrar el mensaje "Hola, Soy Iron Man"', () => {
+        
+        const saludo = 'Hola, Soy Iron Man';
+
+        const wrapper = render( <PrimeraApp/> );
+    })
+    
+})
+```
+
+Luego se marca una advertencia que indica que el prop saludo fue marcado como requerido en PrimeraApp pero esta indefinido
+
+![assets-git/199.png](assets-git/199.png)
+
+Entonces se debe agregar el prop para ver si se siguen cargando mas errores 
+
+```
+import '@testing-library/jest-dom';
+import { render } from '@testing-library/react';
+import PrimeraApp from '../PrimeraApp';
+
+describe('Pruebas en <PrimeraApp />', () => {
+
+    test('Debe de mostrar el mensaje "Hola, Soy Iron Man"', () => {
+        
+        const saludo = 'Hola, Soy Iron Man';
+
+        const wrapper = render( <PrimeraApp saludo={ saludo } /> );
+    })
+    
+    
+})
+```
+
+Ahora ya esta cargando la prueba correctamente 
+
+![assets-git/200.png](assets-git/200.png)
+
+el wrapper tambien tine un metodo llamado `getBytext` que se puede acceder como `wrapper.getByText()` o desestructurar directamente a `wrapper` para utilizar la funcion.
+
+Cuando hacemos el `expect` y dentro de este el `getByText(saludo)` indicamos que haga la busqueda en el componente del prop `saludo` el cual retorna `"Hola, Soy Iron Man"` y luego `.toBeInTheDocument()` para que haga la busqueda sobre el componente
+
+```
+import '@testing-library/jest-dom';
+import { render } from '@testing-library/react';
+import PrimeraApp from '../PrimeraApp';
+
+describe('Pruebas en <PrimeraApp />', () => {
+
+    test('Debe de mostrar el mensaje "Hola, Soy Iron Man"', () => {
+        
+        const saludo = 'Hola, Soy Iron Man';
+
+        const { getByText} = render( <PrimeraApp saludo={ saludo } /> );
+
+        expect( getByText(saludo)).toBeInTheDocument();
+    })
+    
+    
+})
+
+```
+
+De esta forma vemos que la evaluación del componente pasa la prueba
+
+![assets-git/201.png](assets-git/201.png)
+
+pero si se quisiera que arrojara un error se puede concatenar saludo con otro string y ver que lanza la consola
+
+![assets-git/202.png](assets-git/202.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
