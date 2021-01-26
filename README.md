@@ -70,6 +70,8 @@
 
 [toEqual](#toEqual)
 
+[Pruebas en el archivo 07-desestructuracion-arreglos.js](#Pruebas-en-el-archivo-07-desestructuracion-arreglos.js)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -4074,6 +4076,134 @@ describe('Pruebas en 05-funciones.js', () => {
 ```
 
 ![assets-git/184.png](assets-git/184.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Pruebas en el archivo 07-desestructuracion-arreglos.js
+
+Iniciamos creando el archivo para pruebas en la carpeta **tests** **07-desestructuracion-arreglos.test.js**.
+
+Realizamos una modificación al archivo que le vamos a hacer pruebas y queda de esta forma
+
+```
+const personajes = ['Iron Man', 'Capitan America', 'Spiderman'];
+
+const [ , p2, p3] = personajes;
+
+
+export const retornaArreglo = () => {
+    return ['ABC' , 123];
+}
+
+// const [letras, numeros] = retornaArreglo()
+
+
+const estados = (valor) => {
+    return [valor, () => { console.log('Hola Mundo')}];
+}
+
+```
+
+Ahora hicimos un export de `retornaArreglo`, pasamos nuevamente al archivo donde vamos a realizar el test y creamos la estructura para la prueba
+
+```
+import '@testing-library/jest-dom';
+
+
+describe('Pruebas en desestructuración', () => {
+
+    test('Debe de retornar un string y un numero', () => {
+        
+    })
+    
+    
+})
+
+```
+
+Luego hacemos la importación de `retornaArreglo` y hacemos la comparación
+
+```
+import '@testing-library/jest-dom';
+import {retornaArreglo} from '../../base/07-desesctructuracion-arreglos'
+
+describe('Pruebas en desestructuración', () => {
+
+    test('Debe de retornar un string y un numero', () => {
+        
+        const arr = retornaArreglo(); // ['ABC', 123];
+
+        expect( arr ).toEqual(['ABC' , 123])
+    })
+    
+    
+})
+
+```
+
+![assets-git/185.png](assets-git/185.png)
+
+Otra forma de hacerlo es desestructurando el arreglo de esta forma y haciendo una validación por cada uno, por ejemplo primero se hace un console.log de letras para que genere por consola que es un string y luego entra a realizar la comparación entre el tipo de datos
+
+```
+import '@testing-library/jest-dom';
+import {retornaArreglo} from '../../base/07-desesctructuracion-arreglos'
+
+describe('Pruebas en desestructuración', () => {
+
+    test('Debe de retornar un string y un numero', () => {
+        
+        // const arr = retornaArreglo(); // ['ABC', 123];
+
+        // expect( arr ).toEqual(['ABC' , 123])
+
+        const [letras, numeros] = retornaArreglo();
+
+        console.log(typeof letras);
+
+        expect(letras).toBe('ABC');
+    })
+    
+    
+})
+
+```
+
+![assets-git/186.png](assets-git/186.png)
+
+Despues se puede hacer el mismo ejercicio para los numeros
+
+```
+import '@testing-library/jest-dom';
+import {retornaArreglo} from '../../base/07-desesctructuracion-arreglos'
+
+describe('Pruebas en desestructuración', () => {
+
+    test('Debe de retornar un string y un numero', () => {
+        
+        // const arr = retornaArreglo(); // ['ABC', 123];
+
+        // expect( arr ).toEqual(['ABC' , 123])
+
+        const [letras, numeros] = retornaArreglo();
+
+        console.log(typeof letras);
+
+        expect(letras).toBe('ABC');
+
+        console.log(typeof numeros);
+
+        expect(numeros).toBe(123);
+    })
+    
+    
+})
+```
+
+![assets-git/187.png](assets-git/187.png)
+
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
