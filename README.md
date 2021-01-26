@@ -76,6 +76,8 @@
 
 [Pruebas con tareas asincronas](#Pruebas-con-tareas-asincronas)
 
+[Pruebas con async-await](#Pruebas-con-async-await)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -4598,6 +4600,90 @@ describe('Pruebas con promesar', () => {
 ```
 
 ![assets-git/196.png](assets-git/196.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Pruebas con async-await
+
+En este capitulo se va a hacer uso y pruebas sobre el archivo **11-async-await.js**, en caso que no este funcionando el apiKey deberan realizar los mismos pasos que se hicieron en el capitulo de [Fetch API](https://github.com/jeyfredc/React---Curso-Udemy#Fetch-API), luego se hace un export de `getImagen` y se hacen unas pequeñas modificaciones para retunarl el `url` y el `error`. El archivo queda asi 
+
+```
+export const getImagen = async() => {
+
+    try {
+        const apiKey = 'soVdva8bjB8shZXmy18BLAE5wCSgYZZv';
+        const resp = await fetch(`http://api.giphy.com/v1/gifs/random?api_key=${apiKey}`)
+        const {data} = await resp.json();
+        const {url} = await data.images.downsized;
+        
+        return url;
+    } catch (error) {
+        
+        return 'No existe';
+    }
+}
+```
+
+Ahora pasamos a la carpeta **tests** y creamos el archivo  **11-async-await.test.js**, el cual lleva la siguiente estructura
+
+```
+import '@testing-library/jest-dom';
+
+describe('Pruebas con async-await y Fetch', () => {
+    
+    test('Debe de retornar el url de la imagen', () => {
+        
+    })
+    
+})
+
+```
+
+Se debe de tener en cuenta que el url regresa un string, hacemos el import de la funcion `getImagen` y recordando las clases del cuando colocamos la palabra `async` sabemos que se retorna una promesa 
+
+si colamos una constante igual a la función y nos paramos sobre la constante vemos que resuelve `<any>` porque Javascript no es un lenguaje con un tipado estricto pero si sabe que regresa una promesa
+
+```
+import '@testing-library/jest-dom';
+import { getImagen } from '../../base/11-async-await';
+
+describe('Pruebas con async-await y Fetch', () => {
+    
+    test('Debe de retornar el url de la imagen', () => {
+        
+        const url = getImagen();
+    })
+    
+})
+
+```
+
+![assets-git/197.png](assets-git/197.png)
+
+Por tanto si hacemos un expect de url igual a un string no va a funcionar por que getImagen regresa una promesa pero su al test le agregamos async y hacemos await al url si podemos comparar que regrese un string
+
+```
+import '@testing-library/jest-dom';
+import { getImagen } from '../../base/11-async-await';
+
+describe('Pruebas con async-await y Fetch', () => {
+    
+    test('Debe de retornar el url de la imagen', async() => {
+        
+        const url = await getImagen();
+
+        console.log(url);
+        expect( typeof url).toBe( 'string' );
+    })
+    
+})
+
+```
+
+![assets-git/198.png](assets-git/198.png)
+
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
