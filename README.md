@@ -80,6 +80,8 @@
 
 [Pruebas sobre componentes de React](#Pruebas-sobre-componentes-de-React)
 
+[Enzyme-Testing unit](#Enzyme-Testing-unit)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -4805,6 +4807,139 @@ De esta forma vemos que la evaluación del componente pasa la prueba
 pero si se quisiera que arrojara un error se puede concatenar saludo con otro string y ver que lanza la consola
 
 ![assets-git/202.png](assets-git/202.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Enzyme-Testing unit
+
+Para esta capitulo nos vamos a apoyar de la libreria llamada Enzyme en este [enlace](https://enzymejs.github.io/enzyme/) se encuentra la documentación oficial, actualmente esta libreria se encuentra en la version 16, y react actualmente se encuentra en la version 17 por lo que es necesario hacer la instalacion de un adaptor de la version 17 con el siguiente comando en la terminal
+
+`npm install --save-dev @wojtekmaj/enzyme-adapter-react-17` o `yarn add --dev @wojtekmaj/enzyme-adapter-react-17`
+
+**Nota:**Recordar estar en la ubicación del proyecto
+
+![assets-git/203.png](assets-git/203.png)
+
+Tambien se debe realizar la instalacion de [enzyme-to-json](https://www.npmjs.com/package/enzyme-to-json), aqui ejecutamos el comando 
+
+`npm install --save-dev enzyme-to-json`
+
+Despues de realizar esta instalación dentro de la carpeta src creamos un archivo que se llama **setupTests.js** con la siguiente configuración
+
+```
+import Enzyme from 'enzyme';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+
+import { createSerializer } from 'enzyme-to-json';
+
+Enzyme.configure({adapter: new Adapter() });
+expect.addSnapshotSerializer( createSerializer({ mode: 'deep' }) );
+```
+
+Si yarn o npm se estan ejecutando en la consola de la terminal se debe finalizar y volver a ejecutar porque se hizo la instalacion de **setupTest.js** y este es un archivo de configuracion cuando ejecutamos por primera vez `npx` para crear una aplicación
+
+Despues de realizar las configuraciones, regresamos al archivo **PrimeraApp.test.js** para realizar una prueba de que se renderice correctamente el componente y dejamos el archivo de la siguiente forma
+
+```
+import '@testing-library/jest-dom';
+import { render } from '@testing-library/react';
+import PrimeraApp from '../PrimeraApp';
+
+describe('Pruebas en <PrimeraApp />', () => {
+
+    // test('Debe de mostrar el mensaje "Hola, Soy Iron Man"', () => {
+    //     const saludo = 'Hola, Soy Iron Man';
+    //     const { getByText} = render( <PrimeraApp saludo={ saludo } /> );
+    //     expect( getByText(saludo)).toBeInTheDocument();
+    // })
+    test('debe de mostrar el componenet <PrimeraApp /> correctamente', () => {
+        
+    })
+    
+    
+})
+
+```
+
+Dentro de test creamos una constatnte wrapper que llama a la funcion `shallow()`, la cual hay que importar y nos deshacemos de render.
+
+`shallow()` es parecido a `render()` pero este permite simular varios tipos de elementos e incluso simular clicks, dentro de `shallow()` extraemos el mismo contenido que en `render()`
+
+```
+import '@testing-library/jest-dom';
+import { shallow } from 'enzyme';
+import PrimeraApp from '../PrimeraApp';
+
+describe('Pruebas en <PrimeraApp />', () => {
+
+    // test('Debe de mostrar el mensaje "Hola, Soy Iron Man"', () => {
+    //     const saludo = 'Hola, Soy Iron Man';
+    //     const { getByText} = render( <PrimeraApp saludo={ saludo } /> );
+    //     expect( getByText(saludo)).toBeInTheDocument();
+    // })
+    test('debe de mostrar el componenet <PrimeraApp /> correctamente', () => {
+        
+        const saludo = 'Hola, Soy Iron Man';
+        const wrapper = shallow( <PrimeraApp saludo={ saludo } /> );
+    })
+    
+    
+})
+
+```
+
+Aqui ya deberiamos estar viendo que la prueba se ejecuta pero todavia no estamos haciendo ninguna validación para esto hacemos uso de `expect()` y con la funcion `.toMatchSnapshot()` obtenemos un render del archivo en otra carpeta que se va a crear de manera automatica al guardar los cambios del siguiente codigo
+
+```
+import '@testing-library/jest-dom';
+import { shallow } from 'enzyme';
+import PrimeraApp from '../PrimeraApp';
+
+describe('Pruebas en <PrimeraApp />', () => {
+
+    // test('Debe de mostrar el mensaje "Hola, Soy Iron Man"', () => {
+    //     const saludo = 'Hola, Soy Iron Man';
+    //     const { getByText} = render( <PrimeraApp saludo={ saludo } /> );
+    //     expect( getByText(saludo)).toBeInTheDocument();
+    // })
+    test('debe de mostrar el componenet <PrimeraApp /> correctamente', () => {
+        
+        const saludo = 'Hola, Soy Iron Man';
+        const wrapper = shallow( <PrimeraApp saludo={ saludo } /> );
+
+        expect( wrapper).toMatchSnapshot();
+    })
+    
+    
+})
+
+```
+
+Si revisamos la consola ahora sale que 1 snapshot fue escrito
+
+![assets-git/205.png](assets-git/205.png)
+
+La carpeta que se ha creado de manera automatica se creo en la carpeta **tests** y alli se nombro otra carpeta llamada **__snapshots__**, si abrimos esta hay un archivo contenido llamado **PrimeraApp.test.js.snap** y este archivo trae una captura del render del componente `PrimeraApp` como se puede ver a continuación
+
+**Nota:** Este archivo no se debe alterar de ninguna forma
+
+![assets-git/204.png](assets-git/204.png)
+
+En el caso que se llegue a actualizar el componente `PrimeraApp` por ejemplo modificando el contenido dentro de la etiqueta `<p>` con signos de admiracion sobre la linea 11 como se ve a continuación
+
+![assets-git/206.png](assets-git/206.png)
+
+En la terminal se va actualizar este cambio pero va indicar que la prueba fallo
+
+![assets-git/207.png](assets-git/207.png)
+
+como fue una actualizacion del documento en la terminal debemos oprimir la tecla `w` y luego la tecla `u` para que se actualicen los cambios.
+
+Despues de realizar esto nuevamente podemos abrir la carpeta **__snapshots__** y verificar el archivo **PrimeraApp.test.js.snap** ya que alli es donde se actualiza la fotografia del componente notando que ahora tambien aparecen los signos de admiración que se actualizaron sobre `PrimeraApp`
+
+![assets-git/208.png](assets-git/208.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
