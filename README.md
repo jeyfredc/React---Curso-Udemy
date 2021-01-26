@@ -72,6 +72,8 @@
 
 [Pruebas en el archivo 07-desestructuracion-arreglos.js](#Pruebas-en-el-archivo-07-desestructuracion-arreglos.js)
 
+[Pruebas en 08-import-export.js-Arreglos](#Pruebas-en-08-import-export.js-Arreglos)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -4204,6 +4206,233 @@ describe('Pruebas en desestructuración', () => {
 
 ![assets-git/187.png](assets-git/187.png)
 
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Pruebas en 08-import-export.js-Arreglos
+
+Para iniciar dentro de la carpeta **src**, crear otra capeta llamada **data** y dentro de esta un archivo llamado **heroes.js**, copiar el siguiente codigo y guardar los cambios
+
+```
+const heroes = [
+    {
+        id: 1,
+        name: 'Batman',
+        owner: 'DC'
+    },
+    {
+        id: 2,
+        name: 'Spiderman',
+        owner: 'Marvel'
+    },
+    {
+        id: 3,
+        name: 'Superman',
+        owner: 'DC'
+    },
+    {
+        id: 4,
+        name: 'Flash',
+        owner: 'DC'
+    },
+    {
+        id: 5,
+        name: 'Wolverine',
+        owner: 'Marvel'
+    },
+];
+
+export default heroes;
+```
+
+Del archivo **08-import-export.js** vamos a exportar la funcion `getHeroeById`. Ahora en la carpeta **tests** creamos el archivo **08-import-export.test.js** donde se correran las pruebas y creamos la estructura basica
+
+```
+import '@testing-library/jest-dom';
+
+describe('Pruebas en funciones de Heroes', () => {
+
+    test('Debe de retornar un heroe por id ', () => {
+        
+    })
+    
+})
+
+```
+
+La funcion que vamos a probrar es `getHeroeById` y se pueden considerar varios tipos de prueba:
+
+- ¿Que pasa si recibimos un id que no existe?
+
+- ¿Que pasa si se envia un id correcto pero el heroe no existe?
+
+- ¿Que pasa si envio un id y la respuesta es undefined?
+
+Lo primero que hacemos dentro del test es importar la funcion `getHeroeById`, luego creamos una constante id que recibe un numero y luego otra constante que reciba la funcion con el id y hacer un console.log de la constante
+
+```
+import '@testing-library/jest-dom';
+import { getHeroeById } from '../../base/08-import-export';
+
+describe('Pruebas en funciones de Heroes', () => {
+
+    test('Debe de retornar un heroe por id ', () => {
+        
+        const id=1;
+        const heroe = getHeroeById( id );
+
+        console.log(heroe)
+    })
+    
+})
+
+```
+
+y verificamos que la terminal este retornando el objeto de forma correcta
+
+![assets-git/188.png](assets-git/188.png)
+
+`{ id: 1, name: 'Batman', owner: 'DC' }`
+
+Luego hacemos un import del archivo **heroes** y le hacemos un `find` para buscar el valor del id y con esto ya hacemos un `expect` para que compare los mismos datos
+
+```
+import '@testing-library/jest-dom';
+import { getHeroeById } from '../../base/08-import-export';
+import heroes from '../../data/heroes';
+
+describe('Pruebas en funciones de Heroes', () => {
+
+    test('Debe de retornar un heroe por id ', () => {
+        
+        const id=1;
+        const heroe = getHeroeById( id );
+
+        const heroeData = heroes.find(h=>h.id === id );
+
+        expect( heroe ).toEqual( heroeData );
+
+    })
+    
+})
+```
+
+![assets-git/189.png](assets-git/189.png)
+
+Ahora realizamos otra prueba si paso un id que no existe deberia retornar undefined
+
+```
+import '@testing-library/jest-dom';
+import { getHeroeById } from '../../base/08-import-export';
+import heroes from '../../data/heroes';
+
+describe('Pruebas en funciones de Heroes', () => {
+
+    test('Debe de retornar un heroe por id ', () => {
+        
+        const id=1;
+        const heroe = getHeroeById( id );
+
+        const heroeData = heroes.find(h=>h.id === id );
+
+        expect( heroe ).toEqual( heroeData );
+
+    })
+
+    test('Debe de retornar un undefined si heroe no existe ', () => {
+        
+        const id=9;
+        const heroe = getHeroeById( id );
+
+        expect( heroe ).toBe( undefined );
+
+    })
+    
+})
+```
+
+![assets-git/190.png](assets-git/190.png)
+
+Se pueden hacer otras pruebas con la funcion `getHeroesByOwner`, una para retornar y filtrar heroes que pertenezcan a DC, otra para Marvel y otra por la longitud de cada uno, lo mas importante para hacer la prueba es analizar que objetos devuelve ownerData y heroesMarvel
+
+```
+import '@testing-library/jest-dom';
+import { getHeroeById, getHeroesByOwner } from '../../base/08-import-export';
+import heroes from '../../data/heroes';
+
+describe('Pruebas en funciones de Heroes', () => {
+
+    test('Debe de retornar un heroe por id ', () => {
+        
+        const id=1;
+        const heroe = getHeroeById( id );
+
+        const heroeData = heroes.find(h=>h.id === id );
+
+        expect( heroe ).toEqual( heroeData );
+
+    })
+
+    test('Debe de retornar un undefined si heroe no existe ', () => {
+        
+        const id=9;
+        const heroe = getHeroeById( id );
+
+        expect( heroe ).toBe( undefined );
+    })
+
+    // debe de retornar un arreglo con heroes de DC
+    // Crear una constante que en vez de llamarse id, se llame owner
+    // toEqual al arreglo filtrado
+
+    test('debe de retornar un arreglo con heroes de DC', () => {
+        
+        const owner = 'DC';
+
+        const heroesDc = [
+            { id: 1, name: 'Batman', owner: 'DC' },
+            { id: 3, name: 'Superman', owner: 'DC' },
+            { id: 4, name: 'Flash', owner: 'DC' }
+        ]
+      
+        const ownerData = heroes.filter((h) => h.owner === owner)
+
+        expect(heroesDc).toEqual( ownerData )
+    })
+    
+  
+    // debe de retornar un arreglo con heroes de DC
+    // toEqual al arreglo filtrado
+    // toBe leght=2
+
+    test('debe de retornar un arreglo con heroes de Marvel', () => {
+        
+        const owner = 'Marvel';
+
+        const heroesMarvel = getHeroesByOwner(owner);
+      
+        const ownerData = heroes.filter((h) => h.owner === owner)
+
+        expect(heroesMarvel).toEqual( ownerData )
+    })
+
+    // debe de retornar un arreglo con heroes de DC
+    // toBe leght=2
+
+    test('debe de retornar un arreglo con heroes de Marvel utilizando toBe', () => {
+        
+        const owner = 'Marvel';
+
+        const heroesMarvel = getHeroesByOwner(owner);
+      
+        expect(heroesMarvel.length).toBe( 2 )
+    })
+})
+```
+
+![assets-git/191.png](assets-git/191.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
