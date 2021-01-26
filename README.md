@@ -74,6 +74,8 @@
 
 [Pruebas en 08-import-export.js-Arreglos](#Pruebas-en-08-import-export.js-Arreglos)
 
+[Pruebas con tareas asincronas](#Pruebas-con-tareas-asincronas)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -4433,6 +4435,169 @@ describe('Pruebas en funciones de Heroes', () => {
 ```
 
 ![assets-git/191.png](assets-git/191.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Pruebas con tareas asincronas
+
+Para este capitulo hay que empezar a realizar modificaciones en **09-promesas.js** y queda de esta forma
+
+```
+import {getHeroeById} from './08-import-export';
+
+export const getHeroeByIdAsync = (id) => {
+    return new Promise((resolve, reject) => {
+
+        setTimeout(() => {
+            const personaje = getHeroeById(id);
+            if(personaje){
+            resolve(personaje)
+            }else{
+                reject('No se pudo encontrar al heroe')
+            }
+        }, 1500)
+    });    
+}
+```
+
+Ahora nos dirigimos a la carpeta **tests** y creamos el archivo **09-promesas.test.js** y creamos la estructura basica 
+
+```
+import '@testing-library/jest-dom';
+
+describe('Pruebas con promesar', () => {
+    
+    test('getHeroeByIdAsync debe de retornar un heroe async ', () => {
+        
+    })
+    
+})
+```
+
+Luego debemos realizar lña importación de `getHeroeByIdAsync`, creamos la constane que recibe un id y llamamos la funcion, pero aqui vamos a realizar algo que esta mal porque true nunca va a ser igual a false y aun asi la prueba pasa
+
+```
+import '@testing-library/jest-dom';
+import { getHeroeByIdAsync } from '../../base/09-promesas';
+
+describe('Pruebas con promesar', () => {
+    
+    test('getHeroeByIdAsync debe de retornar un heroe async ', () => {
+        
+        const id = 1;
+
+        getHeroeByIdAsync( id )
+        .then( heroe => {
+            
+            expect(true).toBe(false)
+        });
+    })
+    
+})
+
+```
+
+![assets-git/192.png](assets-git/192.png)
+
+Esto sucede porque la prueba se ejecuta de manera sincrona, linea por linea, pero realmente es como si no estuviera entrando a la promesa, es decir al `.then`, por esta razon se debe pasar al callback del test un argumnento llamado `done` e igualmente debajo del `expect` para indicar que hay debe terminar de leer el codigo, si hace de esta forma ahora vamos a obtener un error y asi sabemos que las pruebas ya estan dando el resultado que esperamos
+
+```
+import '@testing-library/jest-dom';
+import { getHeroeByIdAsync } from '../../base/09-promesas';
+
+describe('Pruebas con promesar', () => {
+    
+    test('getHeroeByIdAsync debe de retornar un heroe async ', (done) => {
+        
+        const id = 1;
+
+        getHeroeByIdAsync( id )
+        .then( heroe => {
+            
+            expect(true).toBe(false)
+            done();
+        });
+    })
+    
+})
+
+```
+
+![assets-git/193.png](assets-git/193.png)
+
+Ahora si ya podemos ejecutar la prueba de manera correcta para esto debemos importa a `heroes` se espera el heroe con id igual a 1 y a los heroes en la posicion 0 del arreglo
+
+```
+import '@testing-library/jest-dom';
+import { getHeroeByIdAsync } from '../../base/09-promesas';
+import heroes from '../../data/heroes';
+
+describe('Pruebas con promesar', () => {
+    
+    test('getHeroeByIdAsync debe de retornar un heroe async ', (done) => {
+        
+        const id = 1;
+
+        getHeroeByIdAsync( id )
+        .then( heroe => {
+            
+            expect(heroe).toBe(heroes[0])
+            done();
+        });
+    })
+    
+})
+
+```
+
+En este caso la prueba pasa 
+
+![assets-git/194.png](assets-git/194.png)
+
+Si colocaramos a heroes en la posicion 1 la prueba va a fallar.
+
+![assets-git/195.png](assets-git/195.png)
+
+Ahora se hace la prueba para capturar el error en caso de que el heroe no exista y el mensaje que deberia enviar como se ve en el archivo **09-promesas.js** es `"No se puede encontra el heroe"` en este caso se debe realizar lo mismo que el paso anterior utilizando tambien al argumento done
+
+```
+import '@testing-library/jest-dom';
+import { getHeroeByIdAsync } from '../../base/09-promesas';
+import heroes from '../../data/heroes';
+
+describe('Pruebas con promesar', () => {
+    
+    test('getHeroeByIdAsync debe de retornar un heroe async ', (done) => {
+        
+        const id = 1;
+
+        getHeroeByIdAsync( id )
+        .then( heroe => {
+            
+            expect(heroe).toBe(heroes[0])
+            done();
+        });
+    })
+    
+    test('dede de obtener un error si el heroe por id no existe', (done) => {
+        
+        const id = 9;
+
+        getHeroeByIdAsync( id )
+        .catch( heroe => {
+            
+            expect(heroe).toBe("No se pudo encontrar al heroe")
+            done();
+        });
+    })
+    
+})
+
+```
+
+![assets-git/196.png](assets-git/196.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
