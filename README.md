@@ -86,6 +86,8 @@
 
 [Pruebas básicas del CounterApp](#Pruebas-básicas-del-CounterApp)
 
+[Simular eventos Click](#Simular-eventos-Click)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -5154,6 +5156,169 @@ describe('Pruebas en <CounterApp />', () => {
 Las pruebas deben pasar satisfactoriamente, verificar el archivo que se genere en la carpeta **__snapshots__**
 
 ![assets-git/211.png](assets-git/211.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Simular eventos Click
+
+Dentro de **CounterApp.test.js** se va a crear la prueba de que al dar un click sobre el boton `+1` este aumente y se crea el nuevo test
+
+```
+import '@testing-library/jest-dom';
+import { shallow } from 'enzyme';
+import CounterApp from '../CounterApp';
+
+describe('Pruebas en <CounterApp />', () => {
+
+
+    test('Debe de mostrar `<CounterApp />` correctamente (hacer match con un snapshot) y sus valores por defecto', () => {
+        
+        const wrapper = shallow( <CounterApp /> );
+
+        expect( wrapper).toMatchSnapshot();
+    })
+
+    test('Debe de mostrar el valor por defecto de 100', () => {
+    
+        const counter = '100'
+        const wrapper = shallow( 
+        <CounterApp 
+        /> );
+
+        const textoParrafo = wrapper.find('p').text()
+        // console.log(textoParrafo); 
+
+        expect( textoParrafo ).toBe( counter );
+    })
+
+    test('debe de incrementar con el boton +1', () => {
+        
+    })
+    
+})
+
+```
+
+la constante wrapper se puede elevar a un nivel mas alto para que sea reutilizada en las funciones por tanto se cambia y luego se hace la busqueda del boton para esto se puede hacer una referencia crear una constante que se llame `btn1 = wrapper.find('button')` ahora con `.at(0)` se hace referencia al primer boton y con `.simulate('click')` para que cuando se haga un click el numero aumente
+
+```
+import '@testing-library/jest-dom';
+import { shallow } from 'enzyme';
+import CounterApp from '../CounterApp';
+
+describe('Pruebas en <CounterApp />', () => {
+
+    const wrapper = shallow( <CounterApp /> );
+
+    test('Debe de mostrar `<CounterApp />` correctamente (hacer match con un snapshot) y sus valores por defecto', () => {
+
+        expect( wrapper).toMatchSnapshot();
+    })
+
+    test('Debe de mostrar el valor por defecto de 100', () => {
+    
+        const counter = '100'
+
+        const textoParrafo = wrapper.find('p').text()
+        // console.log(textoParrafo); 
+
+        expect( textoParrafo ).toBe( counter );
+    })
+
+    test('debe de incrementar con el boton +1', () => {
+        const btn1= wrapper.find('button').at(0).simulate('click');
+        console.log(btn1.html());
+    })
+    
+})
+
+```
+
+Luego de hacer el console.log verificamos la referencia del boton que es la constante y añadimos el `.html()` para ver que sea el boton que estamos buscando
+
+![assets-git/212.png](assets-git/212.png)
+
+despues se quita la referencia de `btn1` y se deja la funcion para que haga la busqueda del elemento donde se renderiza el aumento del numero y se busca el siguiente que tiene que renderizar, recordando que 100 es el numero por defecto por tanto el siguiente sera 101
+
+```
+import '@testing-library/jest-dom';
+import { shallow } from 'enzyme';
+import CounterApp from '../CounterApp';
+
+describe('Pruebas en <CounterApp />', () => {
+
+    const wrapper = shallow( <CounterApp /> );
+
+    test('Debe de mostrar `<CounterApp />` correctamente (hacer match con un snapshot) y sus valores por defecto', () => {
+
+        expect( wrapper).toMatchSnapshot();
+    })
+
+    test('Debe de mostrar el valor por defecto de 100', () => {
+    
+        const counter = '100'
+
+        const textoParrafo = wrapper.find('p').text()
+        // console.log(textoParrafo); 
+
+        expect( textoParrafo ).toBe( counter );
+    })
+
+    test('debe de incrementar con el boton +1', () => {
+        wrapper.find('button').at(0).simulate('click');
+        const textoParrafo = wrapper.find('p').text()
+        expect(textoParrafo).toBe('101');
+    })
+    
+})
+
+```
+
+![assets-git/213.png](assets-git/213.png)
+
+Ahora se puede hacer la prueba del boton -1, pero es clave e importante saber que la simulacion de la prueba ya hizo un primer click que aumento el numero a 101, por tanto el siguiente bloque de codigo si se quiere evaluar que disminuya se debe tener en cuenta el aumento y por tanto debe renderizar en el caso que haga en click al boton -1 que debe devolver el numero 100
+
+```
+import '@testing-library/jest-dom';
+import { shallow } from 'enzyme';
+import CounterApp from '../CounterApp';
+
+describe('Pruebas en <CounterApp />', () => {
+
+    const wrapper = shallow( <CounterApp /> );
+
+    test('Debe de mostrar `<CounterApp />` correctamente (hacer match con un snapshot) y sus valores por defecto', () => {
+
+        expect( wrapper).toMatchSnapshot();
+    })
+
+    test('Debe de mostrar el valor por defecto de 100', () => {
+    
+        const counter = '100'
+
+        const textoParrafo = wrapper.find('p').text()
+        // console.log(textoParrafo); 
+
+        expect( textoParrafo ).toBe( counter );
+    })
+
+    test('debe de incrementar con el boton +1', () => {
+        wrapper.find('button').at(0).simulate('click');
+        const textoParrafo = wrapper.find('p').text()
+        expect(textoParrafo).toBe('101');
+    })
+
+    test('debe de disminuir con el boton -1', () => {
+        wrapper.find('button').at(2).simulate('click');
+        const textoParrafo = wrapper.find('p').text()
+        expect(textoParrafo).toBe('100');
+    })
+    
+})
+
+```
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
