@@ -92,6 +92,42 @@
 
 [GifExpertApp-Component](#GifExpertApp-Component)
 
+[Creando una lista de categorias](#Creando-una-lista-de-categorias)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -5419,6 +5455,189 @@ Y a continuación se de dejan 2 enlaces para leer sobre como es la estructura de
 [Estructura, nombre de folders y componentes en React](https://hackernoon.com/structuring-projects-and-naming-components-in-react-1261b6e18d76)
 
 
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Creando una lista de categorias
+
+Dentro del componente `GifExpertApp` vamos a crear una constante que se llame categories y esta va a tener una lista de serie de anime dentro de un arreglo
+
+```
+import React from 'react'
+
+const GiffExpertApp = () => {
+
+    const categories = ['One Punch', 'Samuari X', 'Dragon Ball'];
+    return (
+        <div>
+            <h2>GifExpertApp</h2>
+            <hr/>
+        </div>
+    )
+}
+
+export default GiffExpertApp
+
+```
+
+Si quisiera renderizar estas categorias, existen varias formas de hacerlo, primero se haran de forma incorrecta para ir viendo como se comporta la aplicación y los cambios que se van a ir realizando
+
+en el componente despues de la etiqueta `<hr>` entre corchetes se llama a la constante {categories},
+
+pero este no seria un resultado esperado
+
+![assets-git/218.png](assets-git/218.png)
+
+Entonces se podria pensar en una etiqueta `<ol>` para mostrar de manera ordenada la lista y luego agregar etiquetas `<li>` llamando a cada elemento por posicion de esta forma
+
+![assets-git/219.png](assets-git/219.png)
+
+pero esto tampoco esta bien, existe otra forma de retornar estos elementos de una forma mas dinamica utilizando la funcion map, para esto entre llaves se debe llamar a la constante que contiene el arreglo y utilizar map, esta recibe 2 elementos, el primero hace referencia a los elementos que contiene el arreglo y el segundo a su indice.
+
+Para utilizar esta funcion es necesario que se establezca una llave que es el `key` usualmente se comente el error de acceder al indice del elemento que en este caso se llamo como idx y este trae la posicion de cada uno, el `key` debe ser utilizado para traer al elemento que trae el arreglo directamente, aqui un ejemplo de como se ve
+
+```
+import React from 'react'
+
+const GiffExpertApp = () => {
+
+    const categories = ['One Punch', 'Samuari X', 'Dragon Ball'];
+    return (
+        <div>
+            <h2>GifExpertApp</h2>
+            <hr/>
+
+            <ol>
+                {
+                    categories.map( (category, idx) => {
+                        return <li key={idx}>{idx} - {category} </li>
+                    })
+                }
+            </ol>
+        </div>
+    )
+}
+
+export default GiffExpertApp
+
+```
+
+![assets-git/220.png](assets-git/220.png)
+
+Pero ahora se modifica a como deberia quedar , en este caso no se requiere el indice por tanto se borra del argumento que se llamaba en la funcion map y se retornan los elementos a traves de la categoria
+
+```
+import React from 'react'
+
+const GiffExpertApp = () => {
+
+    const categories = ['One Punch', 'Samuari X', 'Dragon Ball'];
+    return (
+        <div>
+            <h2>GifExpertApp</h2>
+            <hr/>
+
+            <ol>
+                {
+                    categories.map( (category) => {
+                        return <li key={category}>{category} </li>
+                    })
+                }
+            </ol>
+        </div>
+    )
+}
+
+export default GiffExpertApp
+
+```
+
+![assets-git/221.png](assets-git/221.png)
+
+Ahora crear la constante `categories` tambien esta mal porque se esta unando como constante y si se quisieran agregar mas elementos no se podria realizar, aqui es cuando se empieza a hacer uso de los Hooks, empezando por el useState, en el cual el estado puede contener el mismo arreglo que tenia `categories` con la diferencia que ahora hay un modificador que se llama `setCategories`
+
+**Nota:** Recordar que para hacer uso del Hook se debe importar de React
+
+```
+import React, { useState } from 'react'
+
+const GiffExpertApp = () => {
+
+    // const categories = ['One Punch', 'Samuari X', 'Dragon Ball'];
+
+    const [categories, setCategories] = useState(['One Punch', 'Samuari X', 'Dragon Ball'])
+    return (
+        <div>
+            <h2>GifExpertApp</h2>
+            <hr/>
+
+            <ol>
+                {
+                    categories.map( (category) => {
+                        return <li key={category}>{category} </li>
+                    })
+                }
+            </ol>
+        </div>
+    )
+}
+
+export default GiffExpertApp
+
+```
+
+![assets-git/222.png](assets-git/222.png)
+
+Ahora vamos a agregar una etiqueta boton que tenga el nombre Agregar y la funcionalidad sea empujar mas datos a la lista que se esta retornando de anime para eso se crea la funcion `handleAdd()`, pero antes de hacerlo si se abre la consola y se va a la pestaña **Components** vemos que ya se esta guardando un estado en el componente
+
+![assets-git/223.png](assets-git/223.png)
+
+Cuando creamos la función `handleAdd()`, lo primero que se debe de tener en cuenta es que vamos a hacer uso del modificador de estado el cual se llama `setCategories`, este lo debemos llamar dentro de la funcion `handleAdd()` y fijar que el estado es un arreglo, su caracteristica para ser un arreglo es que los elementos estan contenidos dentro de estos parentesis cuadrados `[]`, de esta misma forma se debe modificar el estado, donde tambien se debe llamar un arreglo `[]` y utilizando el operador spread que son los `...` hacemos una copia de categories y despues de este se añade el nuevo elemento que es `HunterXHunter`, esto es una prueba por lo que si se quiere agregar multiples veces `HunterXHunter` se puede hacer aunque tambien esta mal porque no debe existir duplicidad de elementos.
+
+```
+import React, { useState } from 'react'
+
+const GiffExpertApp = () => {
+
+    // const categories = ['One Punch', 'Samuari X', 'Dragon Ball'];
+
+    const [categories, setCategories] = useState(['One Punch', 'Samuari X', 'Dragon Ball'])
+
+    const handleAdd = () => {
+        setcategories(
+            [...categories, 'HunterXHunter']
+        )
+    }
+
+    return (
+        <div>
+            <h2>GifExpertApp</h2>
+            <hr/>
+
+            <button onClick={handleAdd}>Agregar</button>
+
+            <ol>
+                {
+                    categories.map( (category) => {
+                        return <li key={category}>{category} </li>
+                    })
+                }
+            </ol>
+        </div>
+    )
+}
+
+export default GiffExpertApp
+
+```
+
+![assets-git/224.png](assets-git/224.png)
+
+tambien se puede verificar que el estado se este modificando, para eso nuevamente se abre la pestaña components.
+
+![assets-git/225.png](assets-git/225.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
