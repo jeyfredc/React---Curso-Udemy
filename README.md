@@ -90,6 +90,8 @@
 
 [Proyecto-GifExpertApp](#Proyecto-GifExpertApp)
 
+[GifExpertApp-Component](#GifExpertApp-Component)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -5339,6 +5341,83 @@ Abrir el enlace de [Giphy API](https://developers.giphy.com/) y crear un API key
 Despues de hacer la instalación de la aplicacion moverse a la nueva carpeta creada **04-gif-expert-app** ejecutar `code .` para abrir el proyecto en vsCode y ejecutar `npm start` o `yarn start`
 
 ![assets-git/216.png](assets-git/216.png)
+
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## GifExpertApp-Component
+
+Despues de haber lanzado la aplicación podemos empezar a borrar algunos archivos que no se requieren para el proyecto como **App.css**, **App.js**, **App.test.js**, **logo.svg**, **reportWebVitals.js**, despues abrimos **index.css** y limpiamos todo el archivo es decir lo dejamos vacio y guardamos los cambios y **index.js**, lo dejamos con la siguiente estructura porque tambien se modifica el archivo
+
+```
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import './index.css';
+
+ReactDOM.render(
+    <App />,
+  document.getElementById('root')
+);
+
+```
+
+Ahora dentro de la carpeta **src** creamos un componente el cual se va a llamar **GifExpertApp.js** que inicia con la siguiente estructura
+
+```
+import React from 'react'
+
+const GiffExpertApp = () => {
+    return (
+        <div>
+            <h2>GifExpertApp</h2>
+            <hr/>
+        </div>
+    )
+}
+
+export default GiffExpertApp
+```
+
+Regresamos a **index.js** y hacemos la importación para renderizar el componente en el navegador
+
+```
+import React from 'react';
+import ReactDOM from 'react-dom';
+import GiffExpertApp from './GiffExpertApp';
+
+import './index.css';
+
+ReactDOM.render(
+    <GiffExpertApp />,
+  document.getElementById('root')
+);
+
+```
+
+Y se crea una pequeña modificación en **index.css** para estilizar la forma en como se va a ver el componente
+
+```
+* {
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+body{
+  padding: 60px;
+}
+
+```
+
+![assets-git/217.png](assets-git/217.png)
+
+Y a continuación se de dejan 2 enlaces para leer sobre como es la estructura de archivos en React
+
+[Estructura de directorios](https://es.reactjs.org/docs/faq-structure.html)
+
+[Estructura, nombre de folders y componentes en React](https://hackernoon.com/structuring-projects-and-naming-components-in-react-1261b6e18d76)
+
 
 
 <div align="right">
