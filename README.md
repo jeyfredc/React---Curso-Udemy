@@ -82,6 +82,8 @@
 
 [Enzyme-Testing unit](#Enzyme-Testing-unit)
 
+[Revisar elementos dentro del componente](#Revisar-elementos-dentro-del-componente)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -4940,6 +4942,148 @@ como fue una actualizacion del documento en la terminal debemos oprimir la tecla
 Despues de realizar esto nuevamente podemos abrir la carpeta **__snapshots__** y verificar el archivo **PrimeraApp.test.js.snap** ya que alli es donde se actualiza la fotografia del componente notando que ahora tambien aparecen los signos de admiración que se actualizaron sobre `PrimeraApp`
 
 ![assets-git/208.png](assets-git/208.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Revisar elementos dentro del componente
+
+Ahora vamos a realizar la comprobación del subtitulo que se encuentra en el componente `PrimeraApp`, nuevamente, abrit **PrimeraApp.tes.js** y agregar el test despues del que se realizo en el capitulo anterior.
+
+En este se va crear una constante llamada subTitulo, y se pasa como props, se estaba cargando anteriormente porque el subtitulo se coloco por Default, pero en este caso se va a hacer una validación de ese prop
+
+```
+import '@testing-library/jest-dom';
+import { shallow } from 'enzyme';
+import PrimeraApp from '../PrimeraApp';
+
+describe('Pruebas en <PrimeraApp />', () => {
+
+    // test('Debe de mostrar el mensaje "Hola, Soy Iron Man"', () => {
+    //     const saludo = 'Hola, Soy Iron Man';
+    //     const { getByText} = render( <PrimeraApp saludo={ saludo } /> );
+    //     expect( getByText(saludo)).toBeInTheDocument();
+    // })
+    test('debe de mostrar el componenet <PrimeraApp /> correctamente', () => {
+        
+        const saludo = 'Hola, Soy Iron Man';
+        const wrapper = shallow( <PrimeraApp saludo={ saludo } /> );
+
+        expect( wrapper).toMatchSnapshot();
+    })
+
+    test('debe de mostrar el subtitulo enviado por props', () => {
+        
+        const saludo = 'Hola, Soy Iron Man';
+        const subTitulo = 'Soy un subtitulo'
+        const wrapper = shallow( 
+        <PrimeraApp 
+        saludo={ saludo } 
+        subtitulo={ subTitulo }
+        /> );
+    })
+    
+    
+    
+})
+
+```
+
+hasta aqui, despues de agregar el codigo los test deben estar corriendo correctamente pero aun no se esta haciendo la validación del subtitulo.
+
+El prop del subtitulo en el archivo **PrimeraApp.js** esta dentro de una etiqueta `<p>`, la constante wrapper tiene toda la información del html por lo que se podria ademas crear una constate que se llame textoParrafo y hacerla igual al wrapper, con el metodo .find dependiendo que se quiera buscar se coloca `'p'` para buscar un elemento html, en este caso la p es porque es etiqueta de parrafo, si fuera un titulo seria `'h1'`, `'.algo'` para buscar una clase, `'#algo'` para buscar el id de un elemento y ademas se añade la propiedad `.text()` para revisar que tiene esa etiqueta. Despues se hace un console.log de la constante para ver que esta trayendo en la consola
+
+```
+import '@testing-library/jest-dom';
+import { shallow } from 'enzyme';
+import PrimeraApp from '../PrimeraApp';
+
+describe('Pruebas en <PrimeraApp />', () => {
+
+    // test('Debe de mostrar el mensaje "Hola, Soy Iron Man"', () => {
+    //     const saludo = 'Hola, Soy Iron Man';
+    //     const { getByText} = render( <PrimeraApp saludo={ saludo } /> );
+    //     expect( getByText(saludo)).toBeInTheDocument();
+    // })
+    test('debe de mostrar el componenet <PrimeraApp /> correctamente', () => {
+        
+        const saludo = 'Hola, Soy Iron Man';
+        const wrapper = shallow( <PrimeraApp saludo={ saludo } /> );
+
+        expect( wrapper).toMatchSnapshot();
+    })
+
+    test('debe de mostrar el subtitulo enviado por props', () => {
+        
+        const saludo = 'Hola, Soy Iron Man';
+        const subTitulo = 'Soy un subtitulo'
+        const wrapper = shallow( 
+        <PrimeraApp 
+        saludo={ saludo } 
+        subtitulo={ subTitulo }
+        /> );
+
+        const textoParrafo = wrapper.find('p').text();
+        console.log(textoParrafo); 
+    })
+    
+    
+    
+})
+
+```
+
+Como se puede observar en la terminar se imprime Soy un subtitulo, lo cual significa que se esta haciendo la busqueda del elemento correctamente
+
+![assets-git/209.png](assets-git/209.png)
+
+De esta forma podemos quitar el `console.log` y hacer el `expect` de que textoParrafo sea igual a subTitulo
+
+```
+import '@testing-library/jest-dom';
+import { shallow } from 'enzyme';
+import PrimeraApp from '../PrimeraApp';
+
+describe('Pruebas en <PrimeraApp />', () => {
+
+    // test('Debe de mostrar el mensaje "Hola, Soy Iron Man"', () => {
+    //     const saludo = 'Hola, Soy Iron Man';
+    //     const { getByText} = render( <PrimeraApp saludo={ saludo } /> );
+    //     expect( getByText(saludo)).toBeInTheDocument();
+    // })
+    test('debe de mostrar el componenet <PrimeraApp /> correctamente', () => {
+        
+        const saludo = 'Hola, Soy Iron Man';
+        const wrapper = shallow( <PrimeraApp saludo={ saludo } /> );
+
+        expect( wrapper).toMatchSnapshot();
+    })
+
+    test('debe de mostrar el subtitulo enviado por props', () => {
+        
+        const saludo = 'Hola, Soy Iron Man';
+        const subTitulo = 'Soy un subtitulo'
+        const wrapper = shallow( 
+        <PrimeraApp 
+        saludo={ saludo } 
+        subtitulo={ subTitulo }
+        /> );
+
+        const textoParrafo = wrapper.find('p').text();
+        // console.log(textoParrafo); 
+
+        expect( textoParrafo ).toBe( subTitulo );
+    })
+    
+    
+    
+})
+
+```
+
+![assets-git/210.png](assets-git/210.png)
+
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
