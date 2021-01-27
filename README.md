@@ -94,7 +94,7 @@
 
 [Creando una lista de categorias](#Creando-una-lista-de-categorias)
 
-[](#)
+[Componente AddCategory](#Componente-AddCategory)
 
 [](#)
 
@@ -5638,6 +5638,282 @@ export default GiffExpertApp
 tambien se puede verificar que el estado se este modificando, para eso nuevamente se abre la pestaña components.
 
 ![assets-git/225.png](assets-git/225.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Componente AddCategory
+
+Ahora se va a crear un nuevo componente, el cual se va a encargar de tener una caja de texto y que al presionar enter agregue una categoria mas a la lista de categorias.
+
+Dentro de la carpeta **src** crear una carpeta que se llame **components** y dentro de esta crear el componente **Addcategory.js** con el snipet **rafce** en vsCode, podemos obtener una estructura basica para empezar a adaptar el componente como queremos
+
+```
+import React from 'react'
+
+const AddCategory = () => {
+    return (
+        <div>
+            
+        </div>
+    )
+}
+
+export default AddCategory
+
+```
+
+y ahora lo modificamos con algo basico, quitamos los `<div>` para tener un Fragment por defecto y añadimos una etiqueta `<h2>Add Category</h2>`
+
+```
+import React from 'react'
+
+const AddCategory = () => {
+    return (
+        <>
+          <h2>Add Category</h2>  
+        </>
+    )
+}
+
+export default AddCategory
+
+```
+
+Ahora regresamos al componente `GiffExpert` y realizamos unas modificaciones e importamos al componente `AddCategory` despues de la etiqueta `<h2>`
+
+```
+import React, { useState } from 'react'
+import AddCategory from './components/AddCategory'
+
+const GiffExpertApp = () => {
+
+    const [categories, setcategories] = useState(['One Punch', 'Samuari X', 'Dragon Ball'])
+
+    // const handleAdd = () => {
+    //     setcategories(
+    //         [...categories, 'HunterXHunter']
+    //     )
+    // }
+
+    return (
+        <>
+            <h2>GifExpertApp</h2>
+            <AddCategory />
+            <hr/>
+
+            <ol>
+                {
+                    categories.map( (category) => {
+                        return <li key={category}>{category} </li>
+                    })
+                }
+            </ol>
+        </>
+    )
+}
+
+export default GiffExpertApp
+```
+
+y ahora verificamos que el componente este renderizando correctamente0
+
+![assets-git/226.png](assets-git/226.png)
+
+Nuevamente nos dirigimos al componente `AddCategory` y alli añadimos un `<input />` para obtener una caja de texto 
+
+```
+import React from 'react'
+
+const AddCategory = () => {
+    return (
+        <>
+          <h2>Add Category</h2>  
+          <input />
+        </>
+    )
+}
+
+export default AddCategory
+
+```
+
+y ahora modificamos **index.css** para dar estilo al input
+
+```
+* {
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+body {
+  padding: 60px;
+}
+
+input {
+  color: grey;
+  font-size: 1.2rem;
+  width: 100%;
+}
+```
+
+Verificamos nuevamente, y escribimos cualquier cosa para ver que al escribir algo se escriba en color gris, la letra y el input tengan el tamaño adecuado.
+
+![assets-git/228.png](assets-git/228.png)
+
+Nuevamente regresamos al componente `AddCategory` y empezamos a añadir atributos.
+
+El primero es el `type="text` que es lo que recibe el input.
+
+Luego creamos un estado, el cual inicialmente lo traemos con un `'Hola Mundo'`
+
+```
+import React, { useState } from 'react'
+
+const AddCategory = () => {
+
+    const [inputValue, setInputValue] = useState('Hola Mundo')
+    
+    return (
+        <>
+          <h2>Add Category</h2>  
+          <input 
+          type="text"
+          />
+        </>
+    )
+}
+
+export default AddCategory
+
+```
+
+Despues lo establecemos como un valor por defecto agregando el atributo value a la etiqueta `<input>` y llamando al estado con las llaves `{ inputValue }`
+
+```
+import React, { useState } from 'react'
+
+const AddCategory = () => {
+
+    const [inputValue, setInputValue] = useState('Hola Mundo')
+
+    return (
+        <>
+          <h2>Add Category</h2>  
+          <input 
+          type="text"
+          value={ inputValue }
+          />
+        </>
+    )
+}
+
+export default AddCategory
+
+```
+
+Si verificamos el navegador, ya tendremos el valor por defecto, pero si intentamos, borrar o modificar ese valor en el campo de texto, no se va a poder realizar, ademas tambien verificamos que el estado del componente es Hola Mundo
+
+![assets-git/227.png](assets-git/227.png)
+
+Para poder modificar el estado tenemos que hacer uso del atributo `onChange` y en este llamar una funcion que modifique el estado, asi que creamos la funcion handleInputChange a la cual le pasamos un evento y con el modificador utilizamos el evento accediendo al modificador de esta forma `e.target.value`.
+
+Este `e` o `event` se debe llamar de la misma forma, si en el callback de la funcion coloco `(event)` las propiedades se deben llamar de la misma forma `event.target.value`
+
+```
+import React, { useState } from 'react'
+
+const AddCategory = () => {
+
+    const [inputValue, setInputValue] = useState('Hola Mundo')
+
+    const handleInputChange = ( e ) => {
+        setInputValue( e.target.value ); 
+    }
+
+    return (
+        <>
+          <h2>Add Category</h2>  
+          <input 
+          type="text"
+          value={ inputValue }
+          onChange={ handleInputChange }
+          />
+        </>
+    )
+}
+
+export default AddCategory
+```
+
+En este caso ya se puede modificar el campo del texto y tambien se obtiene el cambio de estado
+
+![assets-git/229.png](assets-git/229.png)
+
+Ahora lo que se quiere es que se inserte el texto que coloquemos en el campo, para esto se puede crear una etiqueta `<form>` que va a contener al `<input>`, si se maneja de esta forma y el form agrupa a la etiqueta ya no es necesario el Fragment por defecto que se establece, asi que se quiere quitar de alli se puede hacer
+
+```
+import React, { useState } from 'react'
+
+const AddCategory = () => {
+
+    const [inputValue, setInputValue] = useState('Hola Mundo')
+
+    const handleInputChange = ( e ) => {
+        setInputValue( e.target.value ); 
+    }
+
+    return (
+        <form>
+          <h2>Add Category</h2>  
+          <input 
+          type="text"
+          value={ inputValue }
+          onChange={ handleInputChange }
+          />
+        </form>
+    )
+}
+
+export default AddCategory
+
+```
+Si prueban el navegador nuevamente al dar un enter despues de haber escrito algo en el campo de texto se recarga la pagina y esto no es algo que actualmente se use, por tanto se puede agregar a la etiqueta `<form>` el atributo `onSubmit` y crear una funcion llamada `handleSubmit` que tambien recibe un evento en su callback y para evitar que se recargue la pagina utilizamos `e.preventDefault()`, luego de esto podemos hacer un `console.log()` y escribir algo dentro de este para que cada vez que hagamos un enter, verifiquemos que se obtiene cada enter que hagamos sin recargar la pagina
+
+```
+import React, { useState } from 'react'
+
+const AddCategory = () => {
+
+    const [inputValue, setInputValue] = useState('Hola Mundo')
+
+    const handleInputChange = ( e ) => {
+        setInputValue( e.target.value ); 
+    }
+
+    const handleSubmit = ( e ) => {
+        e.preventDefault();
+
+        console.log('Submit hecho')
+    }
+
+    return (
+        <form onSubmit={ handleSubmit }>
+          <h2>Add Category</h2>  
+          <input 
+          type="text"
+          value={ inputValue }
+          onChange={ handleInputChange }
+          />
+        </form>
+    )
+}
+
+export default AddCategory
+```
+
+![assets-git/230.png](assets-git/230.png)
+
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
