@@ -88,6 +88,8 @@
 
 [Simular eventos Click](#Simular-eventos-Click)
 
+[Proyecto-GifExpertApp](#Proyecto-GifExpertApp)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -5319,6 +5321,25 @@ describe('Pruebas en <CounterApp />', () => {
 })
 
 ```
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Proyecto-GifExpertApp
+
+La seccion de pruebas termino en el capitulo anterior y ahora se va a crear una aplicación que va a tener efectos de animación, busqueda y uso de Custom Hooks para hacer peticiciones a [Giphy API](https://developers.giphy.com/).
+
+Por tanto abrir la terminal, alli abrir la ubicacion de donde se esten guardando los proyectos y ahora ejecutar `npx create-react-app 04-gif-expert-app`
+
+![assets-git/215.png](assets-git/215.png)
+
+Abrir el enlace de [Giphy API](https://developers.giphy.com/) y crear un API key si no se ha hecho, en caso de que no se haya creado esta, revisar los pasos para hacerlo en el capitulo de [FETCH API](https://github.com/jeyfredc/React---Curso-Udemy#Fetch-API)
+
+Despues de hacer la instalación de la aplicacion moverse a la nueva carpeta creada **04-gif-expert-app** ejecutar `code .` para abrir el proyecto en vsCode y ejecutar `npm start` o `yarn start`
+
+![assets-git/216.png](assets-git/216.png)
+
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
