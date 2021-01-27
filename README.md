@@ -84,6 +84,8 @@
 
 [Revisar elementos dentro del componente](#Revisar-elementos-dentro-del-componente)
 
+[Pruebas básicas del CounterApp](#Pruebas-básicas-del-CounterApp)
+
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
@@ -5084,6 +5086,74 @@ describe('Pruebas en <PrimeraApp />', () => {
 
 ![assets-git/210.png](assets-git/210.png)
 
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Pruebas básicas del CounterApp
+
+### Tarea
+
+1. Crear las siguientes pruebas para el `<CounterApp />`
+    
+    - Debe de mostrar `<CounterApp />` correctamenter (hacer match con un snapshot) y sus valores por defecto
+
+    - Debe de mostrar el valor por defecto de 100
+    
+    - Usar el `wrapper.find`, tomando el elemento html donde se muestra el valor del contador
+
+Lo primero que se debe hacer es pasar a **index.js**, para que nuevamente renderice al componente  `CounterApp`
+
+```
+import React from 'react';
+import ReactDom from 'react-dom';
+// import PrimeraApp from './PrimeraApp';
+import CounterApp from './CounterApp'
+
+
+const divRoot = document.querySelector('#root');
+
+ReactDom.render( <CounterApp /> , divRoot );
+// ReactDom.render( <PrimeraApp /> , divRoot );
+
+```
+
+Despues se debe crear el archivo en la carpeta **tests** nombrarlo como el original añadiendo `.test` es decir **CounterApp.test.js** y dentro de este se importan y se validan cado de los elementos pedidos
+
+```
+import '@testing-library/jest-dom';
+import { shallow } from 'enzyme';
+import CounterApp from '../CounterApp';
+
+describe('Pruebas en <CounterApp />', () => {
+
+
+    test('Debe de mostrar `<CounterApp />` correctamente (hacer match con un snapshot) y sus valores por defecto', () => {
+        
+        const wrapper = shallow( <CounterApp /> );
+
+        expect( wrapper).toMatchSnapshot();
+    })
+
+    test('Debe de mostrar el valor por defecto de 100', () => {
+    
+        const counter = '100'
+        const wrapper = shallow( 
+        <CounterApp 
+        /> );
+
+        const textoParrafo = wrapper.find('p').text()
+        // console.log(textoParrafo); 
+
+        expect( textoParrafo ).toBe( counter );
+    })
+})
+```
+
+Las pruebas deben pasar satisfactoriamente, verificar el archivo que se genere en la carpeta **__snapshots__**
+
+![assets-git/211.png](assets-git/211.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>

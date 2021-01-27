@@ -4,11 +4,11 @@ import React, {useState} from 'react';
 import PropTypes from 'prop-types';
 
 //Functional Components
-const CounterApp = ({ value }) => {
+const CounterApp = ({ value = 100 }) => {
 
     const [counter, setCounter] = useState(value)
 
-    console.log(counter);
+    // console.log(counter);
     // handleAdd
     const handleAdd = (e) => {
         setCounter( counter + 1)
