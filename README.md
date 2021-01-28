@@ -96,7 +96,7 @@
 
 [Componente AddCategory](#Componente-AddCategory)
 
-[](#)
+[Comunicación entre componentes](#Comunicación-entre-componentes)
 
 [](#)
 
@@ -5914,6 +5914,200 @@ export default AddCategory
 
 ![assets-git/230.png](assets-git/230.png)
 
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Comunicación entre componentes
+
+La instrucción para que se añada un elemento nuevo a la lista de series que tenemos es con setCategores donde se encuentra el componente `GifExpertApp`, pero lo que se quiere hacer es que al presionar enter sobre el campo de texto se añadan mas datos a la lista por tanto hay que hacer uso de este modificador y se tiene que mandar como un prop a `AddCategory`.
+
+```
+import React, { useState } from 'react'
+import AddCategory from './components/AddCategory'
+
+const GiffExpertApp = () => {
+
+    const [categories, setCategories] = useState(['One Punch', 'Samuari X', 'Dragon Ball'])
+
+    // const handleAdd = () => {
+    //     setcategories(
+    //         [...categories, 'HunterXHunter']
+    //     )
+    // }
+
+    return (
+        <>
+            <h2>GifExpertApp</h2>
+            <AddCategory setCategories={setCategories} />
+            <hr/>
+
+            <ol>
+                {
+                    categories.map( (category) => {
+                        return <li key={category}>{category} </li>
+                    })
+                }
+            </ol>
+        </>
+    )
+}
+
+export default GiffExpertApp
+
+```
+
+Si nos vamos a la pestaña **components** del navegador vemos que en los props ya se esta recibiendo a `setCategories`
+
+![assets-git/231.png](assets-git/231.png)
+
+A continuación lo que hay que hacer es ir al componente `AddCategory` y alli recibir el prop `setCategories` desestructurado, razon por la cual viene de esta forma `{setCategories}` y llamarlo tambien en la funcion `handleSubmit` que es la que esta realizando la función de enviar los datos del formulario al hacer submit.
+
+Para tener acceso al estado anterior se debe definir un call back en la funcion que haga una copia del estado anterior y luego mandar como argumento a `inputValue` para que tome la referencia del valor y se pueda cambiar 
+
+```
+    const handleSubmit = ( e ) => {
+        e.preventDefault();
+        setCategories( categ => [...categ, inputValue]);
+        // console.log('Submit hecho')
+    }
+```
+
+```
+import React, { useState } from 'react'
+
+const AddCategory = ( {setCategories} ) => {
+
+    const [inputValue, setInputValue] = useState('Hola Mundo')
+
+    const handleInputChange = ( e ) => {
+        setInputValue( e.target.value ); 
+    }
+
+    const handleSubmit = ( e ) => {
+        e.preventDefault();
+        setCategories( categ => [...categ, inputValue]);
+        // console.log('Submit hecho')
+    }
+
+    return (
+        <form onSubmit={ handleSubmit }>
+          <h2>Add Category</h2>  
+          <input 
+          type="text"
+          value={ inputValue }
+          onChange={ handleInputChange }
+          />
+        </form>
+    )
+}
+
+export default AddCategory
+
+```
+
+Si nuevamente intentamos mandar algo a la lista de animes, ya vemos como recibe datos al presionar Enter
+
+![assets-git/232.png](assets-git/232.png)
+
+El error sale por duplicidad de datos, `Inuyasha` esta dos veces y ademas faltan hacer validaciones para que no se envie el dato vacio
+
+La funcion para insertar se puede meter dentro de una validación y es `inputValue.trim()` la instruccion trim sirve para quitar espacios en blanco `.lengt` para que detecte toda la cadena de carecteres es mayor que 2 entonces envie los datos y ademas dentro de esta el modificador del campo `setInputValue` se envia vacio, con esto se garantiza que al enviar un dato el campo se limpie o este vacio y listo para insertar otro campo
+
+```
+import React, { useState } from 'react'
+
+const AddCategory = ( {setCategories} ) => {
+
+    const [inputValue, setInputValue] = useState('Hola Mundo')
+
+    const handleInputChange = ( e ) => {
+        setInputValue( e.target.value ); 
+    }
+
+    const handleSubmit = ( e ) => {
+        e.preventDefault();
+
+        if( inputValue.trim().length >2){
+            setCategories( categ => [...categ, inputValue]);
+            setInputValue('')
+        }
+        // console.log('Submit hecho')
+    }
+
+    return (
+        <form onSubmit={ handleSubmit }>
+          <h2>Add Category</h2>  
+          <input 
+          type="text"
+          value={ inputValue }
+          onChange={ handleInputChange }
+          />
+        </form>
+    )
+}
+
+export default AddCategory
+
+```
+
+![assets-git/233.png](assets-git/233.png)
+
+Ahora si se intenta insertar un campo vacio o 2 letras no va a pasar nada, la consola no muestra un error pero tampoco deja insertar cadena de caracteres menores a 3
+
+Ahora se va a dejar obligatorio el propType para esto se debe hacer la importación de los `PropTypes` `import PropTypes from 'prop-types';` y como esta es una función se debe definir como una funcion, recordando que primero se llama el nombre del `componente.propTypes` y dentro de esta se hace referencia al prop y se declara como requerido
+
+```
+AddCategory.propTypes = {
+    setCategories: PropTypes.func.isRequired
+}
+```
+Por ultimo se cambia el estado `'Hola Mundo'` por un string vacio `''`.
+
+
+```
+import React, { useState } from 'react'
+import PropTypes from 'prop-types';
+
+const AddCategory = ( {setCategories} ) => {
+
+    const [inputValue, setInputValue] = useState('')
+
+    const handleInputChange = ( e ) => {
+        setInputValue( e.target.value ); 
+    }
+
+    const handleSubmit = ( e ) => {
+        e.preventDefault();
+
+        if( inputValue.trim().length >2){
+            setCategories( categ => [...categ, inputValue]);
+            setInputValue('')
+        }
+        // console.log('Submit hecho')
+    }
+
+    return (
+        <form onSubmit={ handleSubmit }>
+          <h2>Add Category</h2>  
+          <input 
+          type="text"
+          value={ inputValue }
+          onChange={ handleInputChange }
+          />
+        </form>
+    )
+}
+
+AddCategory.propTypes = {
+    setCategories: PropTypes.func.isRequired
+}
+
+export default AddCategory
+
+```
+
+![assets-git/234.png](assets-git/234.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
