@@ -98,7 +98,7 @@
 
 [Comunicación entre componentes](#Comunicación-entre-componentes)
 
-[](#)
+[Fetch API-Obtener las imagenes deseadas](#Fetch-API-Obtener-las-imagenes-deseadas)
 
 [](#)
 
@@ -6108,6 +6108,297 @@ export default AddCategory
 ```
 
 ![assets-git/234.png](assets-git/234.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Fetch API-Obtener las imagenes deseadas
+
+Ahora se va a crear un nuevo componente que cuando note que hay un nuevo elemento en la lista, realice la peticion y traiga las imagenes correspondientes a la categoria y se desplieguen en el navegador
+
+Se realiza una pequeña modificación en el componente `GifExpertApp` y dejar un solo estado en la categoria, en mi caso voy a dejar `'Bleach'`
+
+```
+import React, { useState } from 'react'
+import AddCategory from './components/AddCategory'
+
+const GiffExpertApp = () => {
+
+    const [categories, setCategories] = useState(['Bleach'])
+
+    return (
+        <>
+            <h2>GifExpertApp</h2>
+            <AddCategory setCategories={setCategories} />
+            <hr/>
+
+            <ol>
+                {
+                    categories.map( (category) => {
+                        return <li key={category}>{category} </li>
+                    })
+                }
+            </ol>
+        </>
+    )
+}
+
+export default GiffExpertApp
+```
+
+Ahora pasamos a crear el nuevo componente sobre la carpeta **components** el cual se llamara `GifGrid.js` y se crea la estructura basica. Recordar que se puede utilizar el snipet **rafc** o **rafce**
+
+```
+import React from 'react'
+
+const GifGrid = () => {
+    return (
+        <div>
+            
+        </div>
+    )
+}
+
+export default GifGrid
+
+```
+
+y ahora se pasa como prop desestructurado a `{category}` y crear un `<h3>{ category }</h3>`
+
+```
+import React from 'react'
+
+const GifGrid = ( { category } ) => {
+    return (
+        <>
+            <h3>{ category }</h3>
+        </>
+    )
+}
+
+export default GifGrid
+
+```
+
+Hasta el momento no deberia ocurrir ningun cambio pero si a continuacion regresamos al componente `GiffExpertApp`, vamos a realizar un cambio, ya no se va a llamar una lista, en vez de eso se va a pasar el componente `<GidfGrid>` y a este se le va a pasar como prop a `category` y tambien `key` para traer el objeto correctamente
+
+```
+import React, { useState } from 'react'
+import AddCategory from './components/AddCategory'
+import GifGrid from './components/GifGrid'
+
+const GiffExpertApp = () => {
+
+    const [categories, setCategories] = useState(['Bleach'])
+
+    // const handleAdd = () => {
+    //     setcategories(
+    //         [...categories, 'HunterXHunter']
+    //     )
+    // }
+
+    return (
+        <>
+            <h2>GifExpertApp</h2>
+            <AddCategory setCategories={setCategories} />
+            <hr/>
+
+            <ol>
+                {
+                    categories.map( category => (
+                        <GifGrid
+                        key={ category }
+                            category={ category }
+                        />
+                    ))
+                }
+            </ol>
+        </>
+    )
+}
+
+export default GiffExpertApp
+
+```
+
+Lo que deberiamos tener en el navegador es el estado que se haya dejado por defecto, notar que al mandar el prop `category` desde antes se estaba recibiendo en el componente `GifGrid`, el cual se creo antes de mandar el prop. Para comprobarlo se puede abrir la pestaña **components** y notar que en el componente `GifGrid` aparecen los elementos que estamos enviando
+
+![assets-git/235.png](assets-git/235.png)
+
+A continuación abrir el programa PostMan y ir a la parte de la documentacion de **GIPHY Developers** y buscar la seccion **Search Endpoint**, el cual queda en el siguiente [enlace](https://developers.giphy.com/docs/api/endpoint/#search). 
+
+El endpoint de search se debe copiar a postman
+
+![assets-git/236.png](assets-git/236.png)
+
+Al abrir postman dar click sobre el icono de +
+
+![assets-git/237.png](assets-git/237.png)
+
+y dejar en GET la url que copiamos y dar click en **send**, lo primero que va a aparecer en la parte de abajo es que el API Key no se encontro
+
+![assets-git/238.png](assets-git/238.png)
+
+Ahora se deben mandar los parametros para el api_key que se hacen en los argumentos que aparecen abajo en postman
+
+![assets-git/239.png](assets-git/239.png)
+
+Solo esta regresando la data, pero nada mas porque no se esta buscando nada, pero si a continuacion en la columna **KEY** se manda q que significa `query` esto se indica en la documentación y en la columna **VALUE** la serie que vamos a buscar,  consulta trae varios elementos
+
+![assets-git/240.png](assets-git/240.png)
+
+y a continuación en la columna **KEY** agregamos un limit y en la columna **VALUE** 10 para traer solo 10 imagenes de esta
+
+![assets-git/241.png](assets-git/241.png)
+
+Ahora copiamos la url que proporciono postman y en el componente `GifGird` creamos una funcion llamada getGifs y dentro de la funcion creamos una constante url que va a contener la url que copiamos de postman
+
+```
+import React from 'react'
+
+const GifGrid = ( { category } ) => {
+
+    const getGifs = () => {
+
+        const url='api.giphy.com/v1/gifs/search?api_key=soVdva8bjB8shZXmy18BLAE5wCSgYZZv&q=Bleach&limit=10'
+    }
+
+    return (
+        <>
+            <h3>{ category }</h3>
+        </>
+    )
+}
+
+export default GifGrid
+
+```
+
+a la url hay que agregarle `htpps://`
+
+```
+import React from 'react'
+
+const GifGrid = ( { category } ) => {
+
+    const getGifs = () => {
+
+        const url='https://api.giphy.com/v1/gifs/search?api_key=soVdva8bjB8shZXmy18BLAE5wCSgYZZv&q=Bleach&limit=10'
+    }
+
+    return (
+        <>
+            <h3>{ category }</h3>
+        </>
+    )
+}
+
+export default GifGrid
+
+```
+Ahora se debe convertir la funcion `getGifs` en una funcion `async` y hacer `fetch` de la `url` pero se debe meter dentro de una respuesta `resp` y agregar `await` para esperar la promesa, despues se debe obtener la data que debe ser tranforma a la respuesta en formato json y hacer un console.log de la data para verificar que se esten haciendo las peticiones correctamente y posteriormente llamar la funcion para que retorne la data
+
+```
+import React from 'react'
+
+const GifGrid = ( { category } ) => {
+
+    const getGifs = async() => {
+
+        const url='https://api.giphy.com/v1/gifs/search?api_key=soVdva8bjB8shZXmy18BLAE5wCSgYZZv&q=Bleach&limit=10'
+        const resp = await fetch(url);
+        const data = await resp.json();
+
+        console.log(data);
+    }
+
+    getGifs();
+
+    return (
+        <>
+            <h3>{ category }</h3>
+        </>
+    )
+}
+
+export default GifGrid
+```
+
+![assets-git/242.png](assets-git/242.png)
+
+Mucha de la información que trae la data no es necesaria, entonces se puede desestructurar `{ data }` para obtener los 10 elementos que interesan
+
+```
+import React from 'react'
+
+const GifGrid = ( { category } ) => {
+
+    const getGifs = async() => {
+
+        const url='https://api.giphy.com/v1/gifs/search?api_key=soVdva8bjB8shZXmy18BLAE5wCSgYZZv&q=Bleach&limit=10'
+        const resp = await fetch(url);
+        const { data } = await resp.json();
+
+        console.log(data);
+    }
+
+    getGifs();
+
+    return (
+        <>
+            <h3>{ category }</h3>
+        </>
+    )
+}
+
+export default GifGrid
+
+```
+
+Como se puede observar a continuacion los 10 elementos tambien traen mas información como el id, title, y cualquiera de las imagenes para obtener  la url
+
+![assets-git/243.png](assets-git/243.png)
+
+Para poder renderizar estas imagenes se debe crear una constante que llamaremos gifs y a traves de esta se hace un `.map` de la `data` para obtener cada una de las imagenes y el `return` retorna un nuevo objeto con los datos que interesan el call back se nombra como `img` y este es el que va a traer cada uno de los datos a traves de un objeto, despues se debe cambiar el `console.log` de `data` por `gifs`
+
+```
+import React from 'react'
+
+const GifGrid = ( { category } ) => {
+
+    const getGifs = async() => {
+
+        const url='https://api.giphy.com/v1/gifs/search?api_key=soVdva8bjB8shZXmy18BLAE5wCSgYZZv&q=Bleach&limit=10'
+        const resp = await fetch(url);
+        const { data } = await resp.json();
+
+        const gifs = data.map( img => {
+            return {
+                id: img.id,
+                title: img.title,
+                url: img.images.downsized_medium.url,
+            }
+        })
+
+        console.log(gifs);
+    }
+
+    getGifs();
+
+    return (
+        <>
+            <h3>{ category }</h3>
+        </>
+    )
+}
+
+export default GifGrid
+```
+
+y como resultado obtenemos dicha informacion en la consola
+
+![assets-git/244.png](assets-git/244.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
