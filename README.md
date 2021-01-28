@@ -100,7 +100,7 @@
 
 [Fetch API-Obtener las imagenes deseadas](#Fetch-API-Obtener-las-imagenes-deseadas)
 
-[](#)
+[useEffect](#useEffect)
 
 [](#)
 
@@ -6399,6 +6399,164 @@ export default GifGrid
 y como resultado obtenemos dicha informacion en la consola
 
 ![assets-git/244.png](assets-git/244.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## useEffect
+
+antes de hacer que el useEffect funcione correctamente, primero se va hacer una prueba para entender que pasa con el codigo del componente para esto creamos un estado y un contador que inicia en 0 y un boton en la parte del render que llama al incremento del contador de esta forma
+
+```
+import React, { useState } from 'react'
+
+const GifGrid = ( { category } ) => {
+
+    const [count, setCount] = useState(0);
+
+    const getGifs = async() => {
+
+        const url='https://api.giphy.com/v1/gifs/search?api_key=soVdva8bjB8shZXmy18BLAE5wCSgYZZv&q=Bleach&limit=10'
+        const resp = await fetch(url);
+        const { data } = await resp.json();
+
+        const gifs = data.map( img => {
+            return {
+                id: img.id,
+                title: img.title,
+                url: img.images.downsized_medium.url,
+            }
+        })
+
+        console.log(gifs);
+    }
+
+    getGifs();
+
+    return (
+        <>
+            <h3>{ category }</h3>
+            <h4>{ count }</h4>
+            <button onClick={ ()=> {setCount( count +1) } } >Aumenta</button>
+        </>
+    )
+}
+
+export default GifGrid
+
+```
+
+Como resultado se obtiene el contador mas el boton
+
+![assets-git/245.png](assets-git/245.png)
+
+Pero se debe notar que cada vez que se hace un click sobre el boton `Aumenta` la peticion que se realiza con `getGifs();` se hace nuevamente, entonces cada vez que hacemos click sobre el boton vuelve y se dispara la peticion
+
+![assets-git/246.png](assets-git/246.png)
+
+Para solucionar esto, podemos hacer uso de useEffect de esta forma, comentamos o quitamos la linea 24, importamos useEffect, el cual recibe un call back y llama a la funcion `getGifs();`
+
+```
+import React, { useEffect, useState } from 'react'
+
+const GifGrid = ( { category } ) => {
+
+    const [count, setCount] = useState(0);
+
+    useEffect(() => {
+        getGifs();
+    })
+
+    const getGifs = async() => {
+
+        const url='https://api.giphy.com/v1/gifs/search?api_key=soVdva8bjB8shZXmy18BLAE5wCSgYZZv&q=Bleach&limit=10'
+        const resp = await fetch(url);
+        const { data } = await resp.json();
+
+        const gifs = data.map( img => {
+            return {
+                id: img.id,
+                title: img.title,
+                url: img.images.downsized_medium.url,
+            }
+        })
+
+        console.log(gifs);
+    }
+
+    // getGifs();
+
+    return (
+        <>
+            <h3>{ category }</h3>
+            <h4>{ count }</h4>
+            <button onClick={ ()=> {setCount( count +1) } } >Aumenta</button>
+        </>
+    )
+}
+
+export default GifGrid
+```
+
+pero si nuevamente hacemos click sobre el boton aumenta, ocurre lo mismo
+
+![assets-git/247.png](assets-git/247.png)
+
+useEffect recibe un segundo argumento despues del corchete que cierra y recibe un arreglo de dependencias
+
+```
+    useEffect(() => {
+    }, [])
+```
+
+Si se agrega este argumento al useEffect se indica que no se esta recibiendo ninguna dependencia y solamente se va a disparar una sola vez la peticion
+
+```
+import React, { useEffect, useState } from 'react'
+
+const GifGrid = ( { category } ) => {
+
+    const [count, setCount] = useState(0);
+
+    useEffect(() => {
+        getGifs();
+    }, [])
+
+    const getGifs = async() => {
+
+        const url='https://api.giphy.com/v1/gifs/search?api_key=soVdva8bjB8shZXmy18BLAE5wCSgYZZv&q=Bleach&limit=10'
+        const resp = await fetch(url);
+        const { data } = await resp.json();
+
+        const gifs = data.map( img => {
+            return {
+                id: img.id,
+                title: img.title,
+                url: img.images.downsized_medium.url,
+            }
+        })
+
+        console.log(gifs);
+    }
+
+    // getGifs();
+
+    return (
+        <>
+            <h3>{ category }</h3>
+            <h4>{ count }</h4>
+            <button onClick={ ()=> {setCount( count +1) } } >Aumenta</button>
+        </>
+    )
+}
+
+export default GifGrid
+```
+
+nuevamente se hace un click sobre el boton Aumenta 10 veces y vemos que no se disparan las peticiones repetidas veces
+
+![assets-git/248.png](assets-git/248.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
