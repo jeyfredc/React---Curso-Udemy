@@ -104,7 +104,7 @@
 
 [Mostrar los títulos de las imagenes](#Mostrar-los-títulos-de-las-imagenes)
 
-[](#)
+[className-Clases de css](#className-Clases-de-css)
 
 [](#)
 
@@ -6867,6 +6867,135 @@ export default GifGridItem
 
 ![assets-git/254.png](assets-git/254.png)
 
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## className-Clases de css
+
+Los atributos en un html sencillo para renderizar estilos css siempre se reciben como `class`, JavaScript actualmente utiliza la palabra reservada `class` por lo que en React se decidio utilizar la palabra reservada `className` para traer los estilos css, es por esto que es normal encontrar en los componentes esta palabra, ahora para ver el ejemplo, abrimos el archivo **index.css** donde empezaremos a crear unos estilos sencillos para los componentes que hemos creado hasta el momento
+
+```
+* {
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+body {
+  padding: 60px;
+}
+
+input {
+  color: grey;
+  font-size: 1.2rem;
+  width: 100%;
+}
+
+.card-grid {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.card {
+  align-content: center;
+  border: 1px solid gray;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  margin-right: 10px;
+  overflow: hidden;
+}
+
+.card p {
+  padding: 5px;
+  text-align: center;
+}
+
+.card img{
+  max-height: 170px;
+}
+```
+
+Ahora hay que hacer el llamado de estilos en los componentes `.card-grid` lo llamaremos en el componente `GifGrid`
+
+```
+import React, { useEffect, useState } from 'react'
+import GifGridItem from './GifGridItem';
+
+const GifGrid = ( { category } ) => {
+
+    const [images, setImages] = useState([])
+
+    useEffect(() => {
+        getGifs();
+    }, [])
+
+    const getGifs = async() => {
+
+        const url='https://api.giphy.com/v1/gifs/search?api_key=soVdva8bjB8shZXmy18BLAE5wCSgYZZv&q=Bleach&limit=10'
+        const resp = await fetch(url);
+        const { data } = await resp.json();
+
+        const gifs = data.map( img => {
+            return {
+                id: img.id,
+                title: img.title,
+                url: img.images.downsized_medium.url,
+            }
+        })
+
+        console.log(gifs);
+        setImages( gifs );
+    }
+
+    // getGifs();
+
+    return (
+        <>
+            <h3>{ category }</h3>
+            <div className="card-grid">
+                {
+                    images.map( img => (
+                        <GifGridItem 
+                            key={ img.id }
+                            {...img}
+                        />
+                        ))
+                    }
+            </div>
+            
+        </>
+    )
+}
+
+export default GifGrid
+
+```
+
+en el componente `GifGirdItem` agregamos el `className="card"`
+
+```
+import React from 'react'
+
+const GifGridItem = ( {id, title, url} ) => {
+
+    console.log({id, title, url})
+
+    return (
+        <div className="card">
+            <p> { title } </p>
+            <img src={ url} alt={title}/>
+        </div>
+    )
+}
+
+export default GifGridItem
+
+```
+
+De esta forma se obtiene un poco mas de estilo en el navegador
+
+![assets-git/255.png](assets-git/255.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
