@@ -102,7 +102,7 @@
 
 [useEffect](#useEffect)
 
-[](#)
+[Mostrar los títulos de las imagenes](#Mostrar-los-títulos-de-las-imagenes)
 
 [](#)
 
@@ -6557,6 +6557,316 @@ export default GifGrid
 nuevamente se hace un click sobre el boton Aumenta 10 veces y vemos que no se disparan las peticiones repetidas veces
 
 ![assets-git/248.png](assets-git/248.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Mostrar los títulos de las imagenes
+
+Ahora habiendo entendido y utilizado useEffect, en el componente `GifGrid`, es momento de quitar el `count` y el `setCount` y ahora crear un estado para obtener las imagenes en una lista, pero antes de obtenerlas en una lista, las vemos en el estado a traves del modificador `setImages`
+
+```
+import React, { useEffect, useState } from 'react'
+
+const GifGrid = ( { category } ) => {
+
+    const [images, setImages] = useState([])
+
+    useEffect(() => {
+        getGifs();
+    }, [])
+
+    const getGifs = async() => {
+
+        const url='https://api.giphy.com/v1/gifs/search?api_key=soVdva8bjB8shZXmy18BLAE5wCSgYZZv&q=Bleach&limit=10'
+        const resp = await fetch(url);
+        const { data } = await resp.json();
+
+        const gifs = data.map( img => {
+            return {
+                id: img.id,
+                title: img.title,
+                url: img.images.downsized_medium.url,
+            }
+        })
+
+        console.log(gifs);
+        setImages( gifs );
+    }
+
+    // getGifs();
+
+    return (
+        <>
+            <h3>{ category }</h3>
+            <ol>
+                <li>item</li>
+            </ol>
+        </>
+    )
+}
+
+export default GifGrid
+
+```
+
+Si revisamos el estado en el navegador, obtenemos cada una de las imagenes
+
+![assets-git/249.png](assets-git/249.png)
+
+Ahora lo que debemos hacer es obtener estas en los items para esto debemos usar la funcion `map` y buscar el campo que retorna el titulo de las imagenes
+
+```
+import React, { useEffect, useState } from 'react'
+
+const GifGrid = ( { category } ) => {
+
+    const [images, setImages] = useState([])
+
+    useEffect(() => {
+        getGifs();
+    }, [])
+
+    const getGifs = async() => {
+
+        const url='https://api.giphy.com/v1/gifs/search?api_key=soVdva8bjB8shZXmy18BLAE5wCSgYZZv&q=Bleach&limit=10'
+        const resp = await fetch(url);
+        const { data } = await resp.json();
+
+        const gifs = data.map( img => {
+            return {
+                id: img.id,
+                title: img.title,
+                url: img.images.downsized_medium.url,
+            }
+        })
+
+        console.log(gifs);
+        setImages( gifs );
+    }
+
+    // getGifs();
+
+    return (
+        <>
+            <h3>{ category }</h3>
+            <ol>
+                {
+                    images.map(img => (
+                        <li key={img.id}>{img.title}</li>
+                        ))
+                    }
+                
+            </ol>
+        </>
+    )
+}
+
+export default GifGrid
+
+```
+
+![assets-git/250.png](assets-git/250.png)
+
+Otra forma de obtener los datos para no tener que utilizar img, seria desestructurando los datos en la funcion y solo agrego los campos que necesito, que en este caso son el `id` y el `title`, el resultado es el mismo obtenido anteriormente 
+
+![assets-git/251.png](assets-git/251.png)
+
+Ahora a continuacón pasaremos las imagenes a un nuevo componente el cual se llamara **GiFGridItem.js** que sera creado dentro de la carpeta **components**, nuevamente con la estructura basica, para eso utilizamos el snipet **rafce**
+
+```
+import React from 'react'
+
+const GifGridItem = () => {
+    return (
+        <div>
+            
+        </div>
+    )
+}
+
+export default GifGridItem
+
+```
+
+En este componente vamos a recibir propiedades que vengan desde  el componente `GifGrid`, asi que pasamos a modificarlo tambien y en vez de hacer una lista le pasamos el nuevo componente, recordando que anteriormente se hizo una funcion map, para recorrerlo y volvemos la desestructuracion a su estado inicial, por lo cual pasamos los argumentos del key y mandamos propiedades como el `img`
+
+```
+import React, { useEffect, useState } from 'react'
+import GifGridItem from './GifGridItem';
+
+const GifGrid = ( { category } ) => {
+
+    const [images, setImages] = useState([])
+
+    useEffect(() => {
+        getGifs();
+    }, [])
+
+    const getGifs = async() => {
+
+        const url='https://api.giphy.com/v1/gifs/search?api_key=soVdva8bjB8shZXmy18BLAE5wCSgYZZv&q=Bleach&limit=10'
+        const resp = await fetch(url);
+        const { data } = await resp.json();
+
+        const gifs = data.map( img => {
+            return {
+                id: img.id,
+                title: img.title,
+                url: img.images.downsized_medium.url,
+            }
+        })
+
+        console.log(gifs);
+        setImages( gifs );
+    }
+
+    // getGifs();
+
+    return (
+        <>
+            <h3>{ category }</h3>
+            
+                {
+                    images.map( img => (
+                        <GifGridItem 
+                            key={ img.id }
+                            img={ img }
+                        />
+                        ))
+                    }
+        </>
+    )
+}
+
+export default GifGrid
+
+```
+
+Si queremos ver que trae por consola, abrimos el componente `GifGridItem` y alli hacemos un `console.log` a las propiedades que estamos pasando,
+
+```
+import React from 'react'
+
+const GifGridItem = ( props ) => {
+
+    console.log(props.img)
+
+    return (
+        <div>
+            
+        </div>
+    )
+}
+
+export default GifGridItem
+
+```
+
+En la consola estamos recibiendo el objeto que se esperaba con las 10 imagenes y los campos que esperamos, id, title y url.
+
+![assets-git/252.png](assets-git/252.png)
+
+Regresando al componente GifGrid en vez de mandar el argumento img como se estaba haciendo se puede utilizar el operador de spread `...` con `img`, esto permite que cuando llamen los props en el otro componente pueda hacer desestructuracion
+
+```
+import React, { useEffect, useState } from 'react'
+import GifGridItem from './GifGridItem';
+
+const GifGrid = ( { category } ) => {
+
+    const [images, setImages] = useState([])
+
+    useEffect(() => {
+        getGifs();
+    }, [])
+
+    const getGifs = async() => {
+
+        const url='https://api.giphy.com/v1/gifs/search?api_key=soVdva8bjB8shZXmy18BLAE5wCSgYZZv&q=Bleach&limit=10'
+        const resp = await fetch(url);
+        const { data } = await resp.json();
+
+        const gifs = data.map( img => {
+            return {
+                id: img.id,
+                title: img.title,
+                url: img.images.downsized_medium.url,
+            }
+        })
+
+        console.log(gifs);
+        setImages( gifs );
+    }
+
+    // getGifs();
+
+    return (
+        <>
+            <h3>{ category }</h3>
+            
+                {
+                    images.map( img => (
+                        <GifGridItem 
+                            key={ img.id }
+                            {...img}
+                        />
+                        ))
+                    }
+        </>
+    )
+}
+
+export default GifGrid
+
+```
+
+Si hacemos la desestructuracion en `GifGridItem`, los podemos llamar directamente por las propiedades
+
+```
+import React from 'react'
+
+const GifGridItem = ( {id, title, url} ) => {
+
+    console.log({id, title, url})
+
+    return (
+        <div>
+            
+        </div>
+    )
+}
+
+export default GifGridItem
+
+```
+
+![assets-git/253.png](assets-git/253.png)
+
+Despues de obtener estas propiedades, ahora es posible llamarlas y renderizarlas, para eso agregamos una etiqueta de imagen que reciba la url y un titulo que son los campos obtenidos a traves de la petición
+
+```
+import React from 'react'
+
+const GifGridItem = ( {id, title, url} ) => {
+
+    console.log({id, title, url})
+
+    return (
+        <div>
+            <p> { title } </p>
+            <img src={ url} alt={title}/>
+        </div>
+    )
+}
+
+export default GifGridItem
+
+```
+
+![assets-git/254.png](assets-git/254.png)
+
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
