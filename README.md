@@ -110,7 +110,7 @@
 
 [Custom Hook](#Custom-Hook)
 
-[](#)
+[useFetchGifs Obtener imágenes y bandera de carga](#useFetchGifs-Obtener-imágenes-y-bandera-de-carga)
 
 [](#)
 
@@ -7299,6 +7299,162 @@ export default useFetchGifs;
 ![assets-git/262.png](assets-git/262.png)
 
 ![assets-git/263.png](assets-git/263.png)
+
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## useFetchGifs Obtener imágenes y bandera de carga
+
+Ahora vamos a modificar el Hook `useFetchGifs`, primero debemos eliminar el `setTimeOut` que se habia hecho para probar como funcionaba el **Custom Hook** y nuevamente hacemos el uso de `useEffect` donde alli importaremos el helper `getGifs` y dentro del `.then `estableceremos el modificador de estado del Hook, a la data le vamos a pasar la `data` de las imagenes y el `loading` nuevamente lo dejamos en `false`
+
+**Nota:** A `useFetchGifs` tambien debemos pasarle el `category` porque no se esta recibiendo en ningun lado
+
+```
+import React, { useEffect, useState } from 'react'
+import getGifs from '../helpers/getGifs'
+
+const useFetchGifs = ( category ) => {
+
+    const [state, setstate] = useState({
+        data: [],
+        loading: true,
+    })
+
+    useEffect( () => {
+
+        getGifs( category )
+        .then(imgs =>{
+            setstate({
+                data : imgs,
+                loading: false
+            })
+        })
+    }, [category])
+
+    return state;
+}
+
+export default useFetchGifs;
+
+```
+
+y si se quiere mejorar tambien se puede meter dentro de una funcion `setTimeOut`
+
+```
+import React from 'react'
+import {getGifs} from '../helpers/getGifs'
+
+const useFetchGifs = ( category ) => {
+
+    const [state, setstate] = useState({
+        data: [],
+        loading: true,
+    })
+
+    useEffect( () => {
+
+        getGifs( category )
+            .then(imgs =>{
+                setTimeout(()=>{
+                    setstate({
+                    data : imgs,
+                    loading: false
+                    });
+                },3000);
+            })
+        }, [category])
+
+
+    return state;
+}
+
+export default useFetchGifs;
+
+```
+
+Si guardamos y revisamos el navegador deberia traer esto
+
+![assets-git/265.png](assets-git/265.png)
+
+Entonces ahora debemos pasar al componente `GifGrid` y empezar a modificar para poder traer las imagenes.
+
+En la desestructuracion de `useFetchGifs` nuevamente pasamos los datos y tambien en los argumentos de la funcion mandamos a `category`
+
+Luego se quitan los comentarios del `return` y en vez de pasar images se cambia por la `data` en el `map` del renderizado ya que esto es lo que se esta recibiendo
+
+```
+import React from 'react'
+import useFetchGifs from '../hooks/useFetchGifs'
+import GifGridItem from './GifGridItem';
+
+const GifGrid = ( { category } ) => {
+
+    const { data:images , loading } = useFetchGifs( category );
+
+
+    return (
+        <>
+            <h3>{ category }</h3>
+
+            { loading && 'Cargando...' }
+            <div className="card-grid">
+                {
+                    images.map( img => (
+                        <GifGridItem 
+                            key={ img.id }
+                            {...img}
+                        />
+                        ))
+                    }
+            </div>
+            
+        </>
+    )
+}
+
+export default GifGrid
+
+
+```
+
+Si se quiere pasar `images` en vez de `data` en la desestructuracion de `data` se puede agregar `:` y poner a `images`, de esta forma en vez de llamar a `data.map` en el return nuevamente se llama a `images.map` como se estaba haciendo desde un principio
+
+```
+import React from 'react'
+import useFetchGifs from '../hooks/useFetchGifs'
+import GifGridItem from './GifGridItem';
+
+const GifGrid = ( { category } ) => {
+
+    const { data:images , loading } = useFetchGifs( category );
+
+
+    return (
+        <>
+            <h3>{ category }</h3>
+
+            { loading && 'Cargando...' }
+            <div className="card-grid">
+                {
+                    images.map( img => (
+                        <GifGridItem 
+                            key={ img.id }
+                            {...img}
+                        />
+                        ))
+                    }
+            </div>
+            
+        </>
+    )
+}
+
+export default GifGrid
+```
+
+![assets-git/266.png](assets-git/266.png)
 
 
 <div align="right">
