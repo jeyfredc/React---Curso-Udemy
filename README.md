@@ -106,7 +106,7 @@
 
 [className-Clases de css](#className-Clases-de-css)
 
-[](#)
+[Helpers-getGifs](#Helpers-getGifs)
 
 [](#)
 
@@ -6996,6 +6996,92 @@ export default GifGridItem
 De esta forma se obtiene un poco mas de estilo en el navegador
 
 ![assets-git/255.png](assets-git/255.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Helpers-getGifs
+
+Actualmente el `category` que se llama como un prop en el componente  `GifGrid` no se esta usando, alli esta la funcion `getGifs` y donde esta la url se esta llamando una categoria en especifico, la mia es `Bleach`, la cual se encuentra en la parte de la constante url `const url='https://api.giphy.com/v1/gifs/search?api_key=soVdva8bjB8shZXmy18BLAE5wCSgYZZv&q=Bleach&limit=10` casi finzalizando esta, si esa palabra la reemplazamos por category podemos hacer cualquier consulta en el campo que creamos para mandar las categorias, lo unico que hay que hacer es cambiarlo por backticks para insertar alli variables
+
+`const url=`https://api.giphy.com/v1/gifs/search?api_key=soVdva8bjB8shZXmy18BLAE5wCSgYZZv&q=${ encodeURI( category )}&limit=10``
+
+**Nota:** `encodeURI()` ayuda a que no tengamos errores, como espacios % y demas que vienen en la url
+
+Para mostrar mejor el ejemplo abrir el componente AddCategory y en la linea 16 llamar el argumento inputValue, antes que category de esta forma
+
+`setCategories( categ => [inputValue, ...categ]);`
+
+guardar cambios y ahora escribir cualquier categoria que queramos traer, por ejemplo `Dragon Ball`, el cambio se debera mostrar inmediatamente y debajo de estos, las imagenes que en un principio obtuvimos
+
+![assets-git/256.png](assets-git/256.png)
+
+La función `getGifs` no es tan necesaria en el componente `GifGrid` por tal razón ahora dentro de la carpeta **src** se va a crear alli otra carpeta llamada **helpers** donde alli estaran las funciones que hacen un trabajo en especifico , dentro de esta vamos a crear un archivo igual a como se llama la funcion **getGifs.js** porque a continuación la función que estaba en el componente la vamos a trasladar al nuevo archivo y le vamos hacer una pequeña modificación.
+
+**Nota:** Respecto a la función original, es decir cuando se encontraba en el componente, a esta no se le pasaba el parametro `category` y al final se establecia un `setImages(gifs)` este ya no existe en este nuevo documento por tanto se debe pasar al componente y realizar unos ajustes, ademas es de tener en cuenta que como es una función `async` retorna una promesa y se debe retornar como tal en el componente
+
+```
+export const getGifs = async(category) => {
+
+        const url=`https://api.giphy.com/v1/gifs/search?api_key=soVdva8bjB8shZXmy18BLAE5wCSgYZZv&q=${ encodeURI( category )}&limit=10`
+        const resp = await fetch(url);
+        const { data } = await resp.json();
+
+        const gifs = data.map( img => {
+            return {
+                id: img.id,
+                title: img.title,
+                url: img.images.downsized_medium.url,
+            }
+        })
+
+        return gifs;
+    }
+```
+
+Ahora modifiquemos el componente `GifGrid`, aqui se debe asegurar la importación del nuevo helper `getGifs` y aqui es donde se debe retornar la promesa con un `.then` y alli establecer el `setImages`
+
+```
+import React, { useEffect, useState } from 'react'
+import { getGifs } from '../helpers/getGifs';
+import GifGridItem from './GifGridItem';
+
+const GifGrid = ( { category } ) => {
+
+    const [images, setImages] = useState([])
+
+    useEffect(() => {
+        getGifs(category)
+        .then(setImages)
+    }, [category])
+
+    return (
+        <>
+            <h3>{ category }</h3>
+            <div className="card-grid">
+                {
+                    images.map( img => (
+                        <GifGridItem 
+                            key={ img.id }
+                            {...img}
+                        />
+                        ))
+                    }
+            </div>
+            
+        </>
+    )
+}
+
+export default GifGrid
+
+```
+
+Nuevamente probar el codigo pasando otras imagenes que se quieran traer al navegador
+
+![assets-git/257.png](assets-git/257.png)
+
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
