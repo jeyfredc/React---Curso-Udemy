@@ -108,7 +108,7 @@
 
 [Helpers-getGifs](#Helpers-getGifs)
 
-[](#)
+[Custom Hook](#Custom-Hook)
 
 [](#)
 
@@ -7081,6 +7081,224 @@ export default GifGrid
 Nuevamente probar el codigo pasando otras imagenes que se quieran traer al navegador
 
 ![assets-git/257.png](assets-git/257.png)
+
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Custom Hook
+
+A continuación se va a realizar una introducción a los Custom Hooks, que no son nada mas que otro tipo de funciones como los **functional components** y vamos a empezar a comentar todo el codigo que habiamos hecho en el componente `GifGrid` para demtostrar como funcionan estos Custom Hooks, el archivo por el momento va a quedar de esta forma
+
+```
+import React, { useEffect, useState } from 'react'
+// import { getGifs } from '../helpers/getGifs';
+// import GifGridItem from './GifGridItem';
+
+const GifGrid = ( { category } ) => {
+
+    const [images, setImages] = useState([])
+
+    // useEffect(() => {
+    //     getGifs(category)
+    //     .then(setImages)
+    // }, [category])
+
+    return (
+        <>
+            <h3>{ category }</h3>
+{/*             <div className="card-grid">
+                {
+                    images.map( img => (
+                        <GifGridItem 
+                            key={ img.id }
+                            {...img}
+                        />
+                        ))
+                    }
+            </div> */}
+            
+        </>
+    )
+}
+
+export default GifGrid
+```
+
+Como resultado vamos a obtener esto, con unas advertencias en el navegador
+
+![assets-git/258.png](assets-git/258.png)
+
+Ahora empezaremos por crear el primer Custom Hook de ejemplo, para esto vamos a crear dentro de la carpeta **src** otra carpeta llamada **hooks** y dentro de esta el archivo **useFetchGifs.js**
+
+**Nota:** Recordar que todo Hook empieza por la palabra `use`
+
+y alli vamos a crear la estructura basica de un componente normal utilizando el snipet `rafc`
+
+```
+import React from 'react'
+
+const useFetchGifs = () => {
+    return (
+        <div>
+            
+        </div>
+    )
+}
+
+export default useFetchGifs
+
+```
+
+y ahora pasamos a modificar este nuevo archivo al cual le crearemos un estado que guarda un objeto que contiene `data` y `loading`
+
+```
+import React, { useState } from 'react'
+
+const useFetchGifs = () => {
+
+    const [state, setstate] = useState({
+        data: [],
+        loading: true,
+    })
+
+
+    return state;
+}
+
+export default useFetchGifs;
+
+```
+
+Ahora pasamos al componente `GifGrid` y alli importamos el nuevo Hook nombrandolo en una constante llamada `state` a la cual seguido le hacemos un `console.log`
+
+```
+import React, { useEffect, useState } from 'react'
+import useFetchGifs from '../hooks/useFetchGifs'
+// import { getGifs } from '../helpers/getGifs';
+// import GifGridItem from './GifGridItem';
+
+const GifGrid = ( { category } ) => {
+
+    // const [images, setImages] = useState([])
+    const state = useFetchGifs();
+
+    console.log(state);
+
+    // useEffect(() => {
+    //     getGifs(category)
+    //     .then(setImages)
+    // }, [category])
+
+    return (
+        <>
+            <h3>{ category }</h3>
+{/*             <div className="card-grid">
+                {
+                    images.map( img => (
+                        <GifGridItem 
+                            key={ img.id }
+                            {...img}
+                        />
+                        ))
+                    }
+            </div> */}
+            
+        </>
+    )
+}
+
+export default GifGrid
+
+```
+
+y miramos que esta trayendo en el navegador que deberia ser como tal el objeto
+
+![assets-git/259.png](assets-git/259.png)
+
+Tambien podemnos usar la desestructuración para traer los datos directamente 
+
+![assets-git/260.png](assets-git/260.png)
+
+y ahora debajo del return de la etiqueta `<h3>{ category }</h3>` establecemos un if ternario.
+
+Si loading esta en true va a mostrar el mensaje **Cargando...** de lo contrario **Data cargada**
+
+```
+import React, { useEffect, useState } from 'react'
+import useFetchGifs from '../hooks/useFetchGifs'
+// import { getGifs } from '../helpers/getGifs';
+// import GifGridItem from './GifGridItem';
+
+const GifGrid = ( { category } ) => {
+
+    // const [images, setImages] = useState([])
+    const { data, loading } = useFetchGifs();
+
+    console.log(data, loading);
+
+    // useEffect(() => {
+    //     getGifs(category)
+    //     .then(setImages)
+    // }, [category])
+
+    return (
+        <>
+            <h3>{ category }</h3>
+
+            { loading ? 'Cargando...' : 'Data Cargada' }
+{/*             <div className="card-grid">
+                {
+                    images.map( img => (
+                        <GifGridItem 
+                            key={ img.id }
+                            {...img}
+                        />
+                        ))
+                    }
+            </div> */}
+            
+        </>
+    )
+}
+
+export default GifGrid
+
+```
+
+Por el momento vemos esto en el navegador
+
+![assets-git/261.png](assets-git/261.png)
+
+Ahora pasamos de nuevo al Hook `useFetchGifs` y alli vamos a agregar una funcion `setTimeOut` que lo que va a hacer es mostrar la data y luego al ponerse en `false` va a retornar **Data cargada**
+
+```
+import React, { useState } from 'react'
+
+const useFetchGifs = () => {
+
+    const [state, setstate] = useState({
+        data: [],
+        loading: true,
+    })
+
+    setTimeout( () => {
+        setstate({
+            data: [1,2,3,4,5,6],
+            loading: false
+        })
+    },10000);
+
+    return state;
+}
+
+export default useFetchGifs;
+```
+
+![assets-git/262.png](assets-git/262.png)
+
+![assets-git/263.png](assets-git/263.png)
 
 
 <div align="right">
