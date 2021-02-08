@@ -7696,7 +7696,323 @@ y ya tenemnos la aplicación funcionando
 
 ## useState
 
-<!-- ![assets-git/284.png](assets-git/284.png)-->
+Dentro de la carpeta **src**, creamos otra carpeta que se llame **components** y dentro de esta una carpeta mas que se llame **01-useState**, creamos un archivo llamado **CounterApp.js** y generamos su estructura basica añadiendo un `h1` y un boton con clase Bootstrap
+
+```
+import React from 'react'
+
+export const CounterApp = () => {
+    return (
+        <>
+            <h1>Counter { 0 }</h1>
+            <hr/>
+
+            <button className="btn btn-primary">
+                +1
+            </button>
+        </>
+    )
+}
+
+```
+
+Luego dentro de la carpeta **01-useState** crear un archivo llamado **counter.css** que contiene un padding
+
+```
+body {
+    padding: 70px;
+}
+```
+El css se debe importar en el `CounterApp`
+
+```
+import React from 'react'
+import './couter.css'
+
+export const CounterApp = () => {
+    return (
+        <>
+            <h1>Counter { 0 }</h1>
+            <hr/>
+
+            <button className="btn btn-primary">
+                +1
+            </button>
+        </>
+    )
+}
+```
+y `CounterApp` se debe importar en **index.js**
+
+```
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+// import { HookApp } from './HookApp';
+import { CounterApp } from './components/01-useState/CounterApp';
+
+ReactDOM.render(
+    <CounterApp />,
+  document.getElementById('root')
+);
+```
+
+Realizado este cambio esta es la imagen que debemos obtener en el navegador
+
+![assets-git/285.png](assets-git/285.png)
+
+Ahora en el componente `CounterApp` pasamos a realizar el uso de useState
+
+```
+import React, { useState } from 'react'
+import './counter.css'
+
+export const CounterApp = () => {
+
+    const [counter, setCounter] = useState(10)
+    return (
+        <>
+            <h1>Counter { counter }</h1>
+            <hr/>
+
+            <button 
+            className="btn btn-primary"
+            onClick={() => setCounter(counter+1)}>
+                +1
+            </button>
+        </>
+    )
+}
+
+```
+
+De tal manera que si se hace un click sobre el boton `+1`, el contador va a empezar a aumentar y modificar el estado 
+
+![assets-git/286.png](assets-git/286.png)
+
+Pero ahora este contador se puede modificar y en vez de inicializar el contador con un 10 lo hacemos con un objeto 
+
+```
+{
+    counter1: 10,
+    counter2: 20,
+}
+```
+
+```
+import React, { useState } from 'react'
+import './counter.css'
+
+export const CounterApp = () => {
+
+    const [counter, setCounter] = useState({
+        counter1: 10,
+        counter2: 20
+    })
+    return (
+        <>
+            <h1>Counter { counter }</h1>
+            <hr/>
+
+            <button 
+            className="btn btn-primary"
+            onClick={() => setCounter(counter+1)}>
+                +1
+            </button>
+        </>
+    )
+}
+
+```
+pero al realizar esto se obliga a modificar la estructura del documento, es decir que hay que modificar la parte de la estructura del html agregando una etiqueta mas de tipo `<h1></h1>` y comentando el `setCounter` ya que ahora lo que se va a modificar es un objeto
+
+```
+import React, { useState } from 'react'
+import './counter.css'
+
+export const CounterApp = () => {
+
+    const [counter, setCounter] = useState({
+        counter1: 10,
+        counter2: 20,
+    })
+    return (
+        <>
+            <h1>Counter { counter.counter1 }</h1>
+            <h1>Counter { counter.counter2 }</h1>
+
+            <hr/>
+
+            <button 
+            className="btn btn-primary"
+            /* onClick={() => setCounter(counter+1)} */>
+                +1
+            </button>
+        </>
+    )
+}
+
+```
+
+![assets-git/287.png](assets-git/287.png)
+
+Otra forma de acceder al contenido del objeto para no utilizar `counter.counter1` es desestructurando el objeto en el estado y de esta manera se obtiene el mismo resultado de la imagen
+
+```
+import React, { useState } from 'react'
+import './counter.css'
+
+export const CounterApp = () => {
+
+    const [{counter1, counter2}, setCounter] = useState({
+        counter1: 10,
+        counter2: 20,
+    })
+    return (
+        <>
+            <h1>Counter { counter1 }</h1>
+            <h1>Counter { counter2 }</h1>
+
+            <hr/>
+
+            <button 
+            className="btn btn-primary"
+            /* onClick={() => setCounter(counter+1)} */>
+                +1
+            </button>
+        </>
+    )
+}
+
+```
+
+![assets-git/287.png](assets-git/287.png)
+
+Ahora hay que pasar a modificar el estado, se quiere que el `counter1` cambie de numero pero el `counter2` permanezca en 20, existen varias formas de hacer esto, la primera es la siguiente, donde se crea una funcion `aumentaNumero` y se llama en el boton
+
+```
+import React, { useState } from 'react'
+import './counter.css'
+
+export const CounterApp = () => {
+
+    const [{counter1, counter2}, setCounter] = useState({
+        counter1: 10,
+        counter2: 20,
+    })
+
+    const aumentaNumero = () => {
+        setCounter({
+            counter1: counter1 + 1,
+            counter2: counter2,
+        })
+    }
+
+
+    return (
+        <>
+            <h1>Counter { counter1 }</h1>
+            <h1>Counter { counter2 }</h1>
+
+            <hr/>
+
+            <button 
+            className="btn btn-primary"
+            onClick={aumentaNumero}>
+                +1
+            </button>
+        </>
+    )
+}
+
+```
+
+![assets-git/288.png](assets-git/288.png)
+
+otra forma de modificar el estado es realizando el aumento sobre el `onClick` del boton, es decir se hace directamente
+
+```
+import React, { useState } from 'react'
+import './counter.css'
+
+export const CounterApp = () => {
+
+    const [{counter1, counter2}, setCounter] = useState({
+        counter1: 10,
+        counter2: 20,
+    })
+
+    return (
+        <>
+            <h1>Counter { counter1 }</h1>
+            <h1>Counter { counter2 }</h1>
+
+            <hr/>
+
+            <button 
+            className="btn btn-primary"
+            onClick={()=> { 
+                setCounter({
+                counter1: counter1 +1,
+                counter2: counter2,
+            });
+            }}>
+                +1
+            </button>
+        </>
+    )
+}
+
+```
+
+otra forma de modificar el estado es regresando todo sin desestructurar y añadir mas counter, lo unico que cambia es que ahora desestructuro lo que voy a utilizar y en el `onClick` ahora utilizo el operador spread `...` para hacer una copia del estado inicial, de esta forma solo se va a modificar lo que yo establezca
+
+```
+import React, { useState } from 'react'
+import './counter.css'
+
+export const CounterApp = () => {
+
+    const [counter, setCounter] = useState({
+        counter1: 10,
+        counter2: 20,
+        counter3: 30,
+        counter4: 40,
+        counter5: 50,
+        counter6: 60,
+
+    })
+
+    const { counter1, counter2} = counter;
+
+    return (
+        <>
+            <h1>Counter { counter1 }</h1>
+            <h1>Counter { counter2 }</h1>
+
+            <hr/>
+
+            <button 
+            className="btn btn-primary"
+            onClick={()=> { 
+                setCounter({
+                ...counter,
+                counter1: counter1 + 1,
+            });
+            }}>
+                +1
+            </button>
+        </>
+    )
+}
+
+```
+
+En este caso solo se modifico a `counter1`
+
+![assets-git/289.png](assets-git/289.png)
+
+
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
