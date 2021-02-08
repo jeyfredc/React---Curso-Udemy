@@ -8012,8 +8012,6 @@ En este caso solo se modifico a `counter1`
 
 ![assets-git/289.png](assets-git/289.png)
 
-
-
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
