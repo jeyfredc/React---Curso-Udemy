@@ -32,6 +32,8 @@
 
 [Operador condicional ternario](#Operador-condicional-ternario)
 
+___
+
 [¿Qué son los componentes?](#¿Qué-son-los-componentes?)
 
 [Primera aplicación de React](#Primera-aplicación-de-React)
@@ -59,6 +61,8 @@
 [useState-Hook](#useState-Hook)
 
 [handleSubstract y handleReset](#handleSubstract-y-handleReset)
+
+___
 
 [Introducción a las pruebas unitarias y de integración](#Introducción-a-las-pruebas-unitarias-y-de-integración)
 
@@ -88,6 +92,8 @@
 
 [Simular eventos Click](#Simular-eventos-Click)
 
+___
+
 [Proyecto-GifExpertApp](#Proyecto-GifExpertApp)
 
 [GifExpertApp-Component](#GifExpertApp-Component)
@@ -114,11 +120,13 @@
 
 [Desplegando aplicación en Github Pages](#Desplegando-aplicación-en-Github-Pages)
 
-[](#)
+___
 
-[](#)
+[Profundizando Hooks](#Profundizando-Hooks)
 
-[](#)
+[Inicio de proyecto Hooks](#Inicio-de-proyecto-Hooks)
+
+[useState](#useState)
 
 [](#)
 
@@ -7588,6 +7596,107 @@ regresamos nuevamente, debemos verificar que en la parte de **Github Pages** apa
 ![assets-git/283.png](assets-git/283.png)
 
 Pueden visitarla en la siguiente url [https://jeyfredc.github.io/gifexpertapp/](https://jeyfredc.github.io/gifexpertapp/)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+___
+
+# Profundizando Hooks
+
+## Inicio de proyecto Hooks
+
+Lo primero que vamos a hacer es abrir la carpeta raiz de todos los proyectos en la terminal y ejecutar los comandos para crear aplicación.
+
+ejecutar:
+
+`npx create-react-app 05-hooks-app`
+
+`cd 05-hooks-app/`
+
+`code .`
+
+Al abrir **VsCode**
+
+Buscar la carpeta **src** del proyecto y eliminar los siguientes archivos
+
+**App.css, App.js, App.test.js, logo.svg, reportWbVitals.js, setupTests.js**
+
+Ahora dentro de **src** crear un nuevo archivo que se llame **HookApp.js** y ejecutar el snipet **rafc** para crear la estructura basica del componente y le agregamos una etiqueta `<h1>Hola Mundo</h1>`
+
+```
+import React from 'react'
+
+export const HookApp = () => {
+    return (
+        <div>
+            <h1>Hola Mundo</h1>
+        </div>
+    )
+}
+
+```
+
+Buscamos el archivo **index.js**, lo adaptamos como lo necesitamos para este proyecto, se hace la importación del componente `HookApp`
+
+```
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import { HookApp } from './HookApp';
+
+ReactDOM.render(
+    <HookApp />,
+  document.getElementById('root')
+);
+```
+
+Ahora visitamos la pagina de [Bootstrap](https://getbootstrap.com/), damos click en **Get Started** y copiamos el cdn del CSS
+
+`<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">`
+
+Regresamos al proyecto, abrimos la carpeta **public**, luego el archivo **index.html**, limpiamos comentarios y antes del titulo copiamos el link y renombramos el titulo como `Hooks App`
+
+```
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+    
+    <title>Hooks App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>
+```
+
+Regresamos a la terminal y ejecutamos `npm start` o `yarn start`
+
+![assets-git/284.png](assets-git/284.png)
+
+y ya tenemnos la aplicación funcionando
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## useState
+
+<!-- ![assets-git/284.png](assets-git/284.png)-->
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
