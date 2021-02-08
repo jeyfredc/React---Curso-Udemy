@@ -112,7 +112,7 @@
 
 [useFetchGifs Obtener imágenes y bandera de carga](#useFetchGifs-Obtener-imágenes-y-bandera-de-carga)
 
-[](#)
+[Desplegando aplicación en Github Pages](#Desplegando-aplicación-en-Github-Pages)
 
 [](#)
 
@@ -7456,6 +7456,138 @@ export default GifGrid
 
 ![assets-git/266.png](assets-git/266.png)
 
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Desplegando aplicación en Github Pages
+
+Para empezar debemos verificar que todo este corriendo sin errores tanto en consola como en la terminal, asi que rapidamente ejecutamos `npm start` o `yarn start` en el proyectom, si todo esta correcto deberia salir en la terminal una pantalla como la siguiente, despues de esto tumbar el servidor con `ctrl+C`
+
+![assets-git/267.png](assets-git/267.png)
+
+y a continuación ejecutar `npm run buil` o `yarn build`, esto lo que va a hacer, es crear una nueva carpeta llamada **build** que contiene varios archivos del proyecto
+
+![assets-git/268.png](assets-git/268.png)
+
+Como tal esta es la estructura
+
+![assets-git/269.png](assets-git/269.png)
+
+Ahora si ya cuentan con Github en la computadora en la terminal deben ejecutar 
+
+`git --version`
+
+Esto debe imprimir una version de git, si no, se debe instalar, la pagina esta al inicio de la documentación.
+
+despues de esto se debe hacer configuración para subir el deply a producción.
+
+Primero ejecutar `git config --global user.name"nombre de usuario"`
+
+Segundo ejecutar `git config --global user.email"correo electronico"`
+
+**ejemplo**
+
+`git config --global user.name"pepito.manrique"`
+
+`git config --global user.email"pepito123@gmail.com"`
+
+Ahora en la carpeta del proyecto que se esta trabajando es decir **04-gif-expert-app** ejecutar `git init`
+
+![assets-git/270.png](assets-git/270.png)
+
+ejecutamos `git add .` para guardar todos los archivos de esta carpeta y luego `git commit -m"Respaldo para generar deploy"`
+
+![assets-git/271.png](assets-git/271.png)
+
+Ahora la carpeta que quedo con el nombre de **build**, cambiarlo y reemplazarlo por **docs**
+
+![assets-git/272.png](assets-git/272.png)
+
+Como se ejecuto un cambio ahora nuevamente ejecutar 
+
+`git add .` para guardar todos los archivos de esta carpeta y luego `git commit -m"docs agregado"`
+
+Ahora abrir [Github](https://github.com/login), si no hay una cuenta creada, crearla y despues de esto dirigirse al boton **+** y dar en la opción **New repository**
+
+![assets-git/273.png](assets-git/273.png)
+
+Alli se debe nombrar el repositorio, se puede colocar el nombre que se prefiera y luego dar en la opcion **Create repository**
+
+![assets-git/274.png](assets-git/274.png)
+
+Ahora copiar la parte que indica push en un repositorio existente y pegarlo en la terminal
+
+![assets-git/275.png](assets-git/275.png)
+
+![assets-git/276.png](assets-git/276.png)
+
+al dar enter en la ultima opción debe salir una parte para agregar el usuario y contraseña en Github.
+
+Despues recargar la pagina y debe aparecer un listado como de carpetas como el siguiente
+
+![assets-git/277.png](assets-git/277.png)
+
+Ahora para desplegar debemos dirigirnos a la opción de **Settings** en Github y empezar a buscar hasta encontrar la opcion de **GitHub Pages** y selecccionar la rama **master** 
+
+![assets-git/278.png](assets-git/278.png)
+
+luego, seleccionar **docs** y dar click en el boton **save**
+
+![assets-git/279.png](assets-git/279.png)
+
+Despues de guardar debemos regresar a la parte de **GitHub Pages** y verificar que aparezca la pagina, y la sección debe estar en un color verde, a veces tarda en aparecer, se puede volver a recargar la pagina en caso de que no, y despues seleccionar el enlace que aparece alli
+
+![assets-git/280.png](assets-git/280.png)
+
+Esto va abrir la pagina pero va a estar en blanco si abrimos la consola va a mostrar varios errores que indican que no encuentra algunos archivos que sirven la pagina 
+
+![assets-git/281.png](assets-git/281.png)
+
+Entonces regresamos a **VsCode** y en la carpeta **docs**, buscamos el arvhico **index.html** y hacemos unas pequeñas modificaciones, si el codigo html se muestra en una linea, presionamos `ctrl+shift+i` para que se organice el documento y se hacen pequeños cambios, que tiene que ver con las rutas que buscan los archivos en las partes del `href`, los cambios quedan por lo siguiente
+
+```
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="./favicon.ico" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Web site created using create-react-app" />
+    <link rel="apple-touch-icon" href="./logo192.png" />
+    <link rel="manifest" href="./manifest.json" />
+    <title>Gif Expert App</title>
+    <link href="./static/css/main.7bb06f03.chunk.css" rel="stylesheet">
+</head>
+
+<body><noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+    <script>!function (e) { function r(r) { for (var n, p, f = r[0], i = r[1], l = r[2], c = 0, s = []; c < f.length; c++)p = f[c], Object.prototype.hasOwnProperty.call(o, p) && o[p] && s.push(o[p][0]), o[p] = 0; for (n in i) Object.prototype.hasOwnProperty.call(i, n) && (e[n] = i[n]); for (a && a(r); s.length;)s.shift()(); return u.push.apply(u, l || []), t() } function t() { for (var e, r = 0; r < u.length; r++) { for (var t = u[r], n = !0, f = 1; f < t.length; f++) { var i = t[f]; 0 !== o[i] && (n = !1) } n && (u.splice(r--, 1), e = p(p.s = t[0])) } return e } var n = {}, o = { 1: 0 }, u = []; function p(r) { if (n[r]) return n[r].exports; var t = n[r] = { i: r, l: !1, exports: {} }; return e[r].call(t.exports, t, t.exports, p), t.l = !0, t.exports } p.m = e, p.c = n, p.d = function (e, r, t) { p.o(e, r) || Object.defineProperty(e, r, { enumerable: !0, get: t }) }, p.r = function (e) { "undefined" != typeof Symbol && Symbol.toStringTag && Object.defineProperty(e, Symbol.toStringTag, { value: "Module" }), Object.defineProperty(e, "__esModule", { value: !0 }) }, p.t = function (e, r) { if (1 & r && (e = p(e)), 8 & r) return e; if (4 & r && "object" == typeof e && e && e.__esModule) return e; var t = Object.create(null); if (p.r(t), Object.defineProperty(t, "default", { enumerable: !0, value: e }), 2 & r && "string" != typeof e) for (var n in e) p.d(t, n, function (r) { return e[r] }.bind(null, n)); return t }, p.n = function (e) { var r = e && e.__esModule ? function () { return e.default } : function () { return e }; return p.d(r, "a", r), r }, p.o = function (e, r) { return Object.prototype.hasOwnProperty.call(e, r) }, p.p = "/"; var f = this["webpackJsonp04-gif-expert-app"] = this["webpackJsonp04-gif-expert-app"] || [], i = f.push.bind(f); f.push = r, f = f.slice(); for (var l = 0; l < f.length; l++)r(f[l]); var a = i; t() }([])</script>
+    <script src="./static/js/2.07314731.chunk.js"></script>
+    <script src="./static/js/main.6d81630d.chunk.js"></script>
+</body>
+
+</html>
+```
+
+se guardan cambios, nuevamente se ejecuta en la terminal 
+
+`git add .`
+
+`git commit-m"index.html actualizado"`
+
+`git push`
+
+regresamos nuevamente, debemos verificar que en la parte de **Github Pages** aparezca el chulo y la seccion en color verde y seleccionar nuevamente la url, a veces se demora en cargar la pagina entre 1 a 5 minutos y ya por ultimo queda el despliegue de la aplicación
+
+![assets-git/282.png](assets-git/282.png)
+
+![assets-git/283.png](assets-git/283.png)
+
+Pueden visitarla en la siguiente url [https://jeyfredc.github.io/gifexpertapp/](https://jeyfredc.github.io/gifexpertapp/)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
