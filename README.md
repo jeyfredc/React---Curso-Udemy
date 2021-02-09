@@ -136,7 +136,7 @@ ___
 
 [useEffect Precauciones](#useEffect-Precauciones)
 
-[](#)
+[Formulario con custom Hook](#Formulario-con-custom-Hook)
 
 [](#)
 
@@ -9003,6 +9003,288 @@ Nuevamente probamos escribimos 123 aparecen las coordenadas del mouse, escribimo
 
 ![assets-git/311.png](assets-git/311.png)
 
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Formulario con custom Hook
+
+Vamos a crear un nuevo componente en la carpeta **02-useEffect**, va a tener una estructura parecida a la del componente de `SimpleForm` por lo que es mejor copiarlo diractemente de aca. Este nuevo componente se llamara **FormWithCustomHook.js**
+
+```
+import React, { useState } from 'react'
+
+export const FormWithCustomHook = () => {
+
+    const [formState, setFormState] = useState({
+        name: '',
+        email: '',
+        password: '',
+    })
+
+    const {name, email, password } = formState;
+
+    const handleInputChange = ({target}) => {
+        
+        setFormState({
+            ...formState,
+            [target.name]: [target.value]
+        })
+        
+    }
+    return (
+
+        <>
+            <h1>FormWithCustomHook</h1>
+            <hr/>
+
+            <div className="form-group">
+                <input
+                type="text"
+                name="name"
+                className="form-control"
+                placeholder="Tu nombre"
+                autoComplete="off"
+                value= {name}
+                onChange={ handleInputChange }
+                />
+            </div>
+
+            <div className="form-group">
+                <input
+                type="text"
+                name="email"
+                className="form-control"
+                placeholder="email@gmail.com"
+                autoComplete="off"
+                value= {email}
+                onChange={ handleInputChange }
+                />
+            </div>
+
+            <div className="form-group">
+                <input
+                type="password"
+                name="password"
+                className="form-control"
+                placeholder="****"
+                autoComplete="off"
+                value= {password}
+                onChange={ handleInputChange }
+                />
+            </div>
+            
+        </>
+    )
+}
+```
+
+y ahora lo importamos en **index.js**
+
+```
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import './components/01-useState/counter.css'
+import { FormWithCustomHook } from './components/02-useEffect/FormWithCustomHook';
+// import { SimpleForm } from './components/02-useEffect/SimpleForm';
+// import { HookApp } from './HookApp';
+// import { CounterApp } from './components/01-useState/CounterApp';
+// import { CounterWithCustomHook } from './components/01-useState/CounterWithCustomHook';
+
+ReactDOM.render(
+    <FormWithCustomHook />,
+  document.getElementById('root')
+);
+
+```
+
+Verificamos que trae el navegador y no deberiamos tener algun error por el momento, verificamos la pestaña components y revisamos que el estado de los 3 campos los este trayendo
+
+![assets-git/312.png](assets-git/312.png)
+
+Ahora vamos a crear un custom Hook que permita manejar el `handleInpuChange` desde un Hook y asi limpiar mas el codigo, de esta forma si se llegara a crear otro componente que tiene formulario, solo se reutiliza el Hook.
+
+Dentro de la carpeta **hooks**, creamos el archivo **useForm.js** y usamos el snipet **rafc** pero dejamos lo que necesitamos, en este caso solo es esta parte
+
+```
+
+
+export const useForm = () => {
+
+}
+
+```
+
+Y ahora le creamos un estado llamado `values`, utilizamos la misma funcion `handleInputChange` en el Hook, e inicializamos el estado con un objeto vacio y luego retornamos la funcion y el estado
+
+```
+import { useState } from "react"
+
+
+export const useForm = ( initialState = {} ) => {
+
+    const [values, setValues] = useState(initialState)
+
+    const handleInputChange = ({target}) => {
+        
+        setValues({
+            ...values,
+            [target.name]: target.value
+        })    
+    }
+    
+return [values, handleInputChange];
+}
+
+```
+
+Ahora cambiamos el `useState` por `useForm` en el componente `FormWithCustomHook` asegurandonos que esta importando bien el `useForm` y ahora llamamos a los dos valores que se retornan que seria `values` y `handleInputChange`, aunque se pueden llamar de cualquier forma, de resto, se sigue manejando todo igual
+
+```
+import React from 'react'
+import { useForm } from '../../hooks/useForm';
+
+export const FormWithCustomHook = () => {
+
+    const [values, handleInputChange] = useForm({
+        name: '',
+        email: '',
+        password: '',
+    })
+
+    const {name, email, password } = values;
+
+    return (
+
+        <>
+            <h1>FormWithCustomHook</h1>
+            <hr/>
+
+            <div className="form-group">
+                <input
+                type="text"
+                name="name"
+                className="form-control"
+                placeholder="Tu nombre"
+                autoComplete="off"
+                value= {name}
+                onChange={ handleInputChange }
+                />
+            </div>
+
+            <div className="form-group">
+                <input
+                type="text"
+                name="email"
+                className="form-control"
+                placeholder="email@gmail.com"
+                autoComplete="off"
+                value= {email}
+                onChange={ handleInputChange }
+                />
+            </div>
+
+            <div className="form-group">
+                <input
+                type="password"
+                name="password"
+                className="form-control"
+                placeholder="****"
+                autoComplete="off"
+                value= {password}
+                onChange={ handleInputChange }
+                />
+            </div>
+            
+        </>
+    )
+}
+
+```
+
+De esta manera no notamos ningun cambio en la forma de renderizar el componente y el codigo queda mucho mas legible
+
+**Nota:** En la pestaña components el estado empieza a aparecer dentro de Hooks
+
+![assets-git/313.png](assets-git/313.png)
+
+Ahora se maneja el posteo del formulario para eso en vez de traer a Fragment, lo cambiamos por un `form`, le añadimos el evento `onSubmit` y creamos un boton que envie los valores de cada campo a la consola, el evento `handleSubmit` debe recibir el estado el cual nombramos como `values` para poder mostrarlo en consola
+
+```
+import React from 'react'
+import { useForm } from '../../hooks/useForm';
+
+export const FormWithCustomHook = () => {
+
+    const [values, handleInputChange] = useForm({
+        name: '',
+        email: '',
+        password: '',
+    })
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(values);
+    }
+
+    const {name, email, password } = values;
+
+    return (
+
+        <form onSubmit={handleSubmit}>
+            <h1>FormWithCustomHook</h1>
+            <hr/>
+
+            <div className="form-group">
+                <input
+                type="text"
+                name="name"
+                className="form-control"
+                placeholder="Tu nombre"
+                autoComplete="off"
+                value= {name}
+                onChange={ handleInputChange }
+                />
+            </div>
+
+            <div className="form-group">
+                <input
+                type="text"
+                name="email"
+                className="form-control"
+                placeholder="email@gmail.com"
+                autoComplete="off"
+                value= {email}
+                onChange={ handleInputChange }
+                />
+            </div>
+
+            <div className="form-group">
+                <input
+                type="password"
+                name="password"
+                className="form-control"
+                placeholder="****"
+                autoComplete="off"
+                value= {password}
+                onChange={ handleInputChange }
+                />
+            </div>
+
+            <button 
+            className="btn btn-success"
+            type="submit">
+                Enviar
+            </button>
+            
+        </form>
+    )
+}
+
+```
+
+![assets-git/314.png](assets-git/314.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
