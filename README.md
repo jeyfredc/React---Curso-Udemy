@@ -128,7 +128,7 @@ ___
 
 [useState](#useState)
 
-[](#)
+[useCounter](#useCounter)
 
 [](#)
 
@@ -8011,6 +8011,260 @@ export const CounterApp = () => {
 En este caso solo se modifico a `counter1`
 
 ![assets-git/289.png](assets-git/289.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## useCounter
+
+A continuación dentro de la carpeta **src** creamos el componente **CounterWithCustomHook.js**, escribimos el snipet **rafc** y generamos la estructura basica
+
+```
+import React from 'react'
+
+export const CountterWithCustomHook = () => {
+    return (
+        <div>
+            
+        </div>
+    )
+}
+
+```
+
+Ahora generamos algo parecido al anterior capitulo pero ahora van a existir varios botones que seria el boton +1,-1 y el reset con algunas clases de bootstrap
+
+```
+import React from 'react'
+
+export const CountterWithCustomHook = () => {
+    return (
+        <>
+          <h1> Counter with Hook: { 0 } </h1>
+          <hr/>
+
+          <button className="btn btn-success m-3"> +1 </button>
+
+          <button className="btn btn-primary m-3"> Reset </button>  
+
+          <button className="btn btn-danger m-3"> -1 </button>  
+
+        </>
+    )
+}
+
+```
+
+y lo importamos en **iindex.js** para verificar que se este renderizando correctamente con el **counter.css** para poder obtener una mejor vista
+
+```
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import './components/01-useState/counter.css'
+// import { HookApp } from './HookApp';
+// import { CounterApp } from './components/01-useState/CounterApp';
+import { CountterWithCustomHook } from './components/01-useState/CountterWithCustomHook';
+
+ReactDOM.render(
+    <CountterWithCustomHook />,
+  document.getElementById('root')
+);
+
+```
+
+![assets-git/290.png](assets-git/290.png)
+
+Ahora vamos a pasar a la carpeta **src** y dentro de esta crear una carpeta llamada **hooks** y dentro de este crear un hook llamado **useCounter.js**,recordando que todos los hooks empiezan por la palabra **use**, generamos primero una estructura basica con el snipet **rafc** pero nos deshacemos de lo que no se requiere usar para este Hook, que seria el render
+
+```
+import React from 'react'
+
+export const useCounter = () => {
+    return (
+
+    )
+}
+```
+
+Y ahora se hace uso de useState, solo utilizamos lo que requerimos en el `return` ademas de devolver elementos html tambien podemos devolver objetos o arreglos, en este caso seran objetos y creamos cada una de las funciones que nos serviran para exportar y utilizar en el componente `CounterWithCustomHook`
+
+```
+import { useState } from 'react'
+
+export const useCounter = ( initialState = 10 ) => {
+
+    const [counter, setCounter] = useState(initialState);
+
+    const increment = () => {
+        setCounter( counter + 1);
+    }
+
+    const reset = () => {
+        setCounter(initialState);
+    }
+
+    const decrement = () => {
+        setCounter( counter -1 );
+    }
+    return {
+        counter,
+        increment,
+        reset,
+        decrement,
+    }
+}
+```
+
+Ahora en el componente `CounterWithCustomHook` hacemos la importación de los elementos de forma desestructurada, como se declaro un `inicialState` con valor 10, este va a aparecer por defecto, al dejar el argumento de `useCounter()` vacio
+
+
+```
+import React from 'react'
+import { useCounter } from '../../hooks/useCounter'
+
+export const CounterWithCustomHook = ( ) => {
+
+  const { counter, increment, decrement, reset } = useCounter();
+
+    return (
+        <>
+          <h1> Counter with Hook: { counter } </h1>
+          <hr/>
+
+          <button className="btn btn-success m-3"> +1 </button>
+
+          <button className="btn btn-primary m-3"> Reset </button>  
+
+          <button className="btn btn-danger m-3"> -1 </button>  
+
+        </>
+    )
+}
+
+```
+
+![assets-git/291.png](assets-git/291.png)
+
+Ahora solo resta añadir cada una de las funciones al `onClick` de cada boton
+
+```
+import React from 'react'
+import { useCounter } from '../../hooks/useCounter'
+
+export const CounterWithCustomHook = ( ) => {
+
+  const { counter, increment, decrement, reset } = useCounter();
+
+    return (
+        <>
+          <h1> Counter with Hook: { counter } </h1>
+          <hr/>
+
+          <button 
+          className="btn btn-success m-3"
+          onClick={increment}
+          >
+             +1 
+          </button>
+
+          <button 
+          className="btn btn-primary m-3"
+          onClick={reset}
+          >
+             Reset 
+          </button>  
+
+          <button 
+          className="btn btn-danger m-3"
+          onClick={decrement}
+          >
+             -1 
+          </button>  
+
+        </>
+    )
+}
+
+```
+
+![assets-git/292.png](assets-git/292.png)
+
+Tambien se podrian mandar argumentos a cada funcion, en este caso a `increment` y a `decrement` para que aumenten o disminuyan de 3 en 3, para esto regresamos al Hook `useCounter` y en los argumentos de cada funcion le pasamos dentro de los argumentos el factor
+
+```
+import { useState } from 'react'
+
+export const useCounter = ( initialState = 10 ) => {
+
+    const [counter, setCounter] = useState(initialState);
+
+    const increment = ( factor = 1) => {
+        setCounter( counter + factor);
+    }
+
+    const reset = () => {
+        setCounter(initialState);
+    }
+
+    const decrement = ( factor = 1) => {
+        setCounter( counter -factor );
+    }
+    return {
+        counter,
+        increment,
+        reset,
+        decrement,
+    }
+}
+
+```
+
+y en el componente `CounterWithCustomHook` declaramos un `initialState` en 100 y en los argumentos de cada funcion 3
+
+```
+import React from 'react'
+import { useCounter } from '../../hooks/useCounter'
+
+export const CounterWithCustomHook = ( ) => {
+
+  const { counter, increment, decrement, reset } = useCounter(100);
+
+    return (
+        <>
+          <h1> Counter with Hook: { counter } </h1>
+          <hr/>
+
+          <button 
+          className="btn btn-success m-3"
+          onClick={() => increment(3)}
+          >
+             +3
+          </button>
+
+          <button 
+          className="btn btn-primary m-3"
+          onClick={reset}
+          >
+             Reset 
+          </button>  
+
+          <button 
+          className="btn btn-danger m-3"
+          onClick={() => decrement(3)}
+          >
+             -3
+          </button>  
+
+        </>
+    )
+}
+
+```
+
+![assets-git/293.png](assets-git/293.png)
+
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
