@@ -132,7 +132,7 @@ ___
 
 [useEffect-SimpleForm](#useEffect-SimpleForm)
 
-[](#)
+[useEffect unmount-Cleanup](#useEffect-unmount-Cleanup)
 
 [](#)
 
@@ -8700,6 +8700,130 @@ export const SimpleForm = () => {
 De esta manera solo se recibe un primer efecto que es cuando se carga el componente y los otros efectos cuando modifico el campo de email
 
 ![assets-git/300.png](assets-git/300.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## useEffect unmount-Cleanup
+
+Hasta el momento no ha sido utilizado el snipet de useEffect, el cual viene con esta construcción
+
+```
+    useEffect(() => {
+        effect
+        return () => {
+            cleanup
+        }
+    }, [input])
+```
+
+Donde effect, es el efecto que se recibe, y cleanup, el efecto que indica un efecto de salida, input, es la dependencia,
+
+Para ver mas claro este ejemplo vamos a crear dentro de la carpeta **02-useEffect** al componente **Message.js** y generamos la estructura basica pero añadimos un `useEffect` con el snipet
+
+```
+import React, { useEffect } from 'react'
+
+export const Message = () => {
+
+    useEffect(() => {
+        console.log('Componente recibido');
+        
+        return () => {
+            console.log('Componente Saliendo');
+        }
+    }, [])
+
+    return (
+        
+        <div>
+            <h3>Eres genial!!!</h3>
+        </div>
+    )
+}
+```
+
+Ahora pasamos al componente `SimpleForm`  y lo importamos pero vamos a añadir una condicion debajo de los campos input, cuando el input `name` reciba `123` se va a mostrar el componente de lo contrario no lo va a mostrar y adicional comentamos los console.log del capitulo anterior
+
+```
+import React, { useEffect, useState } from 'react'
+import { Message } from './Message';
+
+export const SimpleForm = () => {
+    const [formState, setFormState] = useState({
+        name: '',
+        email: '',
+    })
+
+    const {name, email} = formState;
+
+    useEffect( () => {
+        // console.log('Me dispare');
+    }, [])
+
+    useEffect( () => {
+        // console.log('Recibi el campo email');
+    }, [ email ])
+
+    const handleInputChange = ({target}) => {
+        
+        setFormState({
+            ...formState,
+            [target.name]: [target.value]
+        })
+        
+    }
+
+    return (
+
+        <>
+            <h1>useEffect</h1>
+            <hr/>
+
+            <div className="form-group">
+                <input
+                type="text"
+                name="name"
+                className="form-control"
+                placeholder="Tu nombre"
+                autoComplete="off"
+                value= {name}
+                onChange={ handleInputChange }
+                />
+            </div>
+
+            <div className="form-group">
+                <input
+                type="text"
+                name="email"
+                className="form-control"
+                placeholder="email@gmail.com"
+                autoComplete="off"
+                value= {email}
+                onChange={ handleInputChange }
+                />
+            </div>
+
+            {(name == '123') && <Message />}
+            
+        </>
+    )
+}
+```
+
+**Nota:** si vamos a la pestaña components del navegador, notaremos que debajo del `State` hay 2 `Effect`, estos hacen referencia a los `useEffect` que estan en SimpleForm y son llamados en el orden que se establecen en el componente
+
+![assets-git/301.png](assets-git/301.png)
+
+Ahora para hacer la prueba en el campo `Tu nombre` escribimos 123 y estamos pendientes de la consola hasta que salga `Componente recibido`
+
+![assets-git/302.png](assets-git/302.png)
+
+Si escribimos un numero de mas o menos se debera disparar el otro efecto que es lanzar por consola `Componente Saliendo`
+
+![assets-git/303.png](assets-git/303.png)
+
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
