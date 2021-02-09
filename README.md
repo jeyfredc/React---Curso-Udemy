@@ -138,7 +138,7 @@ ___
 
 [Formulario con custom Hook](#Formulario-con-custom-Hook)
 
-[](#)
+[useFetch CustomHook](#useFetch-CustomHook)
 
 [](#)
 
@@ -9285,6 +9285,146 @@ export const FormWithCustomHook = () => {
 ```
 
 ![assets-git/314.png](assets-git/314.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## useFetch CustomHook
+
+A continuación se va a crear un Hook para crear peticiones de tipo get a cualquier url el cual se va a llamar **useFetch.js** y debemos crearlo dentro de la carpeta **hooks** y como siempre generamos la estructura basica
+
+```
+export const useFetch = () => {
+
+}
+
+```
+
+Ahora vamos a crear un componente donde vamos a llamar al hook, asi que en la carpeta **components** creamos una carpeta que se llame **03-examples** y dentro de esta un componente que se llamara **MultipleCustomHooks.js**
+
+```
+import React from 'react'
+
+export const MultipleCustomHooks = () => {
+    return (
+        <div>
+            <h1>Custom Hooks!!!</h1>
+        </div>
+    )
+}
+```
+
+Lo importamos en **index.js** y verificamos que se este cargando
+
+```
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import './components/01-useState/counter.css'
+import { MultipleCustomHooks } from './components/03-examples/MultipleCustomHooks';
+// import { FormWithCustomHook } from './components/02-useEffect/FormWithCustomHook';
+// import { SimpleForm } from './components/02-useEffect/SimpleForm';
+// import { HookApp } from './HookApp';
+// import { CounterApp } from './components/01-useState/CounterApp';
+// import { CounterWithCustomHook } from './components/01-useState/CounterWithCustomHook';
+
+ReactDOM.render(
+    <MultipleCustomHooks />,
+  document.getElementById('root')
+);
+
+```
+![assets-git/315.png](assets-git/315.png)
+
+Vamos hacer uso de la API de [brakingBad](https://breakingbadapi.com/), la cual es una API que sirve para traer frases de la serie, alli debemos hacer click sobre la Documentacion y buscamos en la parte de la introduccion una parte llamada **Base URL**, copiamos la url que alli salga y abrimos postman y la pegamos
+
+![assets-git/316.png](assets-git/316.png)
+
+Regresamos a la documentacion y buscamos la parte que dice **Get quote by id**
+
+![assets-git/317.png](assets-git/317.png)
+
+y lugo copiamos el endpoint, que es `quotes/1` y lo pegamos en postman seguido de la palabra api y le damos click en send, esto debe traer las frases segun el numero que enviemos
+
+![assets-git/319.png](assets-git/319.png)
+
+Ahora vamos a copiar la url que dejamos en postman y vamos a empezar a trabajar sobre el hook `useFetch`
+
+Alli creamos un estado que va a recibir la `data` en nulo, `loading` en `true` y el `error` en nulo y el hook debe recibir la url que mande el usuario 
+
+```
+import { useState } from "react"
+
+
+export const useFetch = ( url ) => {
+
+    const [state, setState] = useState({
+        data : null,
+        loading : true,
+        error: null,
+    })
+
+}
+```
+
+Ahora establecemos un `useEffect`, que va a ejecutarse cada vez que la url cambie dentro de `useEffect` se hace el `fetch` a la url y como recibe una promesa se agrega `.then` donde se extrae la respuesta y se convierte a `json`, eso recibe otra promesa por tanto se hace un segundo `.then` que recibe la `data`. Una vez se tiene la `data` se llama al modificador `setState` y se establece la `data` que es la misma que se recibe del endpoint, el `loading` debe estar en `false` porque se supone que la `data` ya cargo y el `error` debe ser nulo y en este caso solo se retorna al `state`
+
+
+```
+import { useEffect, useState } from "react"
+
+
+export const useFetch = ( url ) => {
+
+    const [state, setState] = useState({
+        data : null,
+        loading : true,
+        error: null,
+    })
+
+    useEffect( () => {
+        
+        fetch(url)
+            .then( resp => resp.json())
+            .then( data => {
+
+                setState({
+                    data,
+                    loading: false,
+                    error: null,
+                })
+            })
+    }, [url])
+
+    return state;
+
+}
+
+```
+
+Ahora regresamos al componente `MultipleCustomHooks` e importamos al hook `useFetch` alli recordemos que se recibe la url, alli es donde debemos pegar la url que copiamos de postman entre backticks **` `** y `useFetch` recibe un estado por tanto se hace un `console.log` de ese `state` para ver que información se esta trayendo por consola
+
+```
+import React from 'react'
+import { useFetch } from '../../hooks/useFetch'
+
+export const MultipleCustomHooks = () => {
+
+    const state =useFetch(`https://www.breakingbadapi.com/api/quotes/1`);
+    console.log(state);
+    return (
+        <div>
+            <h1>Custom Hooks!!!</h1>
+        </div>
+    )
+}
+
+```
+
+El primer estado esta en nulo, el cual es que que se dispara con `useEffect` cuando se renderiza por primera vez el componente y el segundo estado es cuando se obtiene la data de la url y se dispara una sola vez
+ 
+![assets-git/320.png](assets-git/320.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>

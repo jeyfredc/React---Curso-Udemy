@@ -56,7 +56,7 @@ export const SimpleForm = () => {
                 />
             </div>
 
-            { (name == '123') && <Message /> }
+            {/* { (name == '123') && <Message /> } */}
             
         </>
     )
