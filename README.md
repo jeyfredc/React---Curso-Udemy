@@ -130,6 +130,70 @@ ___
 
 [useCounter](#useCounter)
 
+[useEffect-SimpleForm](#useEffect-SimpleForm)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
 [](#)
 
 [](#)
@@ -8265,6 +8329,377 @@ export const CounterWithCustomHook = ( ) => {
 
 ![assets-git/293.png](assets-git/293.png)
 
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## useEffect-SimpleForm
+
+Dentro de la carpeta components ahora vamos a crear una nueva carpeta que se va a llamar **02-useEffect** y dentro de esta un componente llamado **SimpleForm.js** usamos el snipet **rafc** para crear la estructura basica y ahora empezamos a modificar porque este componente sera un formulario
+
+```
+import React from 'react'
+
+export const SimpleForm = () => {
+    return (
+        <>
+            <h1>useEffect</h1>
+            <hr/>
+        </>
+    )
+}
+
+```
+
+Luego lo importamos en **index.js** y probamos que este renderizando de forma correcta
+
+```
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import './components/01-useState/counter.css'
+import { SimpleForm } from './components/02-useEffect/SimpleForm';
+// import { HookApp } from './HookApp';
+// import { CounterApp } from './components/01-useState/CounterApp';
+// import { CounterWithCustomHook } from './components/01-useState/CounterWithCustomHook';
+
+ReactDOM.render(
+    <SimpleForm />,
+  document.getElementById('root')
+);
+
+```
+
+![assets-git/294.png](assets-git/294.png)
+
+**useEffect** es un Hook que va a permitir ejecutar algun efecto secundario cuando algo suceda en nuestros componentes 
+
+Lo primero que hay que hacer es darle forma al componente creando un estado y la base para establecer el formulario, el estado inicial va a ser un objeto que recibe a los campos `name` e `email`, que vamos a desestructurar para no tener que usar `formState.name` o `formState.email`, se utilizan clases de Bootstrap y se establecen propiedades del formulario que son muy importantes cuando se van a trabajar, como lo es el atributo `name` y el atributo `value` no significa que los otros atributos no sean importantes pero para formularios es indispensable contar con estos 
+
+```
+import React, { useState } from 'react'
+
+export const SimpleForm = () => {
+    const [formState, setFormState] = useState({
+        name: '',
+        email: '',
+    })
+
+    const {name, email} = formState;
+
+    return (
+
+        <>
+            <h1>useEffect</h1>
+            <hr/>
+
+            <div className="form-group">
+                <input
+                type="text"
+                name="name"
+                className="form-control"
+                placeholder="Tu nombre"
+                autoComplete="off"
+                value= {name}
+                />
+            </div>
+
+            <div className="form-group">
+                <input
+                type="text"
+                name="email"
+                className="form-control"
+                placeholder="email@gmail.com"
+                autoComplete="off"
+                value= {email}
+                />
+            </div>
+            
+        </>
+    )
+}
+
+```
+
+por el momento obtenemos esto, pero si intentamos modificar estado, imprimir en la pestaña Console o Components del navegador no vamos a obtener ningun resultado
+
+![assets-git/295.png](assets-git/295.png)
+
+Es necesario llamar al evento `onChange` el cual llama a una función que la nombramos como `handleInputChange` esta recibe un evento que lo pasamos en el argumento como `e` y luego hacemos un console.log de `e.target`
+
+```
+import React, { useState } from 'react'
+
+export const SimpleForm = () => {
+    const [formState, setFormState] = useState({
+        name: '',
+        email: '',
+    })
+
+    const {name, email} = formState;
+
+    const handleInputChange = (e) => {
+        console.log(e.target)
+    }
+
+    return (
+
+        <>
+            <h1>useEffect</h1>
+            <hr/>
+
+            <div className="form-group">
+                <input
+                type="text"
+                name="name"
+                className="form-control"
+                placeholder="Tu nombre"
+                autoComplete="off"
+                value= {name}
+                onChange={ handleInputChange }
+                />
+            </div>
+
+            <div className="form-group">
+                <input
+                type="text"
+                name="email"
+                className="form-control"
+                placeholder="email@gmail.com"
+                autoComplete="off"
+                value= {email}
+                />
+            </div>
+            
+        </>
+    )
+}
+```
+
+De tal forma que al escribir cualquier cosa sobre los campos de nombre e email, se va a disparar el evento `onChange` y por el momento se va a obtener la etiqueta input en la consola
+
+![assets-git/296.png](assets-git/296.png)
+
+Ahora si establezco un console.log de `e.target.name` y `e.target.value`
+
+```
+    const handleInputChange = (e) => {
+        console.log(e.target.name)
+        console.log(e.target.value)
+    }
+```
+no se modifica nada sobre los campos pero en la consola obtengo el input que es estoy modificando con su valor que en este caso es `"alberto"`
+
+![assets-git/297.png](assets-git/297.png)
+
+para poder obtener el valor del input entonces debo establecer el modificador que es `setFormState`, para no utilizar al evento que se nombro como `(e)`, tambien puedo hacer uso de la desestructuración y obtener directamente a `target`, luego de esto en el modificador debo establecer al objeto llamando cada propiedad, en este caso en name y el value y hago una copia del estado por si alguno de los valores no obtiene un cambio aun
+
+```
+import React, { useState } from 'react'
+
+export const SimpleForm = () => {
+    const [formState, setFormState] = useState({
+        name: '',
+        email: '',
+    })
+
+    const {name, email} = formState;
+
+    const handleInputChange = ({target}) => {
+        
+        setFormState({
+            ...formState,
+            [target.name]: [target.value]
+        })
+        
+    }
+
+    return (
+
+        <>
+            <h1>useEffect</h1>
+            <hr/>
+
+            <div className="form-group">
+                <input
+                type="text"
+                name="name"
+                className="form-control"
+                placeholder="Tu nombre"
+                autoComplete="off"
+                value= {name}
+                onChange={ handleInputChange }
+                />
+            </div>
+
+            <div className="form-group">
+                <input
+                type="text"
+                name="email"
+                className="form-control"
+                placeholder="email@gmail.com"
+                autoComplete="off"
+                value= {email}
+                />
+            </div>
+            
+        </>
+    )
+}
+
+```
+Ahora el estado ya esta recibiendo el valor del campo que se establece 
+
+![assets-git/298.png](assets-git/298.png)
+
+Ahora vamos a establecer un `useEffect` que va a dispara la palabra `Me dispare`
+
+```
+import React, { useEffect, useState } from 'react'
+
+export const SimpleForm = () => {
+    const [formState, setFormState] = useState({
+        name: '',
+        email: '',
+    })
+
+    const {name, email} = formState;
+
+    useEffect( () => {
+        console.log('Me dispare');
+    })
+
+    const handleInputChange = ({target}) => {
+        
+        setFormState({
+            ...formState,
+            [target.name]: [target.value]
+        })
+        
+    }
+
+    return (
+
+        <>
+            <h1>useEffect</h1>
+            <hr/>
+
+            <div className="form-group">
+                <input
+                type="text"
+                name="name"
+                className="form-control"
+                placeholder="Tu nombre"
+                autoComplete="off"
+                value= {name}
+                onChange={ handleInputChange }
+                />
+            </div>
+
+            <div className="form-group">
+                <input
+                type="text"
+                name="email"
+                className="form-control"
+                placeholder="email@gmail.com"
+                autoComplete="off"
+                value= {email}
+                />
+            </div>
+            
+        </>
+    )
+}
+
+```
+
+Hay una primer vez que se dispara el efecto que es cuando se carga el componente, pero en cuanto empiezo a escribir letra por letra en el campo se dispara mas veces el `useEffect`, esto puede ser controlado como se prefiera, si agrego los parentesis cuadrados `[]`, esto solo permite que se dispare una sola vez, que es cuando se carga el componente
+
+```
+    useEffect( () => {
+        console.log('Me dispare');
+    }, [])
+
+```
+
+![assets-git/299.png](assets-git/299.png)
+
+La recomendación de React, es que los efectos se deben trabajar de manera individual, si me interesa escuchar una dependencia en particular, debo establecerla entre los parentesis cuadrados `[]` , para esto en el input del email agregamos el evento `onChange` la cual recibe la misma función y hacemos uso de useEffect en otras lineas donde solo hagamos el efecto del campo email
+
+```
+    useEffect( () => {
+        console.log('Recibi el campo email');
+    }, [ email ])
+```
+
+```
+import React, { useEffect, useState } from 'react'
+
+export const SimpleForm = () => {
+    const [formState, setFormState] = useState({
+        name: '',
+        email: '',
+    })
+
+    const {name, email} = formState;
+
+    useEffect( () => {
+        console.log('Me dispare');
+    }, [])
+
+    useEffect( () => {
+        console.log('Recibi el campo email');
+    }, [ email ])
+
+    const handleInputChange = ({target}) => {
+        
+        setFormState({
+            ...formState,
+            [target.name]: [target.value]
+        })
+        
+    }
+
+    return (
+
+        <>
+            <h1>useEffect</h1>
+            <hr/>
+
+            <div className="form-group">
+                <input
+                type="text"
+                name="name"
+                className="form-control"
+                placeholder="Tu nombre"
+                autoComplete="off"
+                value= {name}
+                onChange={ handleInputChange }
+                />
+            </div>
+
+            <div className="form-group">
+                <input
+                type="text"
+                name="email"
+                className="form-control"
+                placeholder="email@gmail.com"
+                autoComplete="off"
+                value= {email}
+                onChange={ handleInputChange }
+                />
+            </div>
+            
+        </>
+    )
+}
+
+```
+
+De esta manera solo se recibe un primer efecto que es cuando se carga el componente y los otros efectos cuando modifico el campo de email
+
+![assets-git/300.png](assets-git/300.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
