@@ -134,7 +134,7 @@ ___
 
 [useEffect unmount-Cleanup](#useEffect-unmount-Cleanup)
 
-[](#)
+[useEffect Precauciones](#useEffect-Precauciones)
 
 [](#)
 
@@ -8823,6 +8823,185 @@ Ahora para hacer la prueba en el campo `Tu nombre` escribimos 123 y estamos pend
 Si escribimos un numero de mas o menos se debera disparar el otro efecto que es lanzar por consola `Componente Saliendo`
 
 ![assets-git/303.png](assets-git/303.png)
+
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## useEffect Precauciones
+
+para este ejemplo se va a crear en el componente `Message` un oyente del movimiento del mouse y sus coordenadas a traves de `window.addEventListener()`, las condiciones seguiran siendo las mismas cuando escriba sobre el input 123 el evento se debe disparar y por la consola debemos obtener las coordenadas de este
+
+```
+import React, { useEffect } from 'react'
+
+export const Message = () => {
+
+    useEffect(() => {
+        
+        window.addEventListener('mousemove', (e) => {
+            console.log(e);
+        })
+        
+        return () => {
+            console.log('Componente Saliendo');
+        }
+    }, [])
+
+    return (
+
+        <div>
+            <h3>Eres genial!!!</h3>
+        </div>
+    )
+}
+
+```
+
+Nuevamente se hace la prueba y atentos a la consola, con tan solo mover un poco el mouse, lo mas minimo, se va a disparar el evento
+
+![assets-git/304.png](assets-git/304.png)
+
+Cuando se escribe otro numero de mas o menos, se muetra en la consola Componente Saliendo pero el evento aun se sigue disparando
+
+![assets-git/305.png](assets-git/305.png)
+
+Ahora cambiamos un poco el ehercicio y obtenemos las coordenadas directamente a traves de un objeto, creamos una constante coords, y el evento queda a la escucha de las coordenas `x` y `y` y luego imprimimos la constante en consola
+
+```
+import React, { useEffect } from 'react'
+
+export const Message = () => {
+
+    useEffect(() => {
+        
+        window.addEventListener('mousemove', (e) => {
+            const coords = {
+                x: e.x,
+                y: e.y,
+            }
+            console.log(coords);
+        })
+        
+        return () => {
+            console.log('Componente Saliendo');
+        }
+    }, [])
+
+    return (
+
+        <div>
+            <h3>Eres genial!!!</h3>
+        </div>
+    )
+}
+```
+
+Nuevamente escribimos 123 y se dispara el evento, movemos el mouse un poco y ya tenemos los valores de las coordenas en `x` y `y`
+
+![assets-git/306.png](assets-git/306.png)
+
+Cuando se escribe otro numero de mas o menos, se muetra en la consola Componente Saliendo pero el evento aun se sigue disparando nuevamente, es decir no se ha corregido y no ha salido del evento
+
+![assets-git/307.png](assets-git/307.png)
+
+Ahora vamos a utilizar la limpieza del mismo a traves de un removeEventListener, pero vamos a separar el evento mouseMove en una constante
+ 
+```
+import React, { useEffect } from 'react'
+
+export const Message = () => {
+
+    useEffect(() => {
+
+        const mouseMove = (e) => {
+
+            const coords = {
+                x: e.x,
+                y: e.y,
+            }
+            console.log(coords);
+        }
+        
+        window.addEventListener('mousemove', mouseMove);
+        
+        return () => {
+            window.removeEventListener('mousemove', mouseMove);
+        }
+    }, [])
+
+    return (
+
+        <div>
+            <h3>Eres genial!!!</h3>
+        </div>
+    )
+}
+
+```
+
+Ahora nuevamente escribo 123, muevo el mouse y disparo el evento
+
+![assets-git/308.png](assets-git/308.png)
+
+Si escribo un numero de mas o menos, desaparece el efecto, es por esta razón que deben existir precauciones a la hora de hacer uso de `useEffect`
+
+![assets-git/309.png](assets-git/309.png)
+
+Si se quiere ahora se pueden agregar al estado esas coordenadas, ya estando seguros que no se ejecuta ningun proceso por debajo, se pueden quitar los `console.log` y extraer las coordenas en un objeto
+
+```
+import React, { useEffect, useState } from 'react'
+
+export const Message = () => {
+
+    const [coords, setCoords] = useState({
+        x:0,
+        y:0,
+    })
+
+    const {x, y} = coords;
+
+    useEffect(() => {
+
+        const mouseMove = (e) => {
+
+            const coords = {
+                x: e.x,
+                y: e.y,
+            }
+            setCoords(coords);
+            // console.log(coords);
+            // console.log('Iniciando Componente');
+        }
+        
+        window.addEventListener('mousemove', mouseMove);
+        
+        return () => {
+            window.removeEventListener('mousemove', mouseMove);
+            // console.log('Saliendo del Componente');
+
+        }
+    }, [])
+
+    return (
+
+        <div>
+            <h1> x: {x}</h1>
+            <h1> y: {y}</h1>
+            <h3>Eres genial!!!</h3>
+        </div>
+    )
+}
+
+```
+
+Nuevamente probamos escribimos 123 aparecen las coordenadas del mouse, escribimos otro numero de mas o menos y desaparecen 
+
+![assets-git/310.png](assets-git/310.png)
+
+![assets-git/311.png](assets-git/311.png)
 
 
 <div align="right">
