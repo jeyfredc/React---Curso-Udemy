@@ -1,3 +1,9 @@
 body {
     padding: 70px;
 }
+
+.blockquote {
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    text-align: right;
+}

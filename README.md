@@ -140,7 +140,7 @@ ___
 
 [useFetch CustomHook](#useFetch-CustomHook)
 
-[](#)
+[useFetch + useCounter](#useFetch-+-useCounter)
 
 [](#)
 
@@ -9423,8 +9423,445 @@ export const MultipleCustomHooks = () => {
 ```
 
 El primer estado esta en nulo, el cual es que que se dispara con `useEffect` cuando se renderiza por primera vez el componente y el segundo estado es cuando se obtiene la data de la url y se dispara una sola vez
- 
+
 ![assets-git/320.png](assets-git/320.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## useFetch + useCounter
+
+En este capitulo vamos a extraer información de la data que nos retorna la imagen anterior y presentarla en el navegador, para esto vamos a modificar el componente `MultipleCustomHooks` para agregar una barra de cargando y la forma para citar al autor cuando se empiecen a traer las frases de la API, y queda asi 
+
+```
+import React from "react";
+import { useFetch } from "../../hooks/useFetch";
+
+export const MultipleCustomHooks = () => {
+  const state = useFetch(`https://www.breakingbadapi.com/api/quotes/1`);
+  console.log(state);
+  return (
+    <div>
+      <h1>BreakingBad Quotes</h1>
+      <hr />
+      <div className="alert alert-info text-center">Loading...</div>
+      <blockquote className="blockquote text-right">
+        <p className="mb-2"> Hola Mundo</p>
+        <footer className="blockquote-footer"> Jeyfred C.</footer>
+      </blockquote>
+    </div>
+  );
+};
+```
+
+![assets-git/321.png](assets-git/321.png)
+
+Ahora vamos a comentar el `console.log(state)` y extraemos el loading que por el momento es la parte mas facil de extraer y lo presentamos en la consola
+```
+  const {loading} = useFetch(`https://www.breakingbadapi.com/api/quotes/1`);
+    console.log(loading);
+//   console.log(state);
+```
+De esta forma vemos que primero esta en true cuando esta cargando y luego pasa a false cuando ya ha cargado la data 
+
+![assets-git/322.png](assets-git/322.png)
+
+Ahora lo que hacemos es un if ternario que indica que si loading esta cargando la imagen `Loading...`, de lo contrario, solo va a mostrar la cita, este seria el primer paso 
+
+```
+import React from "react";
+import { useFetch } from "../../hooks/useFetch";
+
+export const MultipleCustomHooks = () => {
+  const {loading} = useFetch(`https://www.breakingbadapi.com/api/quotes/1`);
+    console.log(loading);
+//   console.log(state);
+  return (
+    <div>
+      <h1>BreakingBad Quotes</h1>
+      <hr />
+
+    {
+        loading
+        ? 
+        (
+
+        )       
+        :
+        (
+
+        )
+    }
+      <div className="alert alert-info text-center">Loading...</div>
+
+      <blockquote className="blockquote text-right">
+        <p className="mb-2"> Hola Mundo</p>
+        <footer className="blockquote-footer"> Jeyfred C.</footer>
+      </blockquote>
+    </div>
+  );
+};
+
+```
+
+y este el segundo paso 
+
+```
+import React from "react";
+import { useFetch } from "../../hooks/useFetch";
+
+export const MultipleCustomHooks = () => {
+  const {loading} = useFetch(`https://www.breakingbadapi.com/api/quotes/1`);
+    console.log(loading);
+//   console.log(state);
+  return (
+    <div>
+      <h1>BreakingBad Quotes</h1>
+      <hr />
+
+    {
+        loading
+        ? 
+            (
+                <div className="alert alert-info text-center">Loading...</div>
+            )
+        :
+            (
+                <blockquote className="blockquote text-right">
+                    <p className="mb-2"> Hola Mundo</p>
+                    <footer className="blockquote-footer"> Jeyfred C.</footer>
+                </blockquote>
+            )
+    }
+    </div>
+  );
+};
+
+```
+
+Por unos minutos se debe ver que este el `loading...` es decir que este cargando la `data` mientras este en `true` en la consola y cuando este en `false` debe desaparecer y solo mostrar la cita
+
+![assets-git/323.png](assets-git/323.png)
+
+![assets-git/324.png](assets-git/324.png)
+
+Ahora hacemos un `console.log` de la `data`
+
+```
+import React from "react";
+import { useFetch } from "../../hooks/useFetch";
+
+export const MultipleCustomHooks = () => {
+  const {loading, data } = useFetch(`https://www.breakingbadapi.com/api/quotes/1`);
+    console.log(data);
+
+  return (
+    <div>
+      <h1>BreakingBad Quotes</h1>
+      <hr />
+
+    {
+        loading
+        ? 
+            (
+                <div className="alert alert-info text-center">Loading...</div>
+            )
+        :
+            (
+                <blockquote className="blockquote text-right">
+                    <p className="mb-2"> Hola Mundo</p>
+                    <footer className="blockquote-footer"> Jeyfred C.</footer>
+                </blockquote>
+            )
+    }
+    </div>
+  );
+};
+```
+
+y al igual que loading la primer `data` que se trae es nula y despues aparece la `data`
+
+![assets-git/325.png](assets-git/325.png)
+
+Ahora la `data` la debemos convertir a un valor `false` para esto se debe hacer una validación que la veremos en consola
+
+El primer caso es si paso un valor `null`, regresa `null`
+
+El segundo caso es que si se niega a `null` es decir regresa `true`, entonces regresa `'Hola Mundo'` porque esta en `true`
+
+El tercer caso es la doble negacion de `null` es decir que regresa `false`
+
+![assets-git/326.png](assets-git/326.png)
+
+En la validación se debe pasar el `null` a falso para que entonces retorne la `data`
+
+Significa que si existe la `data` entonces extraiga la posicion 0 de la data `const { author, quote} = !!data && data[0];`
+
+```
+import React from "react";
+import { useFetch } from "../../hooks/useFetch";
+
+export const MultipleCustomHooks = () => {
+  const {loading, data } = useFetch(`https://www.breakingbadapi.com/api/quotes/1`);
+    // console.log(data);
+
+    const { author, quote} = !!data && data[0];
+
+    console.log(author, quote)
+
+  return (
+    <div>
+      <h1>BreakingBad Quotes</h1>
+      <hr />
+
+    {
+        loading
+        ? 
+            (
+                <div className="alert alert-info text-center">Loading...</div>
+            )
+        :
+            (
+                <blockquote className="blockquote text-right">
+                    <p className="mb-2"> Hola Mundo</p>
+                    <footer className="blockquote-footer"> Jeyfred C.</footer>
+                </blockquote>
+            )
+    }
+    </div>
+  );
+};
+```
+
+![assets-git/327.png](assets-git/327.png)
+
+Pot ultimo se reemplaza `{quote}` por `Hola Mundo` y `{author}` por `Jeyfred C.`
+
+```
+import React from "react";
+import { useFetch } from "../../hooks/useFetch";
+
+export const MultipleCustomHooks = () => {
+  const {loading, data } = useFetch(`https://www.breakingbadapi.com/api/quotes/1`);
+    // console.log(data);
+
+    const { author, quote} = !!data && data[0];
+
+    // console.log(author, quote)
+
+  return (
+    <div>
+      <h1>BreakingBad Quotes</h1>
+      <hr />
+
+    {
+        loading
+        ? 
+            (
+                <div className="alert alert-info text-center">Loading...</div>
+            )
+        :
+            (
+                <blockquote className="blockquote text-right">
+                    <p className="mb-2"> { quote }</p>
+                    <footer className="blockquote-footer"> { author }</footer>
+                </blockquote>
+            )
+    }
+    </div>
+  );
+};
+
+```
+
+![assets-git/328.png](assets-git/328.png)
+
+Ahora vamos a implementar un boton que cargue el siguiente estado, frase o quote asi que al final de todo creamos un boton que diga `Siguiente frase`
+
+```
+import React from "react";
+import { useFetch } from "../../hooks/useFetch";
+
+export const MultipleCustomHooks = () => {
+  const {loading, data } = useFetch(`https://www.breakingbadapi.com/api/quotes/1`);
+    // console.log(data);
+
+    const { author, quote} = !!data && data[0];
+
+    // console.log(author, quote)
+
+  return (
+    <div>
+      <h1>BreakingBad Quotes</h1>
+      <hr />
+
+    {
+        loading
+        ? 
+            (
+                <div className="alert alert-info text-center">Loading...</div>
+            )
+        :
+            (
+                <blockquote className="blockquote text-right">
+                    <p className="mb-2"> { quote }</p>
+                    <footer className="blockquote-footer"> { author }</footer>
+                </blockquote>
+            )
+    }
+
+    <button className="btn btn-primary">
+      Siguiente frase
+    </button>
+    </div>
+  );
+};
+
+```
+
+![assets-git/329.png](assets-git/329.png)
+
+Pero como no se quiere volver a implementar un contador, hacemos uso del Hook que tenemos creado que se llama `useCounter` y lo modificamos, simplemente le quitamos el `factor` que estaba antes y lo dejamos de esta forma
+
+```
+import { useState } from 'react'
+
+export const useCounter = ( initialState = 10 ) => {
+
+    const [counter, setCounter] = useState(initialState);
+
+    const increment = ( ) => {
+        setCounter( counter + 1);
+    }
+
+    const reset = () => {
+        setCounter(initialState);
+    }
+
+    const decrement = ( ) => {
+        setCounter( counter -1);
+    }
+    return {
+        counter,
+        increment,
+        reset,
+        decrement,
+    }
+}
+```
+
+Ahora nos devolvemos al componente `MultipleCustomHooks` e importamos al hook `useCounter`, de este hook solo nos interesa la funcion increment y se inicializa en valor `1`
+
+```
+import React from "react";
+import { useCounter } from "../../hooks/useCounter";
+import { useFetch } from "../../hooks/useFetch";
+
+export const MultipleCustomHooks = () => {
+
+
+  const { counter, increment } = useCounter(1); 
+```
+
+Ahora dentro de este componente en vez de pasar el numero `1` en el `useFetch` pasamos el estado `counter`
+
+`const {loading, data } = useFetch(`https://www.breakingbadapi.com/api/quotes/${counter}`);`
+
+y ahora en el boton llamamos al evento `onClick` y le pasamos la funcion que incrementa y de esta forma ya tenemos combinados los 2 Hooks
+
+```
+import React from "react";
+import { useCounter } from "../../hooks/useCounter";
+import { useFetch } from "../../hooks/useFetch";
+
+export const MultipleCustomHooks = () => {
+
+
+  const { counter, increment } = useCounter(1); 
+
+  const {loading, data } = useFetch(`https://www.breakingbadapi.com/api/quotes/${counter}`);
+    // console.log(data);
+
+    const { author, quote} = !!data && data[0];
+
+    // console.log(author, quote)
+
+  return (
+    <div>
+      <h1>BreakingBad Quotes</h1>
+      <hr />
+
+    {
+        loading
+        ? 
+            (
+                <div className="alert alert-info text-center">Loading...</div>
+            )
+        :
+            (
+                <blockquote className="blockquote text-right">
+                    <p className="mb-2"> { quote }</p>
+                    <footer className="blockquote-footer"> { author }</footer>
+                </blockquote>
+            )
+    }
+
+    <button 
+    className="btn btn-primary"
+    onClick={increment}
+    >
+      Siguiente frase
+    </button>
+    </div>
+  );
+};
+
+```
+
+Ahora cada vez que hagamos un click sobre el boton Siguiente frase, va a empezar a cambiarla dinamicamente
+
+![assets-git/330.png](assets-git/330.png)
+
+![assets-git/331.png](assets-git/331.png)
+
+Si se quiere que al pasar de frase cargue nuevamente la imagen del `loading` pasamos el `setState` dentro del `useEffect` del hook `useFetch`
+
+```
+import { useEffect, useState } from "react"
+
+
+export const useFetch = ( url ) => {
+
+    const [state, setState] = useState({
+        data : null,
+        loading : true,
+        error: null,
+    })
+
+    useEffect( () => {
+        
+        setState({ data:null, loading: true, error: null})
+
+        fetch(url)
+            .then( resp => resp.json())
+            .then( data => {
+
+                setState({
+                    data,
+                    loading: false,
+                    error: null,
+                })
+            })
+    }, [url])
+
+    return state;
+
+}
+
+```
+
+**Nota:** Probar en el navegador al pasar a la siguiente frase
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
