@@ -142,9 +142,9 @@ ___
 
 [useFetch + useCounter](#useFetch-+-useCounter)
 
-[](#)
+[useRef-Primer uso](#useRef-Primer-uso)
 
-[](#)
+[useRef Caso de uso real](#useRef-Caso-de-uso-real)
 
 [](#)
 
@@ -9866,3 +9866,164 @@ export const useFetch = ( url ) => {
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
+
+## useRef-Primer uso
+
+Ahora vamos a crear un nuevo hook llamado **useRef**, para esto dentro de la carpeta **components** vamos a crear una carpeta que se llame **04-useRef** y dentro de esta el componente **FocusScreen.js**, dentro de este archivo escribimos el snipet `rafc` para montar la estructura basicamente y lo dejamos de la siguiente forma
+
+```
+import React from 'react'
+
+export const FocusScreen = () => {
+    return (
+        <div>
+            <h1>Focus Screen</h1>
+        </div>
+    )
+}
+```
+
+Ahora pasamos a **index.js** lo importamos y lo renderizamod en el navegador
+
+```
+import React from 'react';
+import ReactDOM from 'react-dom';
+import './index.css';
+import './components/01-useState/counter.css'
+import { FocusScreen } from './components/04-useRef/FocusScreen';
+// import { MultipleCustomHooks } from './components/03-examples/MultipleCustomHooks';
+// import { FormWithCustomHook } from './components/02-useEffect/FormWithCustomHook';
+// import { SimpleForm } from './components/02-useEffect/SimpleForm';
+// import { HookApp } from './HookApp';
+// import { CounterApp } from './components/01-useState/CounterApp';
+// import { CounterWithCustomHook } from './components/01-useState/CounterWithCustomHook';
+
+ReactDOM.render(
+    <FocusScreen />,
+  document.getElementById('root')
+);
+
+```
+
+![assets-git/332.png](assets-git/332.png)
+
+Ahora agregamos un formulario sencillo que va a establecer el foco sobre el campo de texto, al dar click sobre el boton focus y para esto se añade la funcion `handleClick` en el evento `onClick` y a traves de un `querySelector` establecemos que el foco va a hacer la etiqueta `input`
+
+```
+import React from 'react'
+
+export const FocusScreen = () => {
+
+    const handleClick = () => {
+        document.querySelector('input').focus();
+    }
+
+    return (
+        <div>
+            <h1>Focus Screen</h1>
+
+            <input
+                className="form-control"
+                placeholder="Su nombre"
+            />
+
+            <button 
+                className="btn btn-outline-primary mt-5"
+                onClick= { handleClick }
+            >
+                Focus
+            </button>
+        </div>
+    )
+}
+
+```
+
+![assets-git/333.png](assets-git/333.png)
+
+Ahora vamos a hacer uso de `useRef` para esto antes de la funcion `handleClick` lo traemos y verificamos que este importado de `react` y luego le hacemos un `console.log` a `ref`
+
+```
+import React, { useRef } from 'react'
+
+export const FocusScreen = () => {
+
+    const ref = useRef();
+    console.log(ref);
+
+    const handleClick = () => {
+        document.querySelector('input').focus();
+    }
+
+    return (
+        <div>
+            <h1>Focus Screen</h1>
+
+            <input
+                className="form-control"
+                placeholder="Su nombre"
+            />
+
+            <button 
+                className="btn btn-outline-primary mt-5"
+                onClick= { handleClick }
+            >
+                Focus
+            </button>
+        </div>
+    )
+}
+
+```
+
+El valor por defecto que trae es undefined por que no esta apuntando en este momento a ninfun valor, `current` siginifica actual.
+
+![assets-git/334.png](assets-git/334.png)
+
+Pero ahora para ver como funciona o que es lo que hace vamos a añadir el atributo `ref` a la etiqueta input y dentro de esta vamos a nombrar el ref como `inputRef` y asi mismo vamos a nombrar la constante en `useRef`, luego dentro de la función `handleClick` en vez de utilizar `document.querySelector('input').` utilizamos `inputRef.current.` si se quiere se puede utilizar la funcion `select()`, ya que esta pone el foco sobre el campo de texto y lo selecciona todo por si se requiere copiar ese campo, este podria ser util en el caso que se necesite
+
+```
+import React, { useRef } from 'react'
+
+export const FocusScreen = () => {
+
+    const inputRef = useRef();
+    console.log(inputRef);
+
+    const handleClick = () => {
+        inputRef.select();
+    }
+
+    return (
+        <div>
+            <h1>Focus Screen</h1>
+
+            <input
+                ref= { inputRef }
+                className="form-control"
+                placeholder="Su nombre"
+            />
+
+            <button 
+                className="btn btn-outline-primary mt-5"
+                onClick= { handleClick }
+            >
+                Focus
+            </button>
+        </div>
+    )
+}
+```
+Al dar click sobre Focus, va a establecer el foco y seleccionar lo que nosotros escribamos o hayamos tenido escrito sobre este 
+
+![assets-git/335.png](assets-git/335.png)
+
+El primer mensaje que se imprime por consola es `undefined` por que no se ha seleccionado el Focus, pero despues de que se hace trae el elemento input que estamos selccionando
+
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## useRef Caso de uso real
+
