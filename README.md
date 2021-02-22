@@ -12052,7 +12052,7 @@ export const TodoApp = () => {
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
 
-## Toggle Todo Marcar como completado o pendiente un TODO
+### Toggle Todo Marcar como completado o pendiente un TODO
 
 Abrir el `todoReducer` y crear un nuevo caso que se llamara `'toggle'` y dentro de este hay que hacer el `return` de un nuevo `state`, para eso vamos a utilizar el metodo `map`, como ya sabemos `action.payload` retorna el id, entonces la validación consiste en que si `todo.id === action.payload`  va a retornar la copia del `todo` y va a negar el `done` para que pase a ser `true` en caso de que el id no sea igual retorna el `todo` sin alguna modificación
 
@@ -12260,6 +12260,54 @@ Primero esta en **done** `false`
 Despues pasa a **done** `true` y se realiza el cambio
 
 ![assets-git/357.png](assets-git/357.png)
+
+Existe otra forma de hacer lo mismo en la función `todoReducer`, asi que el toogle que tenemos lo renombramos como `toggle-Old` para que quede el ejemplo y utilizamos el `toggle` que si va a actuar sobre TodoApp, en este caso se va a hacer lo mismo que `toggle-old` pero con un `return` implicito y utilizando el operador ternario
+
+```
+        case 'toggle':
+            return state.map ( todo => 
+                ( todo.id === action.payload)
+                ? {...todo, done: !todo.done}
+                : todo    
+            );
+```
+
+```
+
+
+export const todoReducer = ( state = [], action) => {
+
+    switch (action.type) {
+        case 'add':
+            return [ ...state, action.payload ];
+
+        case 'delete':
+            return state.filter( todo => todo.id !== action.payload );
+
+        case 'toggle':
+            return state.map ( todo => 
+                ( todo.id === action.payload)
+                ? {...todo, done: !todo.done}
+                : todo    
+            );
+
+        case 'toggle-Old':
+            return state.map( todo => {
+                if( todo.id === action.payload){
+                    return {
+                        ...todo,
+                        done: !todo.done
+                    } 
+                }else {
+                    return todo
+                }
+            })
+    
+        default:
+            return state;
+    }
+}
+```
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
