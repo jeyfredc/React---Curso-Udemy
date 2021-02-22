@@ -10220,4 +10220,850 @@ export const TodoApp = () => {
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
 
- ### Creando el cascaron de la lista de TODOs
+### Creando el cascaron de la lista de TODOs
+
+Si agregamos un `todos.length` en el `h1` se va a ver la lista de tareas que tengamos en el momento, no importa si estan en la lista o no y tambien agregar la estructura de como se va a ver la aplicación  para esto se agrega una etiqueta ul con clases bootstrap y se hace un mapeo de lo que contiene `todos` donde dentro de la etiqueta `li` cargamos la descripción del `todo`
+
+```
+import React, { useReducer } from 'react'
+
+import './styles.css'
+import { todoReducer } from './todoReducer';
+
+const initialState = [{
+    id: new Date().getTime(),
+    desc : 'Aprender React',
+    done: false
+}]
+
+export const TodoApp = () => {
+
+    /*  const [state, dispatch] = useReducer(reducer, initialState, init) 
+    el argumento reducer, es la funcion reducer que se va a declarar, initialState, el estado inicial de la apliacion y init es una funcion
+    que se usa para inicializar el state en caso de que ese state sea procesado o haga varias acciones.
+    
+    dispatch ayuda a disparar las acciones hacia el reducer  */
+    const [ todos ] = useReducer(todoReducer, initialState);
+
+    console.log( todos );
+
+
+    return (
+        <div>
+            <h1>TodoApp</h1>
+            <hr />
+            
+            <ul className="list-group list-groupflush">
+                {
+                    todos.map( todo => (
+                        <li 
+                            key={ todo.id}
+                            className="list-group-item"
+                        >
+                            {todo.desc}
+                        </li>
+                    ))
+                }
+
+            </ul>
+        </div>
+    )
+}
+```
+
+![assets-git/338.png](assets-git/338.png)
+
+Para colocar el numero de tarea, agregamos el otro argumento que recibe la funcion map que es el indice y tambien lo renderizamos a traves de un `i+1`, recordando que `i` por ser el primer elemento del arreglo su posicion es 0 asi que `i+1` es igual a 1
+
+```
+import React, { useReducer } from 'react'
+
+import './styles.css'
+import { todoReducer } from './todoReducer';
+
+const initialState = [{
+    id: new Date().getTime(),
+    desc : 'Aprender React',
+    done: false
+}]
+
+export const TodoApp = () => {
+
+    /*  const [state, dispatch] = useReducer(reducer, initialState, init) 
+    el argumento reducer, es la funcion reducer que se va a declarar, initialState, el estado inicial de la apliacion y init es una funcion
+    que se usa para inicializar el state en caso de que ese state sea procesado o haga varias acciones.
+    
+    dispatch ayuda a disparar las acciones hacia el reducer  */
+    const [ todos ] = useReducer(todoReducer, initialState);
+
+    console.log( todos );
+
+
+    return (
+        <div>
+            <h1>TodoApp</h1>
+            <hr />
+            
+            <ul className="list-group list-groupflush">
+                {
+                    todos.map( (todo, i) => (
+                        <li 
+                            key={ todo.id}
+                            className="list-group-item"
+                        >
+                            { i+1 }. { todo.desc }
+                        </li>
+                    ))
+                }
+
+            </ul>
+        </div>
+    )
+}
+
+```
+
+![assets-git/339.png](assets-git/339.png)
+
+Ahora pasamos a estilizar un poco mas el componente, para esto metemos `{ i+1 }. { todo.desc }` dentro de una etiqueta de parrafo con clases Bootstrap y creamos un boton Borrar estilizado igualmente
+
+```
+import React, { useReducer } from 'react'
+
+import './styles.css'
+import { todoReducer } from './todoReducer';
+
+const initialState = [{
+    id: new Date().getTime(),
+    desc : 'Aprender React',
+    done: false
+}]
+
+export const TodoApp = () => {
+
+    /*  const [state, dispatch] = useReducer(reducer, initialState, init) 
+    el argumento reducer, es la funcion reducer que se va a declarar, initialState, el estado inicial de la apliacion y init es una funcion
+    que se usa para inicializar el state en caso de que ese state sea procesado o haga varias acciones.
+    
+    dispatch ayuda a disparar las acciones hacia el reducer  */
+    const [ todos ] = useReducer(todoReducer, initialState);
+
+    console.log( todos );
+
+
+    return (
+        <div>
+            <h1>TodoApp</h1>
+            <hr />
+            
+            <ul className="list-group list-group-flush">
+                {
+                    todos.map( (todo, i) => (
+                        <li 
+                            key={ todo.id}
+                            className="list-group-item"
+                        >
+                            <p className="text-center">{ i + 1 }. { todo.desc }</p>
+                            <button
+                                className="btn btn-danger"
+                            >
+                                Borrar
+                            </button>
+                        </li>
+                    ))
+                }
+
+            </ul>
+        </div>
+    )
+}
+
+```
+
+![assets-git/340.png](assets-git/340.png)
+
+Y si lo estilizamos un poco mas lo pasamos a 2 columnas donde en una aparece el boton borrar y en la otra el formulario que vamos a utilizar para agregar tareas
+
+```
+import React, { useReducer } from 'react'
+
+import './styles.css'
+import { todoReducer } from './todoReducer';
+
+const initialState = [{
+    id: new Date().getTime(),
+    desc : 'Aprender React',
+    done: false
+}]
+
+export const TodoApp = () => {
+
+    /*  const [state, dispatch] = useReducer(reducer, initialState, init) 
+    el argumento reducer, es la funcion reducer que se va a declarar, initialState, el estado inicial de la apliacion y init es una funcion
+    que se usa para inicializar el state en caso de que ese state sea procesado o haga varias acciones.
+    
+    dispatch ayuda a disparar las acciones hacia el reducer  */
+    const [ todos ] = useReducer(todoReducer, initialState);
+
+    console.log( todos );
+
+
+    return (
+        <div>
+            <h1>TodoApp</h1>
+            <hr />
+
+            <div className="row">
+
+                <div className="col-7">
+                    <ul className="list-group list-group-flush">
+                            {
+                                todos.map( (todo, i) => (
+                                    <li 
+                                        key={ todo.id}
+                                        className="list-group-item"
+                                    >
+                                        <p className="text-center">{ i + 1 }. { todo.desc }</p>
+                                        <button
+                                            className="btn btn-danger"
+                                        >
+                                            Borrar
+                                        </button>
+                                    </li>
+                                ))
+                            }
+
+                        </ul>
+            </div>
+                <div className="col-5">
+                        Agregar
+                </div>
+            </div>
+            
+        
+        </div>
+    )
+}
+```
+
+![assets-git/342.png](assets-git/342.png)
+
+y para terminar de modificar el estilo y verlo de una mejor manera, abrimos el archivo **styles.css** y modificamos la clase `list-group-item` y agregamos una clase que se llame `.complete`, esta clase se añadira cuando una tarea este completada y se va a mostrar tachada 
+
+```
+
+body{
+    padding: 50px;
+}
+
+p {
+    cursor: pointer;
+    margin: 0px;
+}
+
+.list-group-item {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.complete {
+    text-decoration: line-through;
+}
+```
+
+Solo falta agregar el formulario para agregar tareas
+
+```
+import React, { useReducer } from 'react'
+
+import './styles.css'
+import { todoReducer } from './todoReducer';
+
+const initialState = [{
+    id: new Date().getTime(),
+    desc : 'Aprender React',
+    done: false
+}]
+
+export const TodoApp = () => {
+
+    /*  const [state, dispatch] = useReducer(reducer, initialState, init) 
+    el argumento reducer, es la funcion reducer que se va a declarar, initialState, el estado inicial de la apliacion y init es una funcion
+    que se usa para inicializar el state en caso de que ese state sea procesado o haga varias acciones.
+    
+    dispatch ayuda a disparar las acciones hacia el reducer  */
+    const [ todos ] = useReducer(todoReducer, initialState);
+
+    console.log( todos );
+
+
+    return (
+        <div>
+            <h1>TodoApp</h1>
+            <hr />
+
+            <div className="row">
+
+                <div className="col-7">
+                    <ul className="list-group list-group-flush">
+                            {
+                                todos.map( (todo, i) => (
+                                    <li 
+                                        key={ todo.id}
+                                        className="list-group-item"
+                                    >
+                                        <p className="text-center">{ i + 1 }. { todo.desc }</p>
+                                        <button
+                                            className="btn btn-danger"
+                                        >
+                                            Borrar
+                                        </button>
+                                    </li>
+                                ))
+                            }
+
+                        </ul>
+            </div>
+                <div className="col-5">
+                    <h4>Agregar TODO</h4>
+                    <hr />
+
+                    <form>
+
+                        <input 
+                            type="text" 
+                            name="description"
+                            className="form-control"
+                            placeholder="Aprender ..."
+                            autoComplete="off"
+                        />
+
+                        <button
+                            className="btn btn-outline-primary mt-1 btn-block"
+                            >
+                            Agregar
+                        </button>
+                        
+                    </form>
+
+                </div>
+            </div>
+            
+        
+        </div>
+    )
+}
+
+```
+
+![assets-git/343.png](assets-git/343.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Agregar un nuevo TODO
+
+Agregamos el atributo `type="submit"` al boton de Agregar y al `form` que contiene todo un evento `onSubmit` que llame a la función `handleSubmit`
+
+```
+import React, { useReducer } from 'react'
+
+import './styles.css'
+import { todoReducer } from './todoReducer';
+
+const initialState = [{
+    id: new Date().getTime(),
+    desc : 'Aprender React',
+    done: false
+}]
+
+export const TodoApp = () => {
+
+    /*  const [state, dispatch] = useReducer(reducer, initialState, init) 
+    el argumento reducer, es la funcion reducer que se va a declarar, initialState, el estado inicial de la apliacion y init es una funcion
+    que se usa para inicializar el state en caso de que ese state sea procesado o haga varias acciones.
+    
+    dispatch ayuda a disparar las acciones hacia el reducer  */
+    const [ todos ] = useReducer(todoReducer, initialState);
+
+    console.log( todos );
+
+
+    return (
+        <div>
+            <h1>TodoApp</h1>
+            <hr />
+
+            <div className="row">
+
+                <div className="col-7">
+                    <ul className="list-group list-group-flush">
+                            {
+                                todos.map( (todo, i) => (
+                                    <li 
+                                        key={ todo.id}
+                                        className="list-group-item"
+                                    >
+                                        <p className="text-center">{ i + 1 }. { todo.desc }</p>
+                                        <button
+                                            className="btn btn-danger"
+                                        >
+                                            Borrar
+                                        </button>
+                                    </li>
+                                ))
+                            }
+
+                        </ul>
+            </div>
+                <div className="col-5">
+                    <h4>Agregar TODO</h4>
+                    <hr />
+
+                    <form onSubmit={ handleSubmit }>
+
+                        <input 
+                            type="text" 
+                            name="description"
+                            className="form-control"
+                            placeholder="Aprender ..."
+                            autoComplete="off"
+                        />
+
+                        <button
+                            type="submit"
+                            className="btn btn-outline-primary mt-1 btn-block"
+                            >
+                            Agregar
+                        </button>
+                        
+                    </form>
+
+                </div>
+            </div>
+            
+        
+        </div>
+    )
+}
+
+```
+
+Luego pasamos a crear la función `handleSubmit` que recibe un evento `e` y para evitar que se reenvie el formulario agregamos un `e.preventDefault()` luego un `console.log('Nueva tarea')` para que cada vez que hagamos click en el boton Agregar, esto se muestre por consola
+
+```
+import React, { useReducer } from 'react'
+
+import './styles.css'
+import { todoReducer } from './todoReducer';
+
+const initialState = [{
+    id: new Date().getTime(),
+    desc : 'Aprender React',
+    done: false
+}]
+
+export const TodoApp = () => {
+
+    /*  const [state, dispatch] = useReducer(reducer, initialState, init) 
+    el argumento reducer, es la funcion reducer que se va a declarar, initialState, el estado inicial de la apliacion y init es una funcion
+    que se usa para inicializar el state en caso de que ese state sea procesado o haga varias acciones.
+    
+    dispatch ayuda a disparar las acciones hacia el reducer  */
+    const [ todos ] = useReducer(todoReducer, initialState);
+
+    console.log( todos );
+
+    const handleSubmit = ( e ) => {
+        e.preventDefault();
+
+        console.log('Nueva tarea');
+    }
+
+
+    return (
+        <div>
+            <h1>TodoApp</h1>
+            <hr />
+
+            <div className="row">
+
+                <div className="col-7">
+                    <ul className="list-group list-group-flush">
+                            {
+                                todos.map( (todo, i) => (
+                                    <li 
+                                        key={ todo.id}
+                                        className="list-group-item"
+                                    >
+                                        <p className="text-center">{ i + 1 }. { todo.desc }</p>
+                                        <button
+                                            className="btn btn-danger"
+                                        >
+                                            Borrar
+                                        </button>
+                                    </li>
+                                ))
+                            }
+
+                        </ul>
+            </div>
+                <div className="col-5">
+                    <h4>Agregar TODO</h4>
+                    <hr />
+
+                    <form onSubmit={ handleSubmit }>
+
+                        <input 
+                            type="text" 
+                            name="description"
+                            className="form-control"
+                            placeholder="Aprender ..."
+                            autoComplete="off"
+                        />
+
+                        <button
+                            type="submit"
+                            className="btn btn-outline-primary mt-1 btn-block"
+                            >
+                            Agregar
+                        </button>
+                        
+                    </form>
+
+                </div>
+            </div>
+            
+        
+        </div>
+    )
+}
+
+```
+
+![assets-git/344.png](assets-git/344.png)
+
+Al dar click sobre el boton Agregar se deberia enviar ese estado a la función `todoReducer`. Entonces en la funcion `handleSubmit` creamos una constante que se llama `newTodo` que tambien va a recibir un id, una descripcion y un done(que es como un realizado)
+
+```
+import React, { useReducer } from 'react'
+
+import './styles.css'
+import { todoReducer } from './todoReducer';
+
+const initialState = [{
+    id: new Date().getTime(),
+    desc : 'Aprender React',
+    done: false
+}]
+
+export const TodoApp = () => {
+
+    /*  const [state, dispatch] = useReducer(reducer, initialState, init) 
+    el argumento reducer, es la funcion reducer que se va a declarar, initialState, el estado inicial de la apliacion y init es una funcion
+    que se usa para inicializar el state en caso de que ese state sea procesado o haga varias acciones.
+    
+    dispatch ayuda a disparar las acciones hacia el reducer  */
+    const [ todos ] = useReducer(todoReducer, initialState);
+
+    console.log( todos );
+
+    const handleSubmit = ( e ) => {
+        e.preventDefault();
+
+        // console.log('Nueva tarea');
+        const newTodo = {
+            id: new Date().getTime(),
+            desc : 'Nueva tarea',
+            done: false
+        };
+    }
+
+
+    return (
+        <div>
+            <h1>TodoApp</h1>
+            <hr />
+
+            <div className="row">
+
+                <div className="col-7">
+                    <ul className="list-group list-group-flush">
+                            {
+                                todos.map( (todo, i) => (
+                                    <li 
+                                        key={ todo.id}
+                                        className="list-group-item"
+                                    >
+                                        <p className="text-center">{ i + 1 }. { todo.desc }</p>
+                                        <button
+                                            className="btn btn-danger"
+                                        >
+                                            Borrar
+                                        </button>
+                                    </li>
+                                ))
+                            }
+
+                        </ul>
+            </div>
+                <div className="col-5">
+                    <h4>Agregar TODO</h4>
+                    <hr />
+
+                    <form onSubmit={ handleSubmit }>
+
+                        <input 
+                            type="text" 
+                            name="description"
+                            className="form-control"
+                            placeholder="Aprender ..."
+                            autoComplete="off"
+                        />
+
+                        <button
+                            type="submit"
+                            className="btn btn-outline-primary mt-1 btn-block"
+                            >
+                            Agregar
+                        </button>
+                        
+                    </form>
+
+                </div>
+            </div>
+            
+        
+        </div>
+    )
+}
+```
+
+Despues de esto se requiere la acción que es la que se va a enviar a `todoReducer`, la accion la nombramos como `action` y el type que va a recibir es `add` de agregar y el `payload` sera el `newTodo`
+
+```
+import React, { useReducer } from 'react'
+
+import './styles.css'
+import { todoReducer } from './todoReducer';
+
+const initialState = [{
+    id: new Date().getTime(),
+    desc : 'Aprender React',
+    done: false
+}]
+
+export const TodoApp = () => {
+
+    /*  const [state, dispatch] = useReducer(reducer, initialState, init) 
+    el argumento reducer, es la funcion reducer que se va a declarar, initialState, el estado inicial de la apliacion y init es una funcion
+    que se usa para inicializar el state en caso de que ese state sea procesado o haga varias acciones.
+    
+    dispatch ayuda a disparar las acciones hacia el reducer  */
+    const [ todos ] = useReducer(todoReducer, initialState);
+
+    console.log( todos );
+
+    const handleSubmit = ( e ) => {
+        e.preventDefault();
+
+        // console.log('Nueva tarea');
+        const newTodo = {
+            id: new Date().getTime(),
+            desc : 'Nueva tarea',
+            done: false
+        };
+
+        const action = {
+            type: 'add',
+            payload: newTodo,
+        }
+    }
+
+
+    return (
+        <div>
+            <h1>TodoApp</h1>
+            <hr />
+
+            <div className="row">
+
+                <div className="col-7">
+                    <ul className="list-group list-group-flush">
+                            {
+                                todos.map( (todo, i) => (
+                                    <li 
+                                        key={ todo.id}
+                                        className="list-group-item"
+                                    >
+                                        <p className="text-center">{ i + 1 }. { todo.desc }</p>
+                                        <button
+                                            className="btn btn-danger"
+                                        >
+                                            Borrar
+                                        </button>
+                                    </li>
+                                ))
+                            }
+
+                        </ul>
+            </div>
+                <div className="col-5">
+                    <h4>Agregar TODO</h4>
+                    <hr />
+
+                    <form onSubmit={ handleSubmit }>
+
+                        <input 
+                            type="text" 
+                            name="description"
+                            className="form-control"
+                            placeholder="Aprender ..."
+                            autoComplete="off"
+                        />
+
+                        <button
+                            type="submit"
+                            className="btn btn-outline-primary mt-1 btn-block"
+                            >
+                            Agregar
+                        </button>
+                        
+                    </form>
+
+                </div>
+            </div>
+            
+        
+        </div>
+    )
+}
+```
+
+Ahora regresando a `todoReducer`, se debe establecer el caso cuando se reciba en el type a `add`, dentro de este `case` lo que se debe retornar es una copia del `state` y el `action.payload`
+
+```
+export const todoReducer = ( state = [], action) => {
+
+    switch (action.type) {
+        case 'add':
+            return [ ...state, action.payload ];
+    
+        default:
+            return state;
+    }
+}
+```
+
+Nuevamente en el componente `TodoApp`, ahora agregamos el `dispatch` al `useReducer`, dispatch es una funcion que manda una acción, entonces debajo de la constante `action` agregamos `dispatch(action);`
+
+```
+import React, { useReducer } from 'react'
+
+import './styles.css'
+import { todoReducer } from './todoReducer';
+
+const initialState = [{
+    id: new Date().getTime(),
+    desc : 'Aprender React',
+    done: false
+}]
+
+export const TodoApp = () => {
+
+    /*  const [state, dispatch] = useReducer(reducer, initialState, init) 
+    el argumento reducer, es la funcion reducer que se va a declarar, initialState, el estado inicial de la apliacion y init es una funcion
+    que se usa para inicializar el state en caso de que ese state sea procesado o haga varias acciones.
+    
+    dispatch ayuda a disparar las acciones hacia el reducer  */
+    const [ todos, dispatch ] = useReducer(todoReducer, initialState);
+
+    console.log( todos );
+
+    const handleSubmit = ( e ) => {
+        e.preventDefault();
+
+        // console.log('Nueva tarea');
+        const newTodo = {
+            id: new Date().getTime(),
+            desc : 'Nueva tarea',
+            done: false
+        };
+
+        const action = {
+            type: 'add',
+            payload: newTodo,
+        }
+
+        dispatch(action);
+    }
+
+
+    return (
+        <div>
+            <h1>TodoApp</h1>
+            <hr />
+
+            <div className="row">
+
+                <div className="col-7">
+                    <ul className="list-group list-group-flush">
+                            {
+                                todos.map( (todo, i) => (
+                                    <li 
+                                        key={ todo.id}
+                                        className="list-group-item"
+                                    >
+                                        <p className="text-center">{ i + 1 }. { todo.desc }</p>
+                                        <button
+                                            className="btn btn-danger"
+                                        >
+                                            Borrar
+                                        </button>
+                                    </li>
+                                ))
+                            }
+
+                        </ul>
+            </div>
+                <div className="col-5">
+                    <h4>Agregar TODO</h4>
+                    <hr />
+
+                    <form onSubmit={ handleSubmit }>
+
+                        <input 
+                            type="text" 
+                            name="description"
+                            className="form-control"
+                            placeholder="Aprender ..."
+                            autoComplete="off"
+                        />
+
+                        <button
+                            type="submit"
+                            className="btn btn-outline-primary mt-1 btn-block"
+                            >
+                            Agregar
+                        </button>
+                        
+                    </form>
+
+                </div>
+            </div>
+            
+        
+        </div>
+    )
+}
+```
+
+Realizando esto, si empezamos a dar click sobre el boton Agregar van a empezar a salir las nuevas tareas 
+
+![assets-git/345.png](assets-git/345.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
