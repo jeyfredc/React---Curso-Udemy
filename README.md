@@ -158,7 +158,7 @@ ___
 
 [Borrar un TODO](#Borrar-un-TODO)
 
-[](#)
+[Toggle Todo Marcar como completado o pendiente un TODO](#Toggle-Todo-Marcar-como-completado-o-pendiente-un-TODO)
 
 [](#)
 
@@ -12047,6 +12047,219 @@ export const TodoApp = () => {
 ![assets-git/354.png](assets-git/354.png)
 
 ![assets-git/355.png](assets-git/355.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Toggle Todo Marcar como completado o pendiente un TODO
+
+Abrir el `todoReducer` y crear un nuevo caso que se llamara `'toggle'` y dentro de este hay que hacer el `return` de un nuevo `state`, para eso vamos a utilizar el metodo `map`, como ya sabemos `action.payload` retorna el id, entonces la validación consiste en que si `todo.id === action.payload`  va a retornar la copia del `todo` y va a negar el `done` para que pase a ser `true` en caso de que el id no sea igual retorna el `todo` sin alguna modificación
+
+```
+
+
+export const todoReducer = ( state = [], action) => {
+
+    switch (action.type) {
+        case 'add':
+            return [ ...state, action.payload ];
+
+        case 'delete':
+            return state.filter( todo => todo.id !== action.payload );
+
+        case 'toggle':
+            return state.map( todo => {
+                if( todo.id === action.payload){
+                    return {
+                        ...todo,
+                        done: !todo.done
+                    } 
+                }else {
+                    return todo
+                }
+            })
+    
+        default:
+            return state;
+    }
+}
+```
+
+Debajo de la función `handleDelete`, crear una nueva función que se llame `handleToggle`, esta función tambien recibira como argumento el `todoId`, dentro de la función creamos el dispatch que recibe directamente la acción
+
+```
+    const handleToggle = ( todoId )=> {
+        dispatch({
+            type:'toggle',
+            payload: todoId
+        })
+    }
+```
+
+En la etiqueta `<p>` quitamos la clase `text-center`, pero en lugar de eso realizamos una condición en el atributo className `className={`${ todo.done && 'complete'}`}`, donde realizaremos una validación, la validación significa que si donde esta en `true` se añada la clase `complete` y esta clase tacha la frase cuando la seleccionamos con el curso, seguido añadimos el evento `onClick` que llama a la función `handleToggle`, la cual recibe como parametro a `todo.id` de esta forma es que se puede hacer la comparación de los id
+
+```
+import React, { useEffect, useReducer } from 'react'
+import { useForm } from '../../hooks/useForm';
+
+import './styles.css'
+import { todoReducer } from './todoReducer';
+
+const init = () => {
+
+    return JSON.parse(localStorage.getItem('todos')) || [];
+    
+/*     return [{
+    id: new Date().getTime(),
+    desc : 'Aprender React',
+    done: false
+}]; */
+}
+
+export const TodoApp = () => {
+
+    /*  const [state, dispatch] = useReducer(reducer, initialState, init) 
+    el argumento reducer, es la funcion reducer que se va a declarar, initialState, el estado inicial de la apliacion y init es una funcion
+    que se usa para inicializar el state en caso de que ese state sea procesado o haga varias acciones.
+    
+    dispatch ayuda a disparar las acciones hacia el reducer  */
+    const [ todos, dispatch ] = useReducer(todoReducer, [], init);
+
+    const [{ description }, handleInputChange, reset] = useForm({
+        description : ''
+    })
+
+/*     console.log( description ); */
+
+    useEffect( () => {
+        localStorage.setItem('todos', JSON.stringify( todos ))
+    }, [ todos ])
+
+    const handleSubmit = ( e ) => {
+        e.preventDefault();
+
+        // Validacion, utilizamos trim() para quitar espacios vacios y el recorrido de lo que escribimos en el campo con .length
+        // Si es menor a 1 retorna vacio y no hace nada
+
+        if( description.trim().length <= 1){
+            return;
+        }
+
+        // console.log('Nueva tarea');
+        const newTodo = {
+            id: new Date().getTime(),
+            desc : description,
+            done: false
+        };
+
+        const action = {
+            type: 'add',
+            payload: newTodo,
+        }
+
+        dispatch(action);
+        reset();
+    }
+
+    const handleDelete = ( todoId ) => {
+
+        // console.log(todoId)
+
+        const action = {
+            type: 'delete',
+            payload: todoId
+        }
+        dispatch(action);
+    }
+
+    const handleToggle = ( todoId )=> {
+        dispatch({
+            type:'toggle',
+            payload: todoId
+        })
+    }
+
+
+    return (
+        <div>
+            <h1>TodoApp</h1>
+            <hr />
+
+            <div className="row">
+
+                <div className="col-7">
+                    <ul className="list-group list-group-flush">
+                            {
+                                todos.map( (todo, i) => (
+                                    <li 
+                                        key={ todo.id}
+                                        className="list-group-item"
+                                    >
+                                        <p 
+                                            className={`${ todo.done && 'complete'}`}
+                                            onClick= { () =>  handleToggle(todo.id) } 
+                                        >
+                                            { i + 1 }. { todo.desc }
+                                        </p>
+                                        <button
+                                            type="submit"
+                                            className="btn btn-danger"
+                                            onClick={ () => handleDelete ( todo.id) }
+                                            value={init}
+                                        >
+                                            Borrar
+                                        </button>
+                                    </li>
+                                ))
+                            }
+
+                        </ul>
+            </div>
+                <div className="col-5">
+                    <h4>Agregar TODO</h4>
+                    <hr />
+
+                    <form onSubmit={ handleSubmit }>
+
+                        <input 
+                            type="text" 
+                            name="description"
+                            className="form-control"
+                            placeholder="Aprender ..."
+                            autoComplete="off"
+                            onChange={ handleInputChange }
+                            value= { description }
+                        />
+
+                        <button
+                            type="submit"
+                            className="btn btn-outline-primary mt-1 btn-block"
+                            >
+                            Agregar
+                        </button>
+                        
+                    </form>
+
+                </div>
+            </div>
+            
+        
+        </div>
+    )
+}
+
+```
+
+Cuando seleccionamos cualquier tarea con el cursor y fijamos en la pestaña Components, cada vez que hagamos click sobre cada tarea `done` cambiara a true y la tarea o `TODO` se tachara
+
+Primero esta en **done** `false`
+
+![assets-git/356.png](assets-git/356.png)
+
+Despues pasa a **done** `true` y se realiza el cambio
+
+![assets-git/357.png](assets-git/357.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
