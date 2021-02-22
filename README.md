@@ -144,11 +144,13 @@ ___
 
 [useRef-Primer uso](#useRef-Primer-uso)
 
-[useRef Caso de uso real](#useRef-Caso-de-uso-real)
+[Memo Método de react](#Memo-Método-de-react)
 
-[](#)
+___
 
-[](#)
+[TodoApp](#TodoApp)
+
+[Creando el cascaron de la lista de TODOs](#Creando-el-cascaron-de-la-lista-de-TODOs)
 
 [](#)
 
@@ -10025,5 +10027,197 @@ El primer mensaje que se imprime por consola es `undefined` por que no se ha sel
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
 
-## useRef Caso de uso real
+ ### TodoApp
 
+ ```
+ import React, { useReducer } from 'react'
+
+import './styles.css'
+
+export const TodoApp = () => {
+
+    /*  const [state, dispatch] = useReducer(reducer, initialState, init) 
+    el argumento reducer, es la funcion reducer que se va a declarar, initialState, el estado inicial de la apliacion y init es una funcion
+    que se usa para inicializar el state en caso de que ese state sea procesado o haga varias acciones.
+    
+    dispatch ayuda a disparar las acciones hacia el reducer  */
+    const [state, dispatch] = useReducer(reducer, initialState, init)
+
+
+    return (
+        <div>
+            <h1>TodoApp</h1>
+            <hr />
+            
+            <ul>
+                <li>Hola</li>
+                <li>Mundo</li>
+                <li>Hola de nuevo</li>
+
+            </ul>
+        </div>
+    )
+}
+
+```
+
+Del componente `TodoApp` borramos por el momento el `dispatch` y el `init`, y antes de iniciar con el componente creamos un `initialState` donde el id trae la fecha y el dia, luego hay una descripción y un valor booleano que indicaria que la tarea no se ha iniciado
+
+```
+import React, { useReducer } from 'react'
+
+import './styles.css'
+
+const initialState = [{
+    id: new Date().getTime(),
+    desc : 'Aprender React',
+    done: false
+}]
+
+export const TodoApp = () => {
+
+    /*  const [state, dispatch] = useReducer(reducer, initialState, init) 
+    el argumento reducer, es la funcion reducer que se va a declarar, initialState, el estado inicial de la apliacion y init es una funcion
+    que se usa para inicializar el state en caso de que ese state sea procesado o haga varias acciones.
+    
+    dispatch ayuda a disparar las acciones hacia el reducer  */
+    const [state] = useReducer(reducer, initialState);
+
+
+    return (
+        <div>
+            <h1>TodoApp</h1>
+            <hr />
+            
+            <ul>
+                <li>Hola</li>
+                <li>Mundo</li>
+                <li>Hola de nuevo</li>
+
+            </ul>
+        </div>
+    )
+}
+
+```
+
+Despues esta el reducer que se encuentra dentro de los argumentos del useReducer el cual aun no se ha creado y para crearlo dentro de la carpeta 08-useReducer, se crea el reducer llamandolo como `todoReducer.js`, como es una función empieza en minúscula, si fuera un componente empezaria en mayúscula. esta función lleva un estado inicial que inicia como arreglo y la accion
+
+```
+export const todoReducer = ( state = [], action) => {
+    
+}
+```
+
+Usualmente en caso de que existan varios `type.action` que agregar se pueden usar condiciones anidadas con `if` y `else if`, pero tambien es mejor y mas legible usar `switch`, recordando siempre que cuando se usa un reducer, al final siempre se debe retornar el estado y para este ejemplo, el todoReducer se debe exportar para poder importalo en el componente `TodoApp`
+
+```
+
+
+export const todoReducer = ( state = [], action) => {
+
+    switch (action.type) {
+        // case 'add':
+            
+        //     break;
+    
+        default:
+            return state;
+    }
+}
+```
+
+Ahora importamos la función en TodoApp, reemplazamos el `reducer` que esta en el argumento de `useReducer` por `todoReducer`, renderizamos en el navegador y en la parte de Components deberia salir el Reducer con la información del `initialState`
+
+```
+import React, { useReducer } from 'react'
+
+import './styles.css'
+import { todoReducer } from './todoReducer';
+
+const initialState = [{
+    id: new Date().getTime(),
+    desc : 'Aprender React',
+    done: false
+}]
+
+export const TodoApp = () => {
+
+    /*  const [state, dispatch] = useReducer(reducer, initialState, init) 
+    el argumento reducer, es la funcion reducer que se va a declarar, initialState, el estado inicial de la apliacion y init es una funcion
+    que se usa para inicializar el state en caso de que ese state sea procesado o haga varias acciones.
+    
+    dispatch ayuda a disparar las acciones hacia el reducer  */
+    const [state] = useReducer(todoReducer, initialState);
+
+
+    return (
+        <div>
+            <h1>TodoApp</h1>
+            <hr />
+            
+            <ul>
+                <li>Hola</li>
+                <li>Mundo</li>
+                <li>Hola de nuevo</li>
+
+            </ul>
+        </div>
+    )
+}
+
+```
+
+![assets-git/336.png](assets-git/336.png)
+
+
+Ahora la constante `state`, se puede renombrar y no afecta en nada como `todos` y luego hacerle un `console.log` a `todos` para que se retorne el estado, el cual es el `initialState`
+
+```
+import React, { useReducer } from 'react'
+
+import './styles.css'
+import { todoReducer } from './todoReducer';
+
+const initialState = [{
+    id: new Date().getTime(),
+    desc : 'Aprender React',
+    done: false
+}]
+
+export const TodoApp = () => {
+
+    /*  const [state, dispatch] = useReducer(reducer, initialState, init) 
+    el argumento reducer, es la funcion reducer que se va a declarar, initialState, el estado inicial de la apliacion y init es una funcion
+    que se usa para inicializar el state en caso de que ese state sea procesado o haga varias acciones.
+    
+    dispatch ayuda a disparar las acciones hacia el reducer  */
+    const [ todos ] = useReducer(todoReducer, initialState);
+
+    console.log( todos );
+
+
+    return (
+        <div>
+            <h1>TodoApp</h1>
+            <hr />
+            
+            <ul>
+                <li>Hola</li>
+                <li>Mundo</li>
+                <li>Hola de nuevo</li>
+
+            </ul>
+        </div>
+    )
+}
+
+```
+
+![assets-git/337.png](assets-git/337.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+ ### Creando el cascaron de la lista de TODOs
