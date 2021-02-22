@@ -152,11 +152,11 @@ ___
 
 [Creando el cascaron de la lista de TODOs](#Creando-el-cascaron-de-la-lista-de-TODOs)
 
-[](#)
+[Agregar un nuevo TODO](#Agregar-un-nuevo-TODO)
 
-[](#)
+[Guardar TODOs en LocalStorage](#Guardar-TODOs-en-LocalStorage)
 
-[](#)
+[Borrar un TODO](#Borrar-un-TODO)
 
 [](#)
 
@@ -11063,6 +11063,826 @@ export const TodoApp = () => {
 Realizando esto, si empezamos a dar click sobre el boton Agregar van a empezar a salir las nuevas tareas 
 
 ![assets-git/345.png](assets-git/345.png)
+
+Por el momento no se pueden Borrar, porque no se ha añadido ningun tipo de funcionalidad al boton
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Guardar TODOs en LocalStorage
+
+Actualmente si recargamos el navegador, las tareas o TODOs que agreguemos se van a borrar y esto es lo que vamos a corregir en este capitulo, en capitulos anteriores creamos un hook llamado `useForm`, este Hook lo utilizaremos en esta aplicación para esto lo primero que debemos hacer es importarlo y ese `useForm` en los argumentos recibe un objeto vacio, pero lo vamos a asociar inicializandolo con un `description`, el cual vamos a asociar con el input del boton agregar donde esta en atributo `name` el cual es igual a `description`
+
+```
+import React, { useReducer } from 'react'
+import { useForm } from '../../hooks/useForm';
+
+import './styles.css'
+import { todoReducer } from './todoReducer';
+
+const initialState = [{
+    id: new Date().getTime(),
+    desc : 'Aprender React',
+    done: false
+}]
+
+export const TodoApp = () => {
+
+    /*  const [state, dispatch] = useReducer(reducer, initialState, init) 
+    el argumento reducer, es la funcion reducer que se va a declarar, initialState, el estado inicial de la apliacion y init es una funcion
+    que se usa para inicializar el state en caso de que ese state sea procesado o haga varias acciones.
+    
+    dispatch ayuda a disparar las acciones hacia el reducer  */
+    const [ todos, dispatch ] = useReducer(todoReducer, initialState);
+
+    useForm({
+        description : ''
+    })
+
+    console.log( todos );
+
+    const handleSubmit = ( e ) => {
+        e.preventDefault();
+
+        // console.log('Nueva tarea');
+        const newTodo = {
+            id: new Date().getTime(),
+            desc : 'Nueva tarea',
+            done: false
+        };
+
+        const action = {
+            type: 'add',
+            payload: newTodo,
+        }
+
+        dispatch(action);
+    }
+
+
+    return (
+        <div>
+            <h1>TodoApp</h1>
+            <hr />
+
+            <div className="row">
+
+                <div className="col-7">
+                    <ul className="list-group list-group-flush">
+                            {
+                                todos.map( (todo, i) => (
+                                    <li 
+                                        key={ todo.id}
+                                        className="list-group-item"
+                                    >
+                                        <p className="text-center">{ i + 1 }. { todo.desc }</p>
+                                        <button
+                                            className="btn btn-danger"
+                                        >
+                                            Borrar
+                                        </button>
+                                    </li>
+                                ))
+                            }
+
+                        </ul>
+            </div>
+                <div className="col-5">
+                    <h4>Agregar TODO</h4>
+                    <hr />
+
+                    <form onSubmit={ handleSubmit }>
+
+                        <input 
+                            type="text" 
+                            name="description"
+                            className="form-control"
+                            placeholder="Aprender ..."
+                            autoComplete="off"
+                        />
+
+                        <button
+                            type="submit"
+                            className="btn btn-outline-primary mt-1 btn-block"
+                            >
+                            Agregar
+                        </button>
+                        
+                    </form>
+
+                </div>
+            </div>
+            
+        
+        </div>
+    )
+}
+
+```
+
+Si revisamos el hook `useForm` vemos que retornaba el estado el cual se nombro como `values` y la funcion `handleInputChange` entonces debo desestructurar el `useForm` para hacer uso del estado y la función. En la etiqueta input debo llamar la función a traves del evento `onChange` , el cual ayuda a traer el estado modificado
+
+```
+import React, { useReducer } from 'react'
+import { useForm } from '../../hooks/useForm';
+
+import './styles.css'
+import { todoReducer } from './todoReducer';
+
+const initialState = [{
+    id: new Date().getTime(),
+    desc : 'Aprender React',
+    done: false
+}]
+
+export const TodoApp = () => {
+
+    /*  const [state, dispatch] = useReducer(reducer, initialState, init) 
+    el argumento reducer, es la funcion reducer que se va a declarar, initialState, el estado inicial de la apliacion y init es una funcion
+    que se usa para inicializar el state en caso de que ese state sea procesado o haga varias acciones.
+    
+    dispatch ayuda a disparar las acciones hacia el reducer  */
+    const [ todos, dispatch ] = useReducer(todoReducer, initialState);
+
+    const [values, handleInputChange] = useForm({
+        description : ''
+    })
+
+    console.log( values );
+
+    const handleSubmit = ( e ) => {
+        e.preventDefault();
+
+        // console.log('Nueva tarea');
+        const newTodo = {
+            id: new Date().getTime(),
+            desc : 'Nueva tarea',
+            done: false
+        };
+
+        const action = {
+            type: 'add',
+            payload: newTodo,
+        }
+
+        dispatch(action);
+    }
+
+
+    return (
+        <div>
+            <h1>TodoApp</h1>
+            <hr />
+
+            <div className="row">
+
+                <div className="col-7">
+                    <ul className="list-group list-group-flush">
+                            {
+                                todos.map( (todo, i) => (
+                                    <li 
+                                        key={ todo.id}
+                                        className="list-group-item"
+                                    >
+                                        <p className="text-center">{ i + 1 }. { todo.desc }</p>
+                                        <button
+                                            className="btn btn-danger"
+                                        >
+                                            Borrar
+                                        </button>
+                                    </li>
+                                ))
+                            }
+
+                        </ul>
+            </div>
+                <div className="col-5">
+                    <h4>Agregar TODO</h4>
+                    <hr />
+
+                    <form onSubmit={ handleSubmit }>
+
+                        <input 
+                            type="text" 
+                            name="description"
+                            className="form-control"
+                            placeholder="Aprender ..."
+                            autoComplete="off"
+                            onChange={ handleInputChange }
+                        />
+
+                        <button
+                            type="submit"
+                            className="btn btn-outline-primary mt-1 btn-block"
+                            >
+                            Agregar
+                        </button>
+                        
+                    </form>
+
+                </div>
+            </div>
+            
+        
+        </div>
+    )
+}
+```
+
+Si ahora escribo algo sobre el campo del formulario para agregar, por consola traigo los cambios o modificaciones que haga sobre este, como se ve en la imagen
+
+![assets-git/346.png](assets-git/346.png)
+
+y el `values` se puede desestructurar aun mas para obtener la descripcion entonces se desestructura y se agrega el atributo `value` al input donde hago el llamado de `description`
+
+```
+import React, { useReducer } from 'react'
+import { useForm } from '../../hooks/useForm';
+
+import './styles.css'
+import { todoReducer } from './todoReducer';
+
+const initialState = [{
+    id: new Date().getTime(),
+    desc : 'Aprender React',
+    done: false
+}]
+
+export const TodoApp = () => {
+
+    /*  const [state, dispatch] = useReducer(reducer, initialState, init) 
+    el argumento reducer, es la funcion reducer que se va a declarar, initialState, el estado inicial de la apliacion y init es una funcion
+    que se usa para inicializar el state en caso de que ese state sea procesado o haga varias acciones.
+    
+    dispatch ayuda a disparar las acciones hacia el reducer  */
+    const [ todos, dispatch ] = useReducer(todoReducer, initialState);
+
+    const [{ description }, handleInputChange] = useForm({
+        description : ''
+    })
+
+    console.log( description );
+
+    const handleSubmit = ( e ) => {
+        e.preventDefault();
+
+        // console.log('Nueva tarea');
+        const newTodo = {
+            id: new Date().getTime(),
+            desc : 'Nueva tarea',
+            done: false
+        };
+
+        const action = {
+            type: 'add',
+            payload: newTodo,
+        }
+
+        dispatch(action);
+    }
+
+
+    return (
+        <div>
+            <h1>TodoApp</h1>
+            <hr />
+
+            <div className="row">
+
+                <div className="col-7">
+                    <ul className="list-group list-group-flush">
+                            {
+                                todos.map( (todo, i) => (
+                                    <li 
+                                        key={ todo.id}
+                                        className="list-group-item"
+                                    >
+                                        <p className="text-center">{ i + 1 }. { todo.desc }</p>
+                                        <button
+                                            className="btn btn-danger"
+                                        >
+                                            Borrar
+                                        </button>
+                                    </li>
+                                ))
+                            }
+
+                        </ul>
+            </div>
+                <div className="col-5">
+                    <h4>Agregar TODO</h4>
+                    <hr />
+
+                    <form onSubmit={ handleSubmit }>
+
+                        <input 
+                            type="text" 
+                            name="description"
+                            className="form-control"
+                            placeholder="Aprender ..."
+                            autoComplete="off"
+                            onChange={ handleInputChange }
+                            value= { description }
+                        />
+
+                        <button
+                            type="submit"
+                            className="btn btn-outline-primary mt-1 btn-block"
+                            >
+                            Agregar
+                        </button>
+                        
+                    </form>
+
+                </div>
+            </div>
+            
+        
+        </div>
+    )
+}
+
+```
+
+Ahora la consola muestra la descripción pero no la retorna como si fuera de un objeto
+
+![assets-git/347.png](assets-git/347.png)
+
+y ahora para obtener el valor directo de lo que coloquemos en el formulario en la funcion `newTodo`, en la propiedad `desc` reemplazamos `'Nueva tarea'` por `description` 
+
+```
+        const newTodo = {
+            id: new Date().getTime(),
+            desc : description,
+            done: false
+        };
+```
+
+De esta forma el valor que agreguemos dentro del campo ya se va a empezar a agregar en el TodoApp
+
+![assets-git/348.png](assets-git/348.png)
+
+y una manera de resetear el formulario, seria abriendo el hook `useForm`, crear una función `reset` y modificar el valor para que sea el `initialState`, es decir que si el estado inicial es vacio, despues de agregar alguna tarea el campo de texto se limpie
+
+```
+import { useState } from "react"
+
+
+export const useForm = ( initialState = {} ) => {
+
+    const [values, setValues] = useState(initialState)
+
+    const reset = () => {
+        setValues(initialState)
+    }
+
+    const handleInputChange = ({target}) => {
+        
+        setValues({
+            ...values,
+            [target.name]: target.value
+        })    
+    }
+    
+return [values, handleInputChange, reset];
+}
+
+```
+
+Luego se importa en el tercer argumento del `useForm` y se llama la función `reset()`, debajo del `dispatch`
+
+```
+import React, { useReducer } from 'react'
+import { useForm } from '../../hooks/useForm';
+
+import './styles.css'
+import { todoReducer } from './todoReducer';
+
+const initialState = [{
+    id: new Date().getTime(),
+    desc : 'Aprender React',
+    done: false
+}]
+
+export const TodoApp = () => {
+
+    /*  const [state, dispatch] = useReducer(reducer, initialState, init) 
+    el argumento reducer, es la funcion reducer que se va a declarar, initialState, el estado inicial de la apliacion y init es una funcion
+    que se usa para inicializar el state en caso de que ese state sea procesado o haga varias acciones.
+    
+    dispatch ayuda a disparar las acciones hacia el reducer  */
+    const [ todos, dispatch ] = useReducer(todoReducer, initialState);
+
+    const [{ description }, handleInputChange, reset] = useForm({
+        description : ''
+    })
+
+/*     console.log( description ); */
+
+    const handleSubmit = ( e ) => {
+        e.preventDefault();
+
+        // console.log('Nueva tarea');
+        const newTodo = {
+            id: new Date().getTime(),
+            desc : description,
+            done: false
+        };
+
+        const action = {
+            type: 'add',
+            payload: newTodo,
+        }
+
+        dispatch(action);
+        reset();
+    }
+
+
+    return (
+        <div>
+            <h1>TodoApp</h1>
+            <hr />
+
+            <div className="row">
+
+                <div className="col-7">
+                    <ul className="list-group list-group-flush">
+                            {
+                                todos.map( (todo, i) => (
+                                    <li 
+                                        key={ todo.id}
+                                        className="list-group-item"
+                                    >
+                                        <p className="text-center">{ i + 1 }. { todo.desc }</p>
+                                        <button
+                                            className="btn btn-danger"
+                                        >
+                                            Borrar
+                                        </button>
+                                    </li>
+                                ))
+                            }
+
+                        </ul>
+            </div>
+                <div className="col-5">
+                    <h4>Agregar TODO</h4>
+                    <hr />
+
+                    <form onSubmit={ handleSubmit }>
+
+                        <input 
+                            type="text" 
+                            name="description"
+                            className="form-control"
+                            placeholder="Aprender ..."
+                            autoComplete="off"
+                            onChange={ handleInputChange }
+                            value= { description }
+                        />
+
+                        <button
+                            type="submit"
+                            className="btn btn-outline-primary mt-1 btn-block"
+                            >
+                            Agregar
+                        </button>
+                        
+                    </form>
+
+                </div>
+            </div>
+            
+        
+        </div>
+    )
+}
+```
+
+De esta forma si agregamos una nueva tarea el campo se limpia automaticamente.
+
+Si agregamos una tarea sin nada en el campo, se agrega el numero 6. y el resto es vacio, para corregir esto se debe hacer una validación en la función `handleSubmit()`
+
+![assets-git/349.png](assets-git/349.png)
+
+```
+    const handleSubmit = ( e ) => {
+        e.preventDefault();
+
+        // Validacion, utilizamos trim() para quitar espacios vacios y el recorrido de lo que escribimos en el campo con .length
+        // Si es menor a 1 retorna vacio y no hace nada
+
+        if( description.trim().length <= 1){
+            return;
+        }
+
+        // console.log('Nueva tarea');
+        const newTodo = {
+            id: new Date().getTime(),
+            desc : description,
+            done: false
+        };
+
+        const action = {
+            type: 'add',
+            payload: newTodo,
+        }
+
+        dispatch(action);
+        reset();
+    }
+```
+
+Ahora hacemos uso del argumento `init` que estaba en el `useReducer`, lo que hace esta funcion es ayudar a computar mas rapido el `initialState` y lo que en si trae `init` es el return del `initialState` y en vez de usar el argumento `initialState`, se inicializa con un arreglo vacio, el cual es su valor por defecto
+
+```
+import React, { useReducer } from 'react'
+import { useForm } from '../../hooks/useForm';
+
+import './styles.css'
+import { todoReducer } from './todoReducer';
+
+const init = () => {
+    
+    return [{
+    id: new Date().getTime(),
+    desc : 'Aprender React',
+    done: false
+}];
+}
+
+export const TodoApp = () => {
+
+    /*  const [state, dispatch] = useReducer(reducer, initialState, init) 
+    el argumento reducer, es la funcion reducer que se va a declarar, initialState, el estado inicial de la apliacion y init es una funcion
+    que se usa para inicializar el state en caso de que ese state sea procesado o haga varias acciones.
+    
+    dispatch ayuda a disparar las acciones hacia el reducer  */
+    const [ todos, dispatch ] = useReducer(todoReducer, [], init);
+
+    const [{ description }, handleInputChange, reset] = useForm({
+        description : ''
+    })
+
+/*     console.log( description ); */
+
+    const handleSubmit = ( e ) => {
+        e.preventDefault();
+
+        // Validacion, utilizamos trim() para quitar espacios vacios y el recorrido de lo que escribimos en el campo con .length
+        // Si es menor a 1 retorna vacio y no hace nada
+
+        if( description.trim().length <= 1){
+            return;
+        }
+
+        // console.log('Nueva tarea');
+        const newTodo = {
+            id: new Date().getTime(),
+            desc : description,
+            done: false
+        };
+
+        const action = {
+            type: 'add',
+            payload: newTodo,
+        }
+
+        dispatch(action);
+        reset();
+    }
+
+
+    return (
+        <div>
+            <h1>TodoApp</h1>
+            <hr />
+
+            <div className="row">
+
+                <div className="col-7">
+                    <ul className="list-group list-group-flush">
+                            {
+                                todos.map( (todo, i) => (
+                                    <li 
+                                        key={ todo.id}
+                                        className="list-group-item"
+                                    >
+                                        <p className="text-center">{ i + 1 }. { todo.desc }</p>
+                                        <button
+                                            className="btn btn-danger"
+                                        >
+                                            Borrar
+                                        </button>
+                                    </li>
+                                ))
+                            }
+
+                        </ul>
+            </div>
+                <div className="col-5">
+                    <h4>Agregar TODO</h4>
+                    <hr />
+
+                    <form onSubmit={ handleSubmit }>
+
+                        <input 
+                            type="text" 
+                            name="description"
+                            className="form-control"
+                            placeholder="Aprender ..."
+                            autoComplete="off"
+                            onChange={ handleInputChange }
+                            value= { description }
+                        />
+
+                        <button
+                            type="submit"
+                            className="btn btn-outline-primary mt-1 btn-block"
+                            >
+                            Agregar
+                        </button>
+                        
+                    </form>
+
+                </div>
+            </div>
+            
+        
+        </div>
+    )
+}
+
+```
+Para grabar en `localStorage`, hacemos uso de `useEffect` y le pasamos como segundo argumento a `todos`, dentro del useEffect agregamos la instrucción `localStorage.setItem()`. localStorage por defecto solo recibe cadenas de texto, por lo tanto hay que convertir al todos, en una cadena de texto con el metodo `JSON.stringify`
+
+```
+import React, { useEffect, useReducer } from 'react'
+import { useForm } from '../../hooks/useForm';
+
+import './styles.css'
+import { todoReducer } from './todoReducer';
+
+const init = () => {
+    
+    return [{
+    id: new Date().getTime(),
+    desc : 'Aprender React',
+    done: false
+}];
+}
+
+export const TodoApp = () => {
+
+    /*  const [state, dispatch] = useReducer(reducer, initialState, init) 
+    el argumento reducer, es la funcion reducer que se va a declarar, initialState, el estado inicial de la apliacion y init es una funcion
+    que se usa para inicializar el state en caso de que ese state sea procesado o haga varias acciones.
+    
+    dispatch ayuda a disparar las acciones hacia el reducer  */
+    const [ todos, dispatch ] = useReducer(todoReducer, [], init);
+
+    const [{ description }, handleInputChange, reset] = useForm({
+        description : ''
+    })
+
+/*     console.log( description ); */
+
+    useEffect( () => {
+        localStorage.setItem('todos', JSON.stringify( todos ))
+    }, [ todos ])
+
+    const handleSubmit = ( e ) => {
+        e.preventDefault();
+
+        // Validacion, utilizamos trim() para quitar espacios vacios y el recorrido de lo que escribimos en el campo con .length
+        // Si es menor a 1 retorna vacio y no hace nada
+
+        if( description.trim().length <= 1){
+            return;
+        }
+
+        // console.log('Nueva tarea');
+        const newTodo = {
+            id: new Date().getTime(),
+            desc : description,
+            done: false
+        };
+
+        const action = {
+            type: 'add',
+            payload: newTodo,
+        }
+
+        dispatch(action);
+        reset();
+    }
+
+
+    return (
+        <div>
+            <h1>TodoApp</h1>
+            <hr />
+
+            <div className="row">
+
+                <div className="col-7">
+                    <ul className="list-group list-group-flush">
+                            {
+                                todos.map( (todo, i) => (
+                                    <li 
+                                        key={ todo.id}
+                                        className="list-group-item"
+                                    >
+                                        <p className="text-center">{ i + 1 }. { todo.desc }</p>
+                                        <button
+                                            className="btn btn-danger"
+                                        >
+                                            Borrar
+                                        </button>
+                                    </li>
+                                ))
+                            }
+
+                        </ul>
+            </div>
+                <div className="col-5">
+                    <h4>Agregar TODO</h4>
+                    <hr />
+
+                    <form onSubmit={ handleSubmit }>
+
+                        <input 
+                            type="text" 
+                            name="description"
+                            className="form-control"
+                            placeholder="Aprender ..."
+                            autoComplete="off"
+                            onChange={ handleInputChange }
+                            value= { description }
+                        />
+
+                        <button
+                            type="submit"
+                            className="btn btn-outline-primary mt-1 btn-block"
+                            >
+                            Agregar
+                        </button>
+                        
+                    </form>
+
+                </div>
+            </div>
+            
+        
+        </div>
+    )
+}
+
+```
+
+Si vamos al navegador y buscamos la pestaña Applications, vemos que aparece la información 
+
+![assets-git/350.png](assets-git/350.png)
+
+Esta información se guarda y se graba 
+
+para poder recuperar esos datos cada vez que carguemos la pagina en la funcion init debemos reemplazar todo por lo siguiente `return JSON.parse(localStorage.getItem('todos')) || [];` el pip significa que en caso de que no exista nada retorne un arreglo vacio
+
+```
+const init = () => {
+
+    return JSON.parse(localStorage.getItem('todos')) || [];
+    
+/*     return [{
+    id: new Date().getTime(),
+    desc : 'Aprender React',
+    done: false
+}]; */
+}
+```
+Si se fijan el estado inicial ahora ya no existe, pero si cargamos el navegador nuevamente este estado de Aprender React, se va a cargar porque ya se grabaron estos datos en el localstorage
+
+![assets-git/350.png](assets-git/350.png)
+
+Pero si borramos los datos y volvemos a cargar el navegador, vemos que se agrega todos pero con un arreglo vacio
+
+![assets-git/351.png](assets-git/351.png)
+
+![assets-git/352.png](assets-git/352.png)
+
+Y si se empiezan a agregar datos, tambien se empiezan a grabar estos, entonces cada vez que se recargue la pagina, van a aparecer todos nuestros datos porque ya los estamos grabando y cargando en el localstorage
+
+![assets-git/353.png](assets-git/353.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Borrar un TODO
+
+![assets-git/353.png](assets-git/353.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
