@@ -11882,7 +11882,171 @@ Y si se empiezan a agregar datos, tambien se empiezan a grabar estos, entonces c
 
 ### Borrar un TODO
 
-![assets-git/353.png](assets-git/353.png)
+Para borrar una de las tareas o TODOs, es necesario agregar un `action.type` al `todoReducer` que tenemos como funcion aparte, y dentro de esta nombrar el `case delete` y retornar un nuevo arreglo, el metodo `filter` retorna un nuevo arreglo y a este se le debe agregar una condición, esta condición es que el `todo.id` debe ser diferente al `action.payload`
+
+```
+
+
+export const todoReducer = ( state = [], action) => {
+
+    switch (action.type) {
+        case 'add':
+            return [ ...state, action.payload ];
+
+        case 'delete':
+            return state.filter( todo => todo.id !== action.payload );
+    
+        default:
+            return state;
+    }
+}
+```
+
+Y ahora debemos de crear una funcion `handleDelete` que debemos llamar en el boton borrar, lo unico que debemos hacer es asegurar que al dar click sobre el boton borrar podamos obtener el id de cada elemento
+
+```
+import React, { useEffect, useReducer } from 'react'
+import { useForm } from '../../hooks/useForm';
+
+import './styles.css'
+import { todoReducer } from './todoReducer';
+
+const init = () => {
+
+    return JSON.parse(localStorage.getItem('todos')) || [];
+    
+/*     return [{
+    id: new Date().getTime(),
+    desc : 'Aprender React',
+    done: false
+}]; */
+}
+
+export const TodoApp = () => {
+
+    /*  const [state, dispatch] = useReducer(reducer, initialState, init) 
+    el argumento reducer, es la funcion reducer que se va a declarar, initialState, el estado inicial de la apliacion y init es una funcion
+    que se usa para inicializar el state en caso de que ese state sea procesado o haga varias acciones.
+    
+    dispatch ayuda a disparar las acciones hacia el reducer  */
+    const [ todos, dispatch ] = useReducer(todoReducer, [], init);
+
+    const [{ description }, handleInputChange, reset] = useForm({
+        description : ''
+    })
+
+/*     console.log( description ); */
+
+    useEffect( () => {
+        localStorage.setItem('todos', JSON.stringify( todos ))
+    }, [ todos ])
+
+    const handleSubmit = ( e ) => {
+        e.preventDefault();
+
+        // Validacion, utilizamos trim() para quitar espacios vacios y el recorrido de lo que escribimos en el campo con .length
+        // Si es menor a 1 retorna vacio y no hace nada
+
+        if( description.trim().length <= 1){
+            return;
+        }
+
+        // console.log('Nueva tarea');
+        const newTodo = {
+            id: new Date().getTime(),
+            desc : description,
+            done: false
+        };
+
+        const action = {
+            type: 'add',
+            payload: newTodo,
+        }
+
+        dispatch(action);
+        reset();
+    }
+
+    const handleDelete = ( todoId ) => {
+
+        // console.log(todoId)
+
+        const action = {
+            type: 'delete',
+            payload: todoId
+        }
+        dispatch(action);
+    }
+
+
+    return (
+        <div>
+            <h1>TodoApp</h1>
+            <hr />
+
+            <div className="row">
+
+                <div className="col-7">
+                    <ul className="list-group list-group-flush">
+                            {
+                                todos.map( (todo, i) => (
+                                    <li 
+                                        key={ todo.id}
+                                        className="list-group-item"
+                                    >
+                                        <p className="text-center">{ i + 1 }. { todo.desc }</p>
+                                        <button
+                                            type="submit"
+                                            className="btn btn-danger"
+                                            onClick={ () => handleDelete ( todo.id) }
+                                            value={init}
+                                        >
+                                            Borrar
+                                        </button>
+                                    </li>
+                                ))
+                            }
+
+                        </ul>
+            </div>
+                <div className="col-5">
+                    <h4>Agregar TODO</h4>
+                    <hr />
+
+                    <form onSubmit={ handleSubmit }>
+
+                        <input 
+                            type="text" 
+                            name="description"
+                            className="form-control"
+                            placeholder="Aprender ..."
+                            autoComplete="off"
+                            onChange={ handleInputChange }
+                            value= { description }
+                        />
+
+                        <button
+                            type="submit"
+                            className="btn btn-outline-primary mt-1 btn-block"
+                            >
+                            Agregar
+                        </button>
+                        
+                    </form>
+
+                </div>
+            </div>
+            
+        
+        </div>
+    )
+}
+
+```
+
+![assets-git/354.png](assets-git/354.png)
+
+![assets-git/355.png](assets-git/355.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
