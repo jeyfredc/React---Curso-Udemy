@@ -168,7 +168,7 @@ ___
 
 [Configurar Router en React](#Configurar-Router-en-React)
 
-[](#)
+[Link y NavLink](#Link-y-NavLink)
 
 [](#)
 
@@ -13076,6 +13076,190 @@ export const AppRouter = () => {
 ```
 
 ![assets-git/361.png](assets-git/361.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Link y NavLink
+
+Crear un nuevo componente dentro de la carpeta **09-useContext** llamado **NavBar.js** el cual contiene la siguiente estructura que esta compuesta por una etiqueta `nav`, que contiene dentro una etiqueta `ul` y estas a su vez contienen etiquetas `li` y tambien contienen etiquetas `a` par poder cargar los path que estamos utilizando
+
+```
+import React from 'react'
+
+export const NavBar = () => {
+    return (
+        <>
+            <nav>
+                <ul>
+                    <li>
+                        <a href="./">Home</a>
+                    </li>
+
+                    <li>
+                        <a href="./about">About</a>
+                    </li>
+
+                    <li>
+                        <a href="./login">Login</a>
+                    </li>
+                </ul>
+            </nav>
+        </>
+    )
+}
+```
+
+lo siguiente para ver que esta funcionando es importar el `NavBar` a `AppRouter`
+
+```
+import React from 'react'
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+  } from "react-router-dom";
+import { AboutScreen } from './AboutScreen';
+import { HomeScreen } from './HomeScreen';
+import { LoginScreen } from './LoginScreen';
+import { NavBar } from './NavBar';
+
+
+export const AppRouter = () => {
+    return (
+        <Router>
+            <div>
+
+                <NavBar />
+
+                <Switch>
+                    <Route exact path="/" component={ HomeScreen }/>
+                    <Route exact path="/about" component={ AboutScreen }/>
+                    <Route exact path="/login" component={ LoginScreen }/>
+
+                </Switch>
+
+
+            </div>
+        </Router>
+    )
+}
+```
+
+Esto es lo que se debe ver en pantalla
+
+![assets-git/364.png](assets-git/364.png)
+
+A cualquiera de los link que viajemos siempre van a estar estos como una barra de navegación superior, es decir siempre van a estar a la vista
+
+**Nota:** Hay algo importante que se debe notar y es que cuando se hace click sobre cada link, la petición se vuelve a realizar, es decir se vuelve a cargar todo el componente de inicio a fin, el ejemplo por el momento es sencillo y no se nota al tomar una captura de pantalla pero esto es como volver a realizar una petición al servidor y no se optimizan recursos
+
+Cuando en un proyecto esta implementado React, los componentes que se establecen por rutas no deben hacer una petición al servidor a menos que se requiera y es por esto que es utilizado `Link` y `NavLink`, el cambio del componente realizar sin que se vuelva a cargar.
+
+La forma de usarlo es importandolo de `react-dom-router` y lo vamos a utilizar dentro del componente `NavBar`, primero hacemos la importación de `Link` esta la cambiamos por la etiqueta `a` y en vez de usar `href` usamos `to` y el path cambia un poco solo quitamos el punto antes del slash
+
+```
+import React from 'react'
+
+import { Link } from 'react-router-dom';
+
+export const NavBar = () => {
+    return (
+        <>
+            <nav>
+                <ul>
+                    <li>
+                        <Link to="/">Home</Link>
+                    </li>
+
+                    <li>
+                        <Link to="/about">About</Link>
+                    </li>
+
+                    <li>
+                        <Link to="/login">Login</Link>
+                    </li>
+                </ul>
+            </nav>
+        </>
+    )
+}
+
+```
+
+Con realizar este cambio, notamos como en el navegador ya no esta haciendo peticiónes cada vez que hacemos click sobre cada link.
+
+Ahora vamos a realizar cambios sobre el componente `NavBar` implementando clases de Bootstrap especiales para esto 
+
+```
+import React from 'react'
+
+import { Link } from 'react-router-dom';
+
+export const NavBar = () => {
+    return (
+        <>
+
+        <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
+        <div className="container-fluid">
+            <Link className="navbar-brand" to="/">useContext</Link>
+            <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div className="navbar-nav">
+                <Link className="nav-link" to="/">Home</Link>
+                <Link className="nav-link" to="/about">About</Link>
+                <Link className="nav-link" to="/login">Login</Link>
+            </div>
+            </div>
+        </div>
+        </nav>
+        </>
+    )
+}
+
+```
+
+El `Link` y el `NavLink` solo que hay dos diferencias.
+
+Primero notar esta imagen 
+
+![assets-git/365.png](assets-git/365.png)
+
+Lo que es Home, About y Login, se notan como si estuvieran apagados
+
+Cuando se usa NavLink esto cambia
+
+```
+import React from 'react'
+
+import { NavLink } from 'react-router-dom';
+
+export const NavBar = () => {
+    return (
+        <>
+
+        <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
+        <div className="container-fluid">
+            <NavLink className="navbar-brand" to="/">useContext</NavLink>
+            <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div className="navbar-nav">
+                <NavLink className="nav-link" to="/">Home</NavLink>
+                <NavLink className="nav-link" to="/about">About</NavLink>
+                <NavLink className="nav-link" to="/login">Login</NavLink>
+            </div>
+            </div>
+        </div>
+        </nav>
+        </>
+    )
+}
+```
+
+Ahora con `NavLink` todo aparece iluminado con una clase css y se nota la pestaña sobre la que estoy ubicado
+
+![assets-git/366.png](assets-git/366.png)
+
+![assets-git/367.png](assets-git/367.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
