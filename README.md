@@ -160,7 +160,7 @@ ___
 
 [Toggle Todo Marcar como completado o pendiente un TODO](#Toggle-Todo-Marcar-como-completado-o-pendiente-un-TODO)
 
-[](#)
+[Optimización 1 Listado de TODOs](#Optimización-1-Listado-de-TODOs)
 
 [](#)
 
@@ -12308,6 +12308,253 @@ export const todoReducer = ( state = [], action) => {
     }
 }
 ```
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Optimización 1 Listado de TODOs
+
+Se optimiza el componente `TodoApp` y se retira todo la etiqueta `<ul></ul>` y se convierte en un componente que recibe varias propiedades, el componente se llama **TodoList.js** y recibe las funciones `todos`, `handleDelete`, `handleToggle`
+
+```
+import React, { useEffect, useReducer } from 'react'
+import { useForm } from '../../hooks/useForm';
+
+import './styles.css'
+import { TodoList } from './TodoList';
+import { todoReducer } from './todoReducer';
+
+const init = () => {
+
+    return JSON.parse(localStorage.getItem('todos')) || [];
+    
+/*     return [{
+    id: new Date().getTime(),
+    desc : 'Aprender React',
+    done: false
+}]; */
+}
+
+export const TodoApp = () => {
+
+    /*  const [state, dispatch] = useReducer(reducer, initialState, init) 
+    el argumento reducer, es la funcion reducer que se va a declarar, initialState, el estado inicial de la apliacion y init es una funcion
+    que se usa para inicializar el state en caso de que ese state sea procesado o haga varias acciones.
+    
+    dispatch ayuda a disparar las acciones hacia el reducer  */
+    const [ todos, dispatch ] = useReducer(todoReducer, [], init);
+
+    const [{ description }, handleInputChange, reset] = useForm({
+        description : ''
+    })
+
+/*     console.log( description ); */
+
+    useEffect( () => {
+        localStorage.setItem('todos', JSON.stringify( todos ))
+    }, [ todos ])
+
+    const handleSubmit = ( e ) => {
+        e.preventDefault();
+
+        // Validacion, utilizamos trim() para quitar espacios vacios y el recorrido de lo que escribimos en el campo con .length
+        // Si es menor a 1 retorna vacio y no hace nada
+
+        if( description.trim().length <= 1){
+            return;
+        }
+
+        // console.log('Nueva tarea');
+        const newTodo = {
+            id: new Date().getTime(),
+            desc : description,
+            done: false
+        };
+
+        const action = {
+            type: 'add',
+            payload: newTodo,
+        }
+
+        dispatch(action);
+        reset();
+    }
+
+    const handleDelete = ( todoId ) => {
+
+        // console.log(todoId)
+
+        const action = {
+            type: 'delete',
+            payload: todoId
+        }
+        dispatch(action);
+    }
+
+    const handleToggle = ( todoId )=> {
+        dispatch({
+            type:'toggle',
+            payload: todoId
+        })
+    }
+
+
+    return (
+        <div>
+            <h1>TodoApp</h1>
+            <hr />
+
+            <div className="row">
+
+                <div className="col-7">
+
+                    <TodoList 
+                    todos={ todos } 
+                    handleDelete={ handleDelete } 
+                    handleToggle={ handleToggle }
+                    />
+            </div>
+                <div className="col-5">
+                    <h4>Agregar TODO</h4>
+                    <hr />
+
+                    <form onSubmit={ handleSubmit }>
+
+                        <input 
+                            type="text" 
+                            name="description"
+                            className="form-control"
+                            placeholder="Aprender ..."
+                            autoComplete="off"
+                            onChange={ handleInputChange }
+                            value= { description }
+                        />
+
+                        <button
+                            type="submit"
+                            className="btn btn-outline-primary mt-1 btn-block"
+                            >
+                            Agregar
+                        </button>
+                        
+                    </form>
+
+                </div>
+            </div>
+            
+        
+        </div>
+    )
+}
+
+```
+
+El componente `TodoList` recibe las propiedades en forma desestructurada y no hay que realizar mas cambios 
+
+```
+import React from 'react'
+
+export const TodoList = ( {todos, handleDelete, handleToggle}) => {
+    return (
+        <>
+            <ul className="list-group list-group-flush">
+                            {
+                                todos.map( (todo, i) => (
+                                    <li 
+                                        key={ todo.id}
+                                        className="list-group-item"
+                                    >
+                                        <p 
+                                            className={`${ todo.done && 'complete'}`}
+                                            onClick= { () =>  handleToggle(todo.id) } 
+                                        >
+                                            { i + 1 }. { todo.desc }
+                                        </p>
+                                        <button
+                                            type="submit"
+                                            className="btn btn-danger"
+                                            onClick={ () => handleDelete ( todo.id) }
+                                            value={init}
+                                        >
+                                            Borrar
+                                        </button>
+                                    </li>
+                                ))
+                            }
+
+                        </ul>
+        </>
+    )
+}
+
+```
+
+Ahora tambien pasamos las etiquetas `<li></li>` a otro componente llamado **ToloListItem.js**, a este componente le pasamos las propiedades `todo`, `i`, `handleDelete`, `handleToggle` y como estamos realizando el metodo `map` es necesario que a este componente se le pase el `key`
+
+```
+import React from 'react'
+import { TodoListItem } from './TodoListItem'
+
+export const TodoList = ( { todos, handleDelete, handleToggle}) => {
+    return (
+        <>
+            <ul className="list-group list-group-flush">
+                            {
+                                todos.map( (todo, i) => (
+                                    <TodoListItem 
+                                    key= { todo.id}
+                                    todo={ todo }
+                                    i={ i }  
+                                    handleDelete={ handleDelete } 
+                                    handleToggle={ handleToggle }
+                                    />
+                                ))
+                            }
+
+                        </ul>
+        </>
+    )
+}
+
+```
+
+Y recibimos nuevamente las propiedades en el componente `TodoListItem`
+
+```
+import React from 'react'
+
+export const TodoListItem = ({ handleDelete, handleToggle, init, todo, i}) => {
+    return (
+        <>
+            <li 
+                
+                className="list-group-item"
+            >
+            <p 
+                className={`${ todo.done && 'complete'}`}
+                onClick= { () =>  handleToggle(todo.id) } 
+            >
+                { i + 1 }. { todo.desc }
+            </p>
+            <button
+                type="submit"
+                className="btn btn-danger"
+                onClick={ () => handleDelete ( todo.id) }
+                value={init}
+            >
+                Borrar
+            </button>
+            </li>
+        </>
+    )
+}
+
+```
+
+Si se quiere, se pueden quitar los ffragment ya que no son necesarios, la consola del navegador no deberia arrojar ningun tipo de error y esta es la optimización de la lista de tareas 
+
+![assets-git/358.png](assets-git/358.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
