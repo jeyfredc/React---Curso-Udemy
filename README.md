@@ -172,7 +172,7 @@ ___
 
 [CreateContext y useContext](#CreateContext-y-useContext)
 
-[](#)
+[useContext](#useContext)
 
 [](#)
 
@@ -13393,6 +13393,235 @@ export const HomeScreen = () => {
 ```
 
 ![assets-git/371.png](assets-git/371.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### useContext
+
+La constante `user` creada en el componente se puede manejar creandola en un `useState` para el caso que queramos cambiar por ejemplo de usuario por el momento la forma de manejarlo, seria inicializando el estado como una variable vacia
+
+```
+import React, { useState } from 'react'
+import { AppRouter } from './AppRouter'
+import { UserContext } from './UserContext'
+
+export const MainApp = () => {
+
+    const [user, setUser] = useState({})
+
+/*     const user = {
+        id: 12345,
+        name: 'Jeyfred C',
+        email: 'jeyfredc@gmail.com'
+    } */
+    return (
+
+        <div>
+            <UserContext.Provider value={ user }>
+
+            <AppRouter />
+            
+            </UserContext.Provider>
+        </div>
+    )
+}
+
+```
+
+pero si quiero pasarle mas propiedades al value lo unico que debo hacer es utilizar la desestructuración, en este caso para pasar el `setUser`
+
+Notar como se pasa sin desestructuración y lo lee la consola
+
+`<UserContext.Provider value={ user, setUser }>`
+
+![assets-git/372.png](assets-git/372.png)
+
+Ahora se realiza el mismo ejercicio desestructurando
+
+`<UserContext.Provider value={{ user, setUser }}>`
+
+```
+import React, { useState } from 'react'
+import { AppRouter } from './AppRouter'
+import { UserContext } from './UserContext'
+
+export const MainApp = () => {
+
+    const [user, setUser] = useState({})
+
+/*     const user = {
+        id: 12345,
+        name: 'Jeyfred C',
+        email: 'jeyfredc@gmail.com'
+    } */
+    return (
+
+        <div>
+            <UserContext.Provider value={{ user, setUser }}>
+
+            <AppRouter />
+            
+            </UserContext.Provider>
+        </div>
+    )
+}
+
+```
+
+![assets-git/373.png](assets-git/373.png)
+
+Ahora en el `HomeScreen` vamos a pasar los datos de ese `user` utilizando la desestructuración, como `user` por el momento no contiene nada lo unico que va a aparecer son corchetes vacios `{}`
+
+```
+import React, { useContext } from 'react'
+import { UserContext } from './UserContext'
+
+export const HomeScreen = () => {
+
+    const { user } = useContext(UserContext)
+
+    console.log( user )
+    return (
+        <div>
+            <h1>HomeScreen</h1>
+            <hr />
+            <pre>
+                { JSON.stringify( user, null, 3) }
+            </pre>
+        </div>
+    )
+}
+
+```
+
+![assets-git/374.png](assets-git/374.png)
+
+Luego realizamos una pequeña modificacion en el `AppRouter` con una clase de Bootstrap, solo se esta añadiendo la clase container, para separar todos los componentes un poco de la margen de la pantalla
+
+```
+import React from 'react'
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+  } from "react-router-dom";
+import { AboutScreen } from './AboutScreen';
+import { HomeScreen } from './HomeScreen';
+import { LoginScreen } from './LoginScreen';
+import { NavBar } from './NavBar';
+
+
+export const AppRouter = () => {
+    return (
+        <Router>
+            <div>
+
+                <NavBar />
+                    <div className="container">
+                <Switch>
+                    <Route exact path="/" component={ HomeScreen }/>
+                    <Route exact path="/about" component={ AboutScreen }/>
+                    <Route exact path="/login" component={ LoginScreen }/>
+
+                </Switch>
+                </div>
+
+            </div>
+        </Router>
+    )
+}
+
+```
+
+Luego de esto regresamos al `LoginScreen` alli con un boton vamos a modificar las propiedades del usuario y se deben pasar al componente HomeScreen para que alli aparezca, el `id`, `nombre` e `email`, entonces tambien debemos establecer el `useContext` y utilizar la desestructuración para poder realizarlo, dentro de la desestructuración solo incluyo el `setUser`
+
+```
+import React, { useContext } from 'react'
+import { UserContext } from './UserContext'
+
+export const LoginScreen = () => {
+
+    const { setUser} = useContext(UserContext)
+    return (
+        <div>
+            <h1>LoginScreen</h1>
+            <hr />
+            <button
+                className="btn btn-primary"
+                onClick={ ()=> setUser({
+                    id: 12345,
+                    name: 'Jeyfred C',
+                    email: 'jeyfredc@gmail.com'
+                })}
+            >
+                Login
+            </button>
+        </div>
+    )
+}
+
+```
+
+Lo unico que voy a tener dentro del componente `LoginScreen` es un boton que dice `Login`, pero al dar click sobre el y luego dirigirme al `HomeScreen` la información que se esta enviando deberia estar renderizada en el navegador
+
+![assets-git/375.png](assets-git/375.png)
+
+![assets-git/376.png](assets-git/376.png)
+
+Otro ejemplo se podria hacer con un LogOut, para eso abrimos el componente AboutScreen y modificamos con lo siguiente
+
+```
+import React, { useContext } from 'react'
+import { UserContext } from './UserContext'
+
+
+export const AboutScreen = () => {
+
+    const {user, setUser} = useContext(UserContext)
+    
+    const handleClick = () => {
+    
+        setUser({})
+    }
+    
+    return (
+        <div>
+            <h1>AboutScreen</h1>
+            <hr />
+
+            <pre>
+                { JSON.stringify(user, null, 3)}
+            </pre>
+
+            <button
+                className="btn btn-danger"
+                onClick={ handleClick}
+            >
+                LogOut
+            </button>
+        </div>
+    )
+}
+
+```
+
+Si vamos a Home o About no aparece ninguna información de momento
+
+![assets-git/377.png](assets-git/377.png)
+
+![assets-git/378.png](assets-git/378.png)
+
+Ahora si nos dirigimos al Login y damos click en el boton Login, la información se va a compartir en Home y en About
+
+![assets-git/376.png](assets-git/376.png)
+
+![assets-git/379.png](assets-git/379.png)
+
+Pero si ahora hago click en LogOut la información se va a dejar de compartir en Home y en About.
+
+Para esto es que sirve el uso de `useContext` compartir la comunicación entre componentes y de estar forma se facilita mucho mas el uso de props entre componentes 
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
