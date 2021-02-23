@@ -166,7 +166,7 @@ ___
 
 [Preparación App con rutas y hook useContext](#Preparación-App-con-rutas-y-hook-useContext)
 
-[](#)
+[Configurar Router en React](#Configurar-Router-en-React)
 
 [](#)
 
@@ -12830,7 +12830,252 @@ ReactDOM.render(
 
 ```
 
-Abrir la terminal ubicar la carpeta 09-useContext y ejecutar el comando `npm install react-router-dom`
+Abrir la terminal ubicar la carpeta **09-useContext** y ejecutar el comando `npm install react-router-dom`
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Configurar Router en React
+
+En este capitulo vamos a implementar rutas con path o url distintas sin tener que hacer peticiones http de algun servidor o API, empezamos creando otro archivo dentro de la carpeta **09-useContext** llamado **AppRouter.js**.
+
+**Nota:** Una aplicación puede tener mas de un Router, 2,3 o mas, lo que se requiera o 2 Router internamente
+
+Para empezar vamos a importar en el `AppRouter` `react-router-dom`, el cual lo proporciona la documentación
+
+```
+import React from 'react'
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Link
+  } from "react-router-dom";
+
+
+export const AppRouter = () => {
+    return (
+        <div>
+            
+        </div>
+    )
+}
+```
+
+A tener en cuenta `as Router` es un alias de `BrowserRouter`, esto sirve para acortar la palabra y verla de una mejor manera en el componente, por el momento lo que se va a utilizar de la importación es `Router`, `Switch` y `Route`, es aconsejable que dentro de una etiqueta `Router` se maneje internamente una etiqueta `div` y a continuación despues se hace uso de la etiqueta `Switch` que al igual que en otros programas Switch es usado como una condición aunque se ve algo distinto a como se usa normalmente un Switch
+
+```
+import React from 'react'
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+  } from "react-router-dom";
+
+
+export const AppRouter = () => {
+    return (
+        <Router>
+            <div>
+
+                <Switch>
+
+                </Switch>
+
+
+
+            </div>
+        </Router>
+    )
+}
+
+```
+
+Dentro de las etiquetas `Switch` va la etiqueta `Route` la cual lleva el path o ruta el url que nosotros queramnos y el render del componente, el componente se debe importar al `AppRouter` para que pueda ser utilizado
+
+Veamos el primer ejemplo
+
+```
+import React from 'react'
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+  } from "react-router-dom";
+import { AboutScreen } from './AboutScreen';
+
+
+export const AppRouter = () => {
+    return (
+        <Router>
+            <div>
+
+                <Switch>
+                    <Route  path="/about" component={ AboutScreen }/>
+                </Switch>
+
+
+            </div>
+        </Router>
+    )
+}
+```
+
+Ahora importamos `AppRouter` a `MainApp` para que podamos visualizar el ejemplo
+
+```
+import React from 'react'
+import { AppRouter } from './AppRouter'
+
+export const MainApp = () => {
+    return (
+        <div>
+            <h1>MainApp</h1>
+            <hr />
+            <AppRouter />
+        </div>
+    )
+}
+
+```
+
+Si por el momento revisamos el navegador solo vamos a tener **MainApp** y el path o url solo esta como **localhost:3000**
+
+![assets-git/359.png](assets-git/359.png)
+
+Pero si ahora a continuacion de la url agregamos **/about**, nos va a mostrar el render del componente `AboutScreen` que no es nada mas que el titulo
+
+![assets-git/360.png](assets-git/360.png)
+
+teniendo en mente esto modificamos `MainApp` quitando el titulo y la etiqueta `<hr />` 
+
+```
+import React from 'react'
+import { AppRouter } from './AppRouter'
+
+export const MainApp = () => {
+    return (
+        <div>
+            <AppRouter />
+        </div>
+    )
+}
+```
+Y dentro de nuestro `AppRouter` agregamos los otros path, que son `/` componente `HomeScreen` y `/login` componente `LoginScreen`
+
+```
+import React from 'react'
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+  } from "react-router-dom";
+import { AboutScreen } from './AboutScreen';
+import { HomeScreen } from './HomeScreen';
+import { LoginScreen } from './LoginScreen';
+
+
+export const AppRouter = () => {
+    return (
+        <Router>
+            <div>
+
+                <Switch>
+                    <Route  path="/about" component={ AboutScreen }/>
+                    <Route  path="/login" component={ LoginScreen }/>
+                    <Route  path="/" component={ HomeScreen }/>
+
+                </Switch>
+
+
+            </div>
+        </Router>
+    )
+}
+```
+De esta forma tenemos los path de cada componente
+
+![assets-git/361.png](assets-git/361.png)
+
+![assets-git/362.png](assets-git/362.png)
+
+Hay algo que recomienda React y es que las rutas se manejen de lo particular a lo mas general siendo lo mas general la ruta del `HomeScreen` por ser la mas sencilla el path es esto `/`, si a continuacion el path queda en el primer orden e intento renderizar la ruta del `/login` como resultado voy a obtener al del path mas general y esto esta mal
+
+```
+import React from 'react'
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+  } from "react-router-dom";
+import { AboutScreen } from './AboutScreen';
+import { HomeScreen } from './HomeScreen';
+import { LoginScreen } from './LoginScreen';
+
+
+export const AppRouter = () => {
+    return (
+        <Router>
+            <div>
+
+                <Switch>
+                    <Route  path="/" component={ HomeScreen }/>
+                    <Route  path="/about" component={ AboutScreen }/>
+                    <Route  path="/login" component={ LoginScreen }/>
+
+                </Switch>
+
+
+            </div>
+        </Router>
+    )
+}
+```
+
+Cuando esta en `HomeScreen` se muestra todo bien 
+
+![assets-git/362.png](assets-git/362.png)
+
+Pero si cambio el path a `/login` se sigue mostrarndo el `HomeScreen`
+
+![assets-git/363.png](assets-git/363.png)
+
+Esto sucede porque hay una coincidencia en el path de cada uno de los componentes para corregir esto debemos añadir el atributo exact antes de establecer el path y el problema queda resuelto
+
+```
+import React from 'react'
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+  } from "react-router-dom";
+import { AboutScreen } from './AboutScreen';
+import { HomeScreen } from './HomeScreen';
+import { LoginScreen } from './LoginScreen';
+
+
+export const AppRouter = () => {
+    return (
+        <Router>
+            <div>
+
+                <Switch>
+                    <Route exact path="/" component={ HomeScreen }/>
+                    <Route exact path="/about" component={ AboutScreen }/>
+                    <Route exact path="/login" component={ LoginScreen }/>
+
+                </Switch>
+
+
+            </div>
+        </Router>
+    )
+}
+
+```
+
+![assets-git/361.png](assets-git/361.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
