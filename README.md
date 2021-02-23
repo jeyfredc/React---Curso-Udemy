@@ -12559,3 +12559,176 @@ Si se quiere, se pueden quitar los ffragment ya que no son necesarios, la consol
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
+
+### Optimización 2 Listado de TODOs
+
+Se crea un componente nuevo llamado TodoAdd y se importa el `useForm`, se crea función `handleAdd` que recibe a `newTodo` y el `dispatch` recibe a `handleAdd`
+
+Esta es la forma como queda el componente `TodoApp`
+
+```
+import React, { useEffect, useReducer } from 'react'
+import { useForm } from '../../hooks/useForm';
+
+import './styles.css'
+import { TodoAdd } from './TodoAdd';
+import { TodoList } from './TodoList';
+import { todoReducer } from './todoReducer';
+
+const init = () => {
+
+    return JSON.parse(localStorage.getItem('todos')) || [];
+    
+/*     return [{
+    id: new Date().getTime(),
+    desc : 'Aprender React',
+    done: false
+}]; */
+}
+
+export const TodoApp = () => {
+
+    /*  const [state, dispatch] = useReducer(reducer, initialState, init) 
+    el argumento reducer, es la funcion reducer que se va a declarar, initialState, el estado inicial de la apliacion y init es una funcion
+    que se usa para inicializar el state en caso de que ese state sea procesado o haga varias acciones.
+    
+    dispatch ayuda a disparar las acciones hacia el reducer  */
+    const [ todos, dispatch ] = useReducer(todoReducer, [], init);
+
+
+
+/*     console.log( description ); */
+
+    useEffect( () => {
+        localStorage.setItem('todos', JSON.stringify( todos ))
+    }, [ todos ])
+
+   
+
+    const handleDelete = ( todoId ) => {
+
+        // console.log(todoId)
+
+        const action = {
+            type: 'delete',
+            payload: todoId
+        }
+        dispatch(action);
+    }
+
+    const handleToggle = ( todoId )=> {
+        dispatch({
+            type:'toggle',
+            payload: todoId
+        })
+    }
+
+    const handleAdd = ( newTodo ) => {
+        dispatch({
+            type:'add',
+            payload: newTodo
+        })
+    }
+
+
+    return (
+        <div>
+            <h1>TodoApp</h1>
+            <hr />
+
+            <div className="row">
+
+                <div className="col-7">
+
+                    <TodoList 
+                    todos={ todos } 
+                    handleDelete={ handleDelete } 
+                    handleToggle={ handleToggle }
+                    />
+            </div>
+                <div className="col-5">
+                    <h4>Agregar TODO</h4>
+                    <hr />
+
+                    <TodoAdd 
+                    handleAdd={handleAdd}
+                    dispatch = {dispatch}/>
+
+                </div>
+            </div>
+            
+        
+        </div>
+    )
+}
+
+```
+
+Esta es la forma como queda el componente `TodoAdd`
+
+```
+import React from 'react'
+import { useForm } from '../../hooks/useForm'
+
+export const TodoAdd = ({handleAdd, dispatch}) => {
+
+    const [{ description }, handleInputChange, reset] = useForm({
+        description : ''
+    })
+
+    const handleSubmit = ( e ) => {
+        e.preventDefault();
+
+        // Validacion, utilizamos trim() para quitar espacios vacios y el recorrido de lo que escribimos en el campo con .length
+        // Si es menor a 1 retorna vacio y no hace nada
+
+        if( description.trim().length <= 1){
+            return;
+        }
+
+        // console.log('Nueva tarea');
+        const newTodo = {
+            id: new Date().getTime(),
+            desc : description,
+            done: false
+        };
+
+        handleAdd(newTodo)
+
+        dispatch(handleAdd);
+        reset();
+    }
+    
+    return (
+        <form onSubmit={ handleSubmit }>
+
+        <input 
+            type="text" 
+            name="description"
+            className="form-control"
+            placeholder="Aprender ..."
+            autoComplete="off"
+            onChange={ handleInputChange }
+            value= { description }
+        />
+
+        <button
+            type="submit"
+            className="btn btn-outline-primary mt-1 btn-block"
+            >
+            Agregar
+        </button>
+        
+    </form>
+    )
+}
+
+```
+
+![assets-git/358.png](assets-git/358.png)
+
+Como tal cambios en el funcionamiento de la aplicación no existen, solo esta optimizando el manejo de componentes
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>

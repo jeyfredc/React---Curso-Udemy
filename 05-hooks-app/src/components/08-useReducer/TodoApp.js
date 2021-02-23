@@ -2,6 +2,7 @@ import React, { useEffect, useReducer } from 'react'
 import { useForm } from '../../hooks/useForm';
 
 import './styles.css'
+import { TodoAdd } from './TodoAdd';
 import { TodoList } from './TodoList';
 import { todoReducer } from './todoReducer';
 
@@ -25,9 +26,7 @@ export const TodoApp = () => {
     dispatch ayuda a disparar las acciones hacia el reducer  */
     const [ todos, dispatch ] = useReducer(todoReducer, [], init);
 
-    const [{ description }, handleInputChange, reset] = useForm({
-        description : ''
-    })
+
 
 /*     console.log( description ); */
 
@@ -35,31 +34,7 @@ export const TodoApp = () => {
         localStorage.setItem('todos', JSON.stringify( todos ))
     }, [ todos ])
 
-    const handleSubmit = ( e ) => {
-        e.preventDefault();
-
-        // Validacion, utilizamos trim() para quitar espacios vacios y el recorrido de lo que escribimos en el campo con .length
-        // Si es menor a 1 retorna vacio y no hace nada
-
-        if( description.trim().length <= 1){
-            return;
-        }
-
-        // console.log('Nueva tarea');
-        const newTodo = {
-            id: new Date().getTime(),
-            desc : description,
-            done: false
-        };
-
-        const action = {
-            type: 'add',
-            payload: newTodo,
-        }
-
-        dispatch(action);
-        reset();
-    }
+   
 
     const handleDelete = ( todoId ) => {
 
@@ -76,6 +51,13 @@ export const TodoApp = () => {
         dispatch({
             type:'toggle',
             payload: todoId
+        })
+    }
+
+    const handleAdd = ( newTodo ) => {
+        dispatch({
+            type:'add',
+            payload: newTodo
         })
     }
 
@@ -99,26 +81,9 @@ export const TodoApp = () => {
                     <h4>Agregar TODO</h4>
                     <hr />
 
-                    <form onSubmit={ handleSubmit }>
-
-                        <input 
-                            type="text" 
-                            name="description"
-                            className="form-control"
-                            placeholder="Aprender ..."
-                            autoComplete="off"
-                            onChange={ handleInputChange }
-                            value= { description }
-                        />
-
-                        <button
-                            type="submit"
-                            className="btn btn-outline-primary mt-1 btn-block"
-                            >
-                            Agregar
-                        </button>
-                        
-                    </form>
+                    <TodoAdd 
+                    handleAdd={handleAdd}
+                    dispatch = {dispatch}/>
 
                 </div>
             </div>
