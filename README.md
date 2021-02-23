@@ -162,7 +162,9 @@ ___
 
 [Optimización 1 Listado de TODOs](#Optimización-1-Listado-de-TODOs)
 
-[](#)
+___
+
+[Preparación App con rutas y hook useContext](#Preparación-App-con-rutas-y-hook-useContext)
 
 [](#)
 
@@ -12728,6 +12730,107 @@ export const TodoAdd = ({handleAdd, dispatch}) => {
 ![assets-git/358.png](assets-git/358.png)
 
 Como tal cambios en el funcionamiento de la aplicación no existen, solo esta optimizando el manejo de componentes
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Preparación App con rutas y hook useContext
+
+Dentro de la carpeta **Components**, crear otra carpeta llamada **09-useContext** y alli se van a crear varios componentes, **AboutScreen.js**, **HomeScreen.js**, **LoginScreen.js**, **MainApp.js**.
+
+Cada archivo llevara la estructura basica que se ha venido creando hasta el momento
+
+**AboutScreen.js**
+
+```
+import React from 'react'
+
+export const AboutScreen = () => {
+    return (
+        <div>
+            <h1>AboutScreen</h1>
+            <hr />
+        </div>
+    )
+}
+```
+
+**HomeScreen.js**
+
+```
+import React from 'react'
+
+export const HomeScreen = () => {
+    return (
+        <div>
+            <h1>HomeScreen</h1>
+            <hr />
+        </div>
+    )
+}
+
+```
+
+**LoginScreen.js**
+
+```
+import React from 'react'
+
+export const LoginScreen = () => {
+    return (
+        <div>
+            <h1>LoginScreen</h1>
+            <hr />
+        </div>
+    )
+}
+```
+
+**MainApp.js**
+
+```
+import React from 'react'
+
+export const MainApp = () => {
+    return (
+        <div>
+            <h1>MainApp</h1>
+            <hr />
+        </div>
+    )
+}
+```
+
+Importar el componente `MainApp` en **index.js** y antes de lanzar la aplicación al navegador instalar [React Router](https://reactrouter.com/web/guides/quick-start)
+
+```
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { MainApp } from './components/09-useContext/MainApp';
+
+// import { TodoApp } from './components/08-useReducer/TodoApp';
+// import './index.css';
+// import './components/01-useState/counter.css'
+// import { Memorize } from './components/05-Memos/Memorize';
+// import { EjemploRealRef } from './components/04-useRef/EjemploRealRef';
+// import { FocusScreen } from './components/04-useRef/FocusScreen';
+// import { MultipleCustomHooks } from './components/03-examples/MultipleCustomHooks';
+// import { FormWithCustomHook } from './components/02-useEffect/FormWithCustomHook';
+// import { SimpleForm } from './components/02-useEffect/SimpleForm';
+// import { HookApp } from './HookApp';
+// import { CounterApp } from './components/01-useState/CounterApp';
+// import { CounterWithCustomHook } from './components/01-useState/CounterWithCustomHook';
+// import './components/08-useReducer/instro-reducer';
+
+ReactDOM.render(
+    <MainApp />,
+  document.getElementById('root')
+);
+
+```
+
+Abrir la terminal ubicar la carpeta 09-useContext y ejecutar el comando `npm install react-router-dom`
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>

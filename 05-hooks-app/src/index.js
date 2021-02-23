@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { TodoApp } from './components/08-useReducer/TodoApp';
+import { MainApp } from './components/09-useContext/MainApp';
 
+// import { TodoApp } from './components/08-useReducer/TodoApp';
 // import './index.css';
 // import './components/01-useState/counter.css'
 // import { Memorize } from './components/05-Memos/Memorize';
@@ -16,6 +17,6 @@ import { TodoApp } from './components/08-useReducer/TodoApp';
 // import './components/08-useReducer/instro-reducer';
 
 ReactDOM.render(
-    <TodoApp />,
+    <MainApp />,
   document.getElementById('root')
 );
