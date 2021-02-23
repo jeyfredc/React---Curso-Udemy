@@ -170,7 +170,7 @@ ___
 
 [Link y NavLink](#Link-y-NavLink)
 
-[](#)
+[CreateContext y useContext](#CreateContext-y-useContext)
 
 [](#)
 
@@ -13291,6 +13291,108 @@ export const NavBar = () => {
 ```
 
 ![assets-git/368.png](assets-git/368.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### CreateContext y useContext
+
+Se debe trabajar con la comunicación de los componentes que tenemos creados, de momento AboutScreen, HomeScreen y LoginScreen son hermanos, si nos fijamos en el AppRouter, el padre de estos componentes viene siendo el Switch.
+
+Ahora vamos a crear un componente que permita enviar o compartir la comunicación entre todos los componentes sin tener que estar pasando propiedades y estar recibiendo todo como props.
+
+Para esto dentro de la carpeta **09-useContext** crear el archivo **UserContext.js** y alli vamos a agregar lo siguiente.
+
+Importamos createContex de react y luego usamos la constante UserContext y la pasamos a createContext como un valor nulo inicialmente aunque puede recibir otros valores
+
+```
+import { createContext } from 'react';
+
+export const UserContext = createContext(null);
+```
+
+El `UserContext` que se acaba de crear es un componente por tanto a este se le pueden agregar componentes hijos, en el componente `MainApp` si coloco el `UserContext` como componente padre, todo lo que este alli adentro va a recibir lo que establezca en el `UserContext` pero debo agregar el `.Provider`
+
+```
+import React from 'react'
+import { AppRouter } from './AppRouter'
+import { UserContext } from './UserContext'
+
+export const MainApp = () => {
+    return (
+        <div>
+            <UserContext.Provider>
+
+            <AppRouter />
+            
+            </UserContext.Provider>
+        </div>
+    )
+}
+
+```
+
+De momento todo funciona normal, pero la pestaña de **Components** del navegador se va a mostrar distinta a como se muestra sin el UserContext 
+
+![assets-git/369.png](assets-git/369.png)
+
+Lo mas importante de alli es que este el `Context.Provider`, el cual va a servir para proveer información a lo largo de todos sus componentes hijos, y todos los componentes hijos es todo lo que encuentra dentro del componente `AppRouter`
+
+Por el momento lo que se quiere compartir es un `prop` o propiedad llamada `value` que es lo que se quiere compartir, para eso hay que crear una constante que sea un `user` y que sea un objeto que traiga información como el `id`, `name`, `email`.
+
+```
+import React from 'react'
+import { AppRouter } from './AppRouter'
+import { UserContext } from './UserContext'
+
+export const MainApp = () => {
+
+    const user = {
+        id: 12345,
+        name: 'Jeyfred C',
+        email: 'jeyfredc@gmail.com'
+    }
+    return (
+
+        <div>
+            <UserContext.Provider value={ user }>
+
+            <AppRouter />
+            
+            </UserContext.Provider>
+        </div>
+    )
+}
+
+```
+
+Si revisamos la información del `Context.Provider` en la pestaña **Components** vemos que aparecer los `props` y aparece `children: <AppRouter />` y debajo las propiedades que acabe de establecer
+
+![assets-git/370.png](assets-git/370.png)
+
+Si necesito tener acceso al `user` desde otro componente como por ejemplo el `HomeScreen` debo importar a `useContext` pasar como argumento el componente y nombrarlo en una constante como `userContext` o puede ser otro nombre y hacer un `console.log` del mismo para ver los datos que esta trayendo
+
+```
+import React, { useContext } from 'react'
+import { UserContext } from './UserContext'
+
+export const HomeScreen = () => {
+
+    const userContext = useContext(UserContext)
+
+    console.log(userContext)
+    return (
+        <div>
+            <h1>HomeScreen</h1>
+            <hr />
+        </div>
+    )
+}
+
+```
+
+![assets-git/371.png](assets-git/371.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
