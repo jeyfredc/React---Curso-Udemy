@@ -174,7 +174,9 @@ ___
 
 [useContext](#useContext)
 
-[](#)
+___
+
+[Proyecto HeroesApp](#Proyecto-HeroesApp)
 
 [](#)
 
@@ -13622,6 +13624,73 @@ Ahora si nos dirigimos al Login y damos click en el boton Login, la información
 Pero si ahora hago click en LogOut la información se va a dejar de compartir en Home y en About.
 
 Para esto es que sirve el uso de `useContext` compartir la comunicación entre componentes y de estar forma se facilita mucho mas el uso de props entre componentes 
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+## Proyecto HeroesApp
+
+Abrir la carpeta raiz del proyecto y ejecutar el comando `npx create-react-app 06-heroesapp`, despues de que este creada la aplicacion abrir la carpeta **src** y borrar los archivos **App.css**, **App.js**, **App.test.js**, **index.css**, **logo.svg**, **reportWebVitals.js** y **setupTests.js**.
+
+Abrir la carpeta **public** y actualizar el **index.html** con el cdn de [Bootstrap4](https://getbootstrap.com/docs/5.0/getting-started/introduction/) que se encuentra en la documentación o dejar como esta a continuación 
+
+```
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#000000" />
+    <meta
+      name="description"
+      content="Web site created using create-react-app"
+    />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <title>Heroes App</title>
+  </head>
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>
+```
+
+Dentro de la carpeta **public** crear otra carpeta que se llame **assets** descargar en este [enlace]() y copiar todas las imagenes en la carpeta 
+
+En la carpeta **src** creamos el archivo **HeroesApp.js** con la estructura basica 
+
+```
+import React from 'react'
+
+export const HeroesApp = () => {
+    return (
+        <div>
+            <h1>Heroes App</h1>
+            <hr />
+        </div>
+    )
+}
+```
+
+y en el archivo **index.js** lo importamos
+
+```
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { HeroesApp } from './HeroesApp';
+
+ReactDOM.render(
+
+    <HeroesApp />,
+  document.getElementById('root')
+);
+```
+
+Por ultimo lanzar la aplicación y comprobar que se renderice correctamente
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
