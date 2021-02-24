@@ -13659,7 +13659,7 @@ Abrir la carpeta **public** y actualizar el **index.html** con el cdn de [Bootst
 </html>
 ```
 
-Dentro de la carpeta **public** crear otra carpeta que se llame **assets** descargar en este [enlace]() y copiar todas las imagenes en la carpeta 
+Dentro de la carpeta **public** crear otra carpeta que se llame **assets** descargar en este [enlace](https://github.com/jeyfredc/React---Curso-Udemy/tree/master/06-heroes-app/public/assets/heroes) y copiar todas las imagenes en la carpeta 
 
 En la carpeta **src** creamos el archivo **HeroesApp.js** con la estructura basica 
 
@@ -13691,6 +13691,191 @@ ReactDOM.render(
 ```
 
 Por ultimo lanzar la aplicación y comprobar que se renderice correctamente
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Creando primer Router
+
+Bajar la aplicación e instalar react-router-dom
+
+`npm install react-router-dom`
+
+Despues de realizar la instalación, nuevamente lanzar la aplicación y dentro de **src**, crear la carpeta **components** y dentro de esta crear otra carpeta que de va a llamar **dc**, la cual va a contener el componente **DcScreen.js**
+
+```
+import React from 'react'
+
+export const DcScreen = () => {
+    return (
+        <div>
+            <h1>DCScreen</h1>
+        </div>
+    )
+}
+```
+
+Ahora dentro de la carpeta **components** crear otra carpeta llamada **marvel** la cual contiene a **MarvelScreen.js**
+
+```
+import React from 'react'
+
+export const MarvelScreen = () => {
+    return (
+        <div>
+            <h1>MarvelScreen</h1>
+        </div>
+    )
+}
+```
+
+Dentro de la carpeta **components** crear otra carpeta llamada **ui** la cual contiene a **NavBar.js**
+
+```
+import React from 'react'
+import { Link, NavLink } from 'react-router-dom'
+
+export const Navbar = () => {
+    return (
+        <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
+            
+            <Link 
+                className="navbar-brand" 
+                to="/"
+            >
+                Asociaciones
+            </Link>
+
+            <div className="navbar-collapse">
+                <div className="navbar-nav">
+
+                    <NavLink 
+                        activeClassName="active"
+                        className="nav-item nav-link" 
+                        exact
+                        to="/marvel"
+                    >
+                        Marvel
+                    </NavLink>
+
+                    <NavLink 
+                        activeClassName="active"
+                        className="nav-item nav-link" 
+                        exact
+                        to="/dc"
+                    >
+                        DC
+                    </NavLink>
+                </div>
+            </div>
+
+            <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
+                <ul className="navbar-nav ml-auto">
+                    <NavLink 
+                        activeClassName="active"
+                        className="nav-item nav-link" 
+                        exact
+                        to="/login"
+                    >
+                        Logout
+                    </NavLink>
+                </ul>
+            </div>
+        </nav>
+    )
+}
+```
+
+Dentro de **components** crear otra carpeta llamada **heroes** que contiene a **HeroScreen.js**
+
+```
+import React from 'react'
+
+export const HeroScreen = () => {
+    return (
+        <div>
+            <h1>HeroScreen</h1>
+        </div>
+    )
+}
+```
+
+Por ultimo crear dentro de la **components** la carpeta **login** que contine a **LoginScreen.js**
+
+```
+import React from 'react'
+
+export const LoginScreen = () => {
+    return (
+        <div>
+            <h1>LoginScreen</h1>
+        </div>
+    )
+}
+```
+
+Dentro de la carpeta **src** crear una nueva carpeta llamada **routers** y crear el archivo **AppRouter.js**
+
+Este archivo va a tener la importacion de react-router-dom donde vamos a utilizar inicialmente `Router`, `Switch` y `Route`, las rutas van a estar dirigidas la primera con el path `/login` hacia el componente `LoginScreen`.
+
+La segunda va a tener el path `/` hacia el componente `Marvel`
+
+El `NavBar` va estar por encima de estas rutas para que siempre se muestre
+
+```
+import React from 'react'
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route
+  } from "react-router-dom";
+import { LoginScreen } from '../components/login/LoginScreen';
+import { MarvelScreen } from '../components/marvel/MarvelScreen';
+import { Navbar } from '../components/ui/NavBar';
+
+export const AppRouter = () => {
+    return (
+        <Router>
+            <div>
+                <Navbar />
+
+                <Switch>
+                    <Route exact path="/login" component={ LoginScreen } />
+
+                    <Route exact path="/" component={ MarvelScreen } />
+                </Switch>
+            </div>
+        </Router>
+    )
+}
+
+```
+
+Por ultimo dentro de **HeroesApp** importamos el componente **AppRouter**
+
+```
+import React from 'react'
+import { AppRouter } from './routers/AppRouter'
+
+export const HeroesApp = () => {
+    return (
+        <div>
+            <AppRouter />
+        </div>
+    )
+}
+```
+
+De momento esto es lo que debemos tener renderizado en el navegador
+
+![assets-git/380.png](assets-git/380.png)
+
+Si cambiamos el path a http://localhost:3000/login, tambien carga el componente
+
+![assets-git/381.png](assets-git/381.png)
+
+La idea es que cuando nos encontremos en el Login sin haber realizado la autenticación, no se muestre el NavBar, pero esto se ira corrigiendo a medida del avance del curso.
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
