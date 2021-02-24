@@ -1,0 +1,51 @@
+body {
+    background-color: black;
+    -webkit-font-smoothing: antialiased;
+    font: normal 14px Roboto,arial,sans-serif;
+    margin: 0;
+  }
+
+  .container {
+    background-color:black;
+    background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoKTvecd0ygWHewChNVx8GjaM2bSCnjfgTdA&usqp=CAU');
+    background-repeat: repeat-x;
+    background-size: 25%;
+    background-position: center;
+    background-position-y: 3px;
+    color: black;
+    text-align: center;
+    min-width: 100%;
+    height: 250px;
+    margin-top: 15%;
+  }
+  
+  .form-login {
+      background-color: white;
+      padding-top: 20px;
+      padding-bottom: 20px;
+      padding-left: 20px;
+      padding-right: 20px;
+      border-radius: 15px;
+      border-color:gray;
+      border-width: 5px;
+      box-shadow:0 1px 0 #cfcfcf;
+  }
+  
+  h4 { 
+   border:0 solid white; 
+   border-bottom-width:1px;
+   padding-bottom:10px;
+   text-align: center;
+  }
+  
+  .form-control {
+      border-radius: 10px;
+  }
+  
+  .wrapper {
+      text-align: center;
+  }
+  
+  .row {
+    justify-content: center;
+}

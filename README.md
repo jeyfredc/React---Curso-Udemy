@@ -178,7 +178,7 @@ ___
 
 [Proyecto HeroesApp](#Proyecto-HeroesApp)
 
-[](#)
+[History push/replace](#History-push/replace)
 
 [](#)
 
@@ -13984,6 +13984,217 @@ De esta forma si estoy en el Login http://localhost:3000/login , no se muestra n
 Pero si cambio el path a otra ruta como `/marvel` o `/dc` obtengo el `NavBar` renderizando al componente y si doy click en LogOut, regreso al Login
 
 ![assets-git/383.png](assets-git/383.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### History push/replace
+
+Ahora vamos a rediseñar el Login con clases de Bootstrap y css
+
+Para esto abrir la carpeta login, crear el archivo **login.css** y copiar lo siguiente
+
+```
+body {
+    background-color: black;
+    -webkit-font-smoothing: antialiased;
+    font: normal 14px Roboto,arial,sans-serif;
+    margin: 0;
+  }
+
+  .container {
+    background-color:black;
+    background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoKTvecd0ygWHewChNVx8GjaM2bSCnjfgTdA&usqp=CAU');
+    background-repeat: repeat-x;
+    background-size: 25%;
+    background-position: center;
+    background-position-y: 3px;
+    color: black;
+    text-align: center;
+    min-width: 100%;
+    height: 250px;
+    margin-top: 15%;
+  }
+  
+  .form-login {
+      background-color: white;
+      padding-top: 20px;
+      padding-bottom: 20px;
+      padding-left: 20px;
+      padding-right: 20px;
+      border-radius: 15px;
+      border-color:gray;
+      border-width: 5px;
+      box-shadow:0 1px 0 #cfcfcf;
+  }
+  
+  h4 { 
+   border:0 solid white; 
+   border-bottom-width:1px;
+   padding-bottom:10px;
+   text-align: center;
+  }
+  
+  .form-control {
+      border-radius: 10px;
+  }
+  
+  .wrapper {
+      text-align: center;
+  }
+  
+  .row {
+    justify-content: center;
+}
+```
+
+A `LoginScreen` añadir las siguientes clases Bootstrap
+
+```
+import React from 'react'
+import './login.css'
+
+export const LoginScreen = () => {
+    return (
+<div className="container">
+    <div className="row mt-5">
+        <div className="col-md-offset-5 col-md-3">
+            <div className="form-login">
+            <h4>Bienvenido a Heroes App.</h4>
+            <p>Por favor haz click sobre Login para ingresar a la aplicación</p>
+                <button className="btn btn-dark btn-md">login</button>
+            </div>
+        
+        </div>
+    </div>
+</div>
+    )
+}
+```
+
+De momento el login se debe ver asi 
+
+![assets-git/384.png](assets-git/384.png)
+
+Ahora vamos a crear un evento `onClick` y llamar la función `handleLogin` y le ponemos un `console.log('click')` para probar que este funcionando
+
+```
+import React from 'react'
+import './login.css'
+
+export const LoginScreen = () => {
+
+    const handleLogin = () => {
+        console.log('Click')
+    }
+
+    return (
+    <div className="container">
+        <div className="row mt-5">
+            <div className="col-md-offset-5 col-md-3">
+                <div className="form-login">
+                    <h4>Bienvenido a Heroes App.</h4>
+                    <p>Por favor haz click sobre Login para ingresar a la aplicación</p>
+                        <button 
+                            className="btn btn-dark btn-md"
+                            onClick={ handleLogin}
+                        >
+                            login
+                        </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    )
+}
+```
+
+![assets-git/385.png](assets-git/385.png)
+
+Si nos dirigimos a la pestaña **Components** y ubicamos el cursor sobre `Router` en las props tenemos varios objetos incrustados por defecto, una de ellos es `history`, `location` y `match`, history proporciona el memtodo para que podamos ir hacia atras o hacia adelante cuando demos click en estos botones del navegador
+
+![assets-git/386.png](assets-git/386.png)
+
+Para utilizar el `history` debemos usar la desestructuración en los argumentos de `LoginScreen` y en la función `handleLogin` podemos utilizar a history con el metodo `push` mandando la ruta a la que quiero navegar, en este caso mando el path `'/'` porque es este el que redirige hacia el componente `Marvel`, de tal manera que si hago click sobre `Login` voy a ver el componente `Marvel` y si doy click sobre el boton atras me devuelvo al `Login`
+
+```
+import React from 'react'
+import './login.css'
+
+export const LoginScreen = ({ history }) => {
+
+    const handleLogin = () => {
+        history.push('/')
+    }
+
+    return (
+    <div className="container">
+        <div className="row mt-5">
+            <div className="col-md-offset-5 col-md-3">
+                <div className="form-login">
+                    <h4>Bienvenido a Heroes App.</h4>
+                    <p>Por favor haz click sobre Login para ingresar a la aplicación</p>
+                        <button 
+                            className="btn btn-dark btn-md"
+                            onClick={ handleLogin}
+                        >
+                            login
+                        </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    )
+}
+
+```
+
+![assets-git/387.png](assets-git/387.png)
+
+Pero si doy click en el boton de atras me redirige al `Login`
+
+Si quisiera ocultar esta ruta para que no vuelva al `Login` **Nota:** hacer este ejercicio en una ventana en incognito y cambiar history.push por `history.replace`
+
+```
+import React from 'react'
+import './login.css'
+
+export const LoginScreen = ({ history }) => {
+
+    const handleLogin = () => {
+        history.replace('/')
+    }
+
+    return (
+    <div className="container">
+        <div className="row mt-5">
+            <div className="col-md-offset-5 col-md-3">
+                <div className="form-login">
+                    <h4>Bienvenido a Heroes App.</h4>
+                    <p>Por favor haz click sobre Login para ingresar a la aplicación</p>
+                        <button 
+                            className="btn btn-dark btn-md"
+                            onClick={ handleLogin}
+                        >
+                            login
+                        </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    )
+}
+
+```
+
+Probar esto en la ventana incognito, si nos dirigimos al `Login` la pantalla abre y carga el componente `Marvel` pero si vamos hacia atras ya no obtenemos el `Login`
+
+![assets-git/389.png](assets-git/389.png)
+
+![assets-git/387.png](assets-git/387.png)
+
+![assets-git/388.png](assets-git/388.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
