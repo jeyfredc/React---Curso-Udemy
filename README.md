@@ -178,7 +178,7 @@ ___
 
 [Proyecto HeroesApp](#Proyecto-HeroesApp)
 
-[History push/replace](#History-push/replace)
+[History push/replace](#History-pushreplace)
 
 [](#)
 
