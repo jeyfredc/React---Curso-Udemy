@@ -180,7 +180,7 @@ ___
 
 [History push/replace](#History-pushreplace)
 
-[](#)
+[Lista de heroes](#Lista-de-heroes)
 
 [](#)
 
@@ -14001,6 +14001,7 @@ body {
     -webkit-font-smoothing: antialiased;
     font: normal 14px Roboto,arial,sans-serif;
     margin: 0;
+    color: white;
   }
 
   .container {
@@ -14081,7 +14082,6 @@ Ahora vamos a crear un evento `onClick` y llamar la función `handleLogin` y le 
 
 ```
 import React from 'react'
-import './login.css'
 
 export const LoginScreen = () => {
 
@@ -14195,6 +14195,318 @@ Probar esto en la ventana incognito, si nos dirigimos al `Login` la pantalla abr
 ![assets-git/387.png](assets-git/387.png)
 
 ![assets-git/388.png](assets-git/388.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Lista de heroes
+
+Dentro de la carpeta **src** crear otra carpeta llamada **data** y alli crear el archivo **heroes.js**, que contendra la siguiente información
+
+```
+export const heroes = [
+    {
+        'id': 'dc-batman',
+        'superhero':'Batman', 
+        'publisher':'DC Comics', 
+        'alter_ego':'Bruce Wayne',
+        'first_appearance':'Detective Comics #27',
+        'characters':'Bruce Wayne'
+    },
+    {
+        'id': 'dc-superman',
+        'superhero':'Superman', 
+        'publisher':'DC Comics', 
+        'alter_ego':'Kal-El',
+        'first_appearance':'Action Comics #1',
+        'characters':'Kal-El'
+    },
+    {
+        'id': 'dc-flash',
+        'superhero':'Flash', 
+        'publisher':'DC Comics', 
+        'alter_ego':'Jay Garrick',
+        'first_appearance':'Flash Comics #1',
+        'characters':'Jay Garrick, Barry Allen, Wally West, Bart Allen'
+    },
+    {
+        'id': 'dc-green',
+        'superhero':'Green Lantern', 
+        'publisher':'DC Comics', 
+        'alter_ego':'Alan Scott',
+        'first_appearance':'All-American Comics #16',
+        'characters':'Alan Scott, Hal Jordan, Guy Gardner, John Stewart, Kyle Raynor, Jade, Sinestro, Simon Baz'
+    },
+    {
+        'id': 'dc-arrow',
+        'superhero':'Green Arrow', 
+        'publisher':'DC Comics', 
+        'alter_ego':'Oliver Queen',
+        'first_appearance':'More Fun Comics #73',
+        'characters':'Oliver Queen'
+    },
+    {
+        'id': 'dc-wonder',
+        'superhero':'Wonder Woman', 
+        'publisher':'DC Comics', 
+        'alter_ego':'Princess Diana',
+        'first_appearance':'All Star Comics #8',
+        'characters':'Princess Diana'
+    },
+    {
+        'id': 'dc-martian',
+        'superhero':'Martian Manhunter', 
+        'publisher':'DC Comics', 
+        'alter_ego':'J\'onn J\'onzz',
+        'first_appearance':'Detective Comics #225',
+        'characters':'Martian Manhunter'
+    },
+    {
+        'id': 'dc-robin',
+        'superhero':'Robin/Nightwing', 
+        'publisher':'DC Comics', 
+        'alter_ego':'Dick Grayson',
+        'first_appearance':'Detective Comics #38',
+        'characters':'Dick Grayson'
+    },
+    {
+        'id': 'dc-blue',
+        'superhero':'Blue Beetle', 
+        'publisher':'DC Comics', 
+        'alter_ego':'Dan Garret',
+        'first_appearance':'Mystery Men Comics #1',
+        'characters':'Dan Garret, Ted Kord, Jaime Reyes'
+    },
+    {
+        'id': 'dc-black',
+        'superhero':'Black Canary', 
+        'publisher':'DC Comics', 
+        'alter_ego':'Dinah Drake',
+        'first_appearance':'Flash Comics #86',
+        'characters':'Dinah Drake, Dinah Lance'
+    },
+    {
+        'id': 'marvel-spider',
+        'superhero':'Spider Man', 
+        'publisher':'Marvel Comics', 
+        'alter_ego':'Peter Parker',
+        'first_appearance':'Amazing Fantasy #15',
+        'characters':'Peter Parker'
+    },
+    {
+        'id': 'marvel-captain',
+        'superhero':'Captain America', 
+        'publisher':'Marvel Comics', 
+        'alter_ego':'Steve Rogers',
+        'first_appearance':'Captain America Comics #1',
+        'characters':'Steve Rogers'
+    },
+    {
+        'id': 'marvel-iron',
+        'superhero':'Iron Man', 
+        'publisher':'Marvel Comics', 
+        'alter_ego':'Tony Stark',
+        'first_appearance':'Tales of Suspense #39',
+        'characters':'Tony Stark'
+    },
+    {
+        'id': 'marvel-thor',
+        'superhero':'Thor', 
+        'publisher':'Marvel Comics', 
+        'alter_ego':'Thor Odinson',
+        'first_appearance':'Journey into Myster #83',
+        'characters':'Thor Odinson'
+    },
+    {
+        'id': 'marvel-hulk',
+        'superhero':'Hulk', 
+        'publisher':'Marvel Comics', 
+        'alter_ego':'Bruce Banner',
+        'first_appearance':'The Incredible Hulk #1',
+        'characters':'Bruce Banner'
+    },
+    {
+        'id': 'marvel-wolverine',
+        'superhero':'Wolverine', 
+        'publisher':'Marvel Comics', 
+        'alter_ego':'James Howlett',
+        'first_appearance':'The Incredible Hulk #180',
+        'characters':'James Howlett'
+    },
+    {
+        'id': 'marvel-daredevil',
+        'superhero':'Daredevil', 
+        'publisher':'Marvel Comics', 
+        'alter_ego':'Matthew Michael Murdock',
+        'first_appearance':'Daredevil #1',
+        'characters':'Matthew Michael Murdock'
+    },
+    {
+        'id': 'marvel-hawkeye',
+        'superhero':'Hawkeye', 
+        'publisher':'Marvel Comics', 
+        'alter_ego':'Clinton Francis Barton',
+        'first_appearance':'Tales of Suspense #57',
+        'characters':'Clinton Francis Barton'
+    },
+    {
+        'id': 'marvel-cyclops',
+        'superhero':'Cyclops', 
+        'publisher':'Marvel Comics', 
+        'alter_ego':'Scott Summers',
+        'first_appearance':'X-Men #1',
+        'characters':'Scott Summers'
+    },
+    {
+        'id': 'marvel-silver',
+        'superhero':'Silver Surfer', 
+        'publisher':'Marvel Comics', 
+        'alter_ego':'Norrin Radd',
+        'first_appearance':'The Fantastic Four #48',
+        'characters':'Norrin Radd'
+    }
+]
+```
+
+En este archivo existe una propiedad llamada `publisher` para cada personaje, tenerla en cuenta porque a continuación dentro de la carpeta **heroes** vamos a crear otro componente llamado **HeroList.js** y alli mediante la desestructuración vamos a llamar a `publisher`
+
+```
+import React from 'react'
+
+export const HeroList = ( { publisher }) => {
+    return (
+        <div>
+            
+        </div>
+    )
+}
+
+```
+
+por el momento se deja asi y ahora dentro de la carpeta **src** creamos otra carpeta llamada **selectors** que va a contener 2 funciones, entonces creamos la primera y nombramos un archivo llamado **getHeroByPublisher.js**.
+
+Este archivo importa a `heroes` y recibe el argumento `publisher`, luego tiene la constante `validPublishers` con el arreglo donde incluye `DC Comics` y `Marvel Comics`, esto es para realizar la validación de la cada uno.
+
+```
+import { heroes } from '../data/heroes'
+
+export const getHeroesByPublisher = ( publisher ) => {
+    
+    const validPublishers = ['DC Comics', 'Marvel Comics']
+}
+```
+
+Luego se hace una validación  con negación es decir dice que si no encuentra en el `publisher` a `DC Comics` o `Marvel Comics` entonces lance un error informando que el `Publisher` que ingreso no es correcto, y se coloca el argumento `publisher` para indicar el que el mismo usuario este escribiendo
+
+```
+import { heroes } from '../data/heroes'
+
+export const getHeroesByPublisher = ( publisher ) => {
+    
+    const validPublishers = ['DC Comics', 'Marvel Comics']
+
+    if( !validPublishers.includes( publisher )) {
+        throw new Error(`Publisher "${ publisher }" no es correcto`)
+    }
+}
+```
+
+Por ultimo si el publisher esta bien, es decir si lo escribe bien el usuario debe retornar el filtro de heroes que escoja
+
+```
+import { heroes } from '../data/heroes'
+
+export const getHeroesByPublisher = ( publisher ) => {
+    
+    const validPublishers = ['DC Comics', 'Marvel Comics']
+
+    if( !validPublishers.includes( publisher )) {
+        throw new Error(`Publisher "${ publisher }" no es correcto`)
+    }
+
+    return heroes.filter( hero => hero.publisher === publisher );
+}
+
+```
+
+Ahora pasamos a crear la siguiente función dentro de la carpeta **selectors** que se llama **getHeroById.js** la funcion recibe el id y lo retorna en caso de que lo encuentre
+
+```
+import { heroes } from "../data/heroes";
+
+export const getHeroById = ( id ) => {
+
+    return heroes.find(hero => hero.id === id)
+}
+
+```
+
+Ahora regresamos al componente `HeroList` e importamos la funcion `getHeroesByPublisher(publisher)` para obtener la data, y dentro del `return` creamos una lista para hacer el barrido de los heroes obteniendo a la propiedad `superhero` 
+
+```
+import React from 'react'
+import { getHeroesByPublisher } from '../../selectors/getHeroesByPublisher'
+
+export const HeroList = ( { publisher }) => {
+
+    const heroes = getHeroByPublisher( publisher )
+    return (
+        <ul>
+            {
+                heroes.map( hero => (
+                    <li
+                        key={ hero.id }>
+                            { hero.superhero }
+                    </li>
+                ))
+            }
+        </ul>
+    )
+}
+```
+
+Lo siguiente que hay que hacer es importar al componente `HeroList` a `MarvelScreen`, y pasar el `Publisher` en este caso estamos entrando a la validacion de la función `getHeroesByPublisher`
+
+```
+import React from 'react'
+import { HeroList } from '../heroes/HeroList'
+
+export const MarvelScreen = () => {
+
+    return (
+        <div>
+            <h1>MarvelScreen</h1>
+            <HeroList publisher="Marvel Comics"/>
+        </div>
+    )
+}
+
+```
+
+y luego realzar lo mismo en `DcScreen`
+
+```
+import React from 'react'
+import { HeroList } from '../heroes/HeroList'
+
+export const DcScreen = () => {
+    return (
+        <div>
+            <h1>DcSreen</h1>
+            <hr />
+            <HeroList publisher="DC Comics" />
+        </div>
+    )
+}
+
+```
+
+El resultado de hace esto, es que en el navegador tenemos la lista de superheroes de Marvel Comics y Dc Comics
+
+![assets-git/390.png](assets-git/390.png)
+
+![assets-git/391.png](assets-git/391.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
