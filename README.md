@@ -13880,3 +13880,111 @@ La idea es que cuando nos encontremos en el Login sin haber realizado la autenti
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
+
+### Creando segundo Router
+
+Como se dejo en el capitulo anterior cuando estemos ubicados en el `Login` no deberia aparecer el Nabvar, por tanto abrimos el componente `AppRouter` y lo retiramos de alli
+
+```
+import React from 'react'
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route
+  } from "react-router-dom";
+import { LoginScreen } from '../components/login/LoginScreen';
+import { MarvelScreen } from '../components/marvel/MarvelScreen';
+
+export const AppRouter = () => {
+    return (
+        <Router>
+            <div>
+
+                <Switch>
+                    <Route exact path="/login" component={ LoginScreen } />
+
+                    <Route exact path="/" component={ MarvelScreen } />
+                </Switch>
+            </div>
+        </Router>
+    )
+}
+
+```
+
+![assets-git/382.png](assets-git/382.png)
+
+Mientras no este autenticado no se va a mostrar el `NavBar`, entonces para corregir esto vamos a crear una nueva ruta dentro de la carpeta **routers** llamado **DashboardRoutes.js** y este archivo va a ser el contenedor de todas las rutas internas, la unica diferencia que va a tener con `AppRouter` es que no va a tener un `Router` que contenga a todo y el DashboardRoutes es el que va a contener a `NavBar` presente en todas las rutas, va a contener al path `/marvel` renderizando el componente `MarvelScreen`,  path `/heroe/:heroeId` renderizando el componente `HeroeScreen` y el path `/dc` renderizando el componente `DcScreen`, ademas tambien tendra una etiqueta `Redirect` que va a redirigir al componente `MarvelScreen` en el caso que el path que se escriba este mal
+
+```
+import React from 'react'
+import { Navbar } from '../components/ui/NavBar'
+import {
+    Switch,
+    Route,
+    Redirect
+  } from "react-router-dom";
+import { MarvelScreen } from '../components/marvel/MarvelScreen';
+import { HeroScreen } from '../components/heroes/HeroScreen';
+import { DcScreen } from '../components/dc/DcScreen';
+
+export const DashboardRoutes = () => {
+    return (
+        <>
+
+        <Navbar />
+
+        <Switch>
+            <Route exact path="/marvel" component={ MarvelScreen }/>
+            <Route exact path="/heroe/:heroeId" component={ HeroScreen }/>
+            <Route exact path="/dc" component={ DcScreen }/>
+
+            <Redirect to="/marvel"/>
+
+        </Switch>
+            
+        </>
+    )
+}
+
+```
+
+Luego regresamos al `AppRouter` y colocamos como path `/` renderizando el componente `DashboardRoutes`
+
+```
+import React from 'react'
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route
+  } from "react-router-dom";
+import { LoginScreen } from '../components/login/LoginScreen';
+import { DashboardRoutes } from './DashboardRoutes';
+
+export const AppRouter = () => {
+    return (
+        <Router>
+            <div>
+
+                <Switch>
+                    <Route exact path="/login" component={ LoginScreen } />
+
+                    <Route path="/" component={ DashboardRoutes } />
+                </Switch>
+            </div>
+        </Router>
+    )
+}
+```
+
+De esta forma si estoy en el Login http://localhost:3000/login , no se muestra nada 
+
+![assets-git/382.png](assets-git/382.png)
+
+Pero si cambio el path a otra ruta como `/marvel` o `/dc` obtengo el `NavBar` renderizando al componente y si doy click en LogOut, regreso al Login
+
+![assets-git/383.png](assets-git/383.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
