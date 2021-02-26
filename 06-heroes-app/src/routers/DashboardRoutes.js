@@ -8,13 +8,14 @@ import {
 import { MarvelScreen } from '../components/marvel/MarvelScreen';
 import { HeroScreen } from '../components/heroes/HeroScreen';
 import { DcScreen } from '../components/dc/DcScreen';
+import './dashboard.css'
 
 export const DashboardRoutes = () => {
     return (
         <>
 
         <Navbar />
-
+        <div className="container mt-2 centrado">
         <Switch>
             <Route exact path="/marvel" component={ MarvelScreen }/>
             <Route exact path="/heroe/:heroeId" component={ HeroScreen }/>
@@ -23,6 +24,7 @@ export const DashboardRoutes = () => {
             <Redirect to="/marvel"/>
 
         </Switch>
+        </div>
             
         </>
     )

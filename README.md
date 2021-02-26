@@ -182,7 +182,7 @@ ___
 
 [Lista de heroes](#Lista-de-heroes)
 
-[](#)
+[Tarjetas con la información del Héroe](#Tarjetas-con-la-información-del-Héroe)
 
 [](#)
 
@@ -14507,6 +14507,187 @@ El resultado de hace esto, es que en el navegador tenemos la lista de superheroe
 ![assets-git/390.png](assets-git/390.png)
 
 ![assets-git/391.png](assets-git/391.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Tarjetas con la información del Héroe
+
+Ahora vamos a cambiar la forma en que se presenta el componente `HeroList` modificando la etiqueta `<ul>` por `<div>` y añadiendo algunas clases de Bootstrap
+
+```
+import React from 'react'
+import { getHeroesByPublisher } from '../../selectors/getHeroesByPublisher'
+
+
+export const HeroList = ({ publisher }) => {
+
+        const heroes = getHeroesByPublisher( publisher )
+    return (
+        <div className="card-columns">
+            {
+                heroes.map( hero => (
+                    <li
+                        key={ hero.id }>
+                            { hero.superhero }
+                    </li>
+                ))
+            }
+        </div>
+    )
+}
+```
+
+y dentro de la carpeta **heroes** creamos un nuevo componente llamado **HeroCard.js** donde vamos a extraer las propiedades que queramos exportar y luego llevar al componente `HeroList` pero en forma de componente
+
+```
+import React from 'react'
+
+export const HeroCard = ({
+    id,
+    superhero,
+    publisher,
+    alter_ego,
+    first_appearance,
+    characters,
+}) => {
+    return (
+        <div>
+            { superhero }
+        </div>
+    )
+}
+```
+
+Ahora el componente `HeroCard` lo traemos y lo importamos a `HeroList`, este pedazo de codigo `{ ...hero }` indica que se esta haciendo copía de cada una de las propiedades de `heroes`, sin embargo en el componente anterior solo estamos presentando la información que necesitamos, que en este caso son los `superheroes`
+
+```
+import React from 'react'
+import { getHeroesByPublisher } from '../../selectors/getHeroesByPublisher'
+import { HeroCard } from './HeroCard'
+
+
+export const HeroList = ({ publisher }) => {
+
+        const heroes = getHeroesByPublisher( publisher )
+    return (
+        <div className="card-columns">
+            {
+                heroes.map( hero => (
+                    <HeroCard
+                        key={ hero.id }
+                            { ...hero }
+                    />
+                ))
+            }
+        </div>
+    )
+}
+
+```
+
+Ademas cambiamos en **login.css** la clase que se llamaba `container` por `containerLogin`
+
+Al realizar este cambio tambien se debe modificar el componente `LoginScreen`, cambiar `<div className="container">` por `<div className="containerLogin">`
+
+Dentro de la carpeta de **routers** creamos el archivo `dashboard.css` el cual contiene la clase `centrado`
+
+```
+.centrado{
+    text-align: -webkit-center;
+}
+```
+y la importamos en el componente `DashboarRoutes`, añadiendo tambien algunaas clases de Bootstrap
+
+```
+import React from 'react'
+import { Navbar } from '../components/ui/NavBar'
+import {
+    Switch,
+    Route,
+    Redirect
+  } from "react-router-dom";
+import { MarvelScreen } from '../components/marvel/MarvelScreen';
+import { HeroScreen } from '../components/heroes/HeroScreen';
+import { DcScreen } from '../components/dc/DcScreen';
+import './dashboard.css'
+
+export const DashboardRoutes = () => {
+    return (
+        <>
+
+        <Navbar />
+        <div className="container mt-2 centrado">
+        <Switch>
+            <Route exact path="/marvel" component={ MarvelScreen }/>
+            <Route exact path="/heroe/:heroeId" component={ HeroScreen }/>
+            <Route exact path="/dc" component={ DcScreen }/>
+
+            <Redirect to="/marvel"/>
+
+        </Switch>
+        </div>
+            
+        </>
+    )
+}
+```
+
+Despues de realizar estos ajustes, deberiamos tener una pagina de este estilo
+
+![assets-git/392.png](assets-git/392.png)
+
+![assets-git/393.png](assets-git/393.png)
+
+Ahora realizamos un ultimo ajuste de diseño y condicionamos la propiedad `alter_ego` con la propiedad `characters` ya que ha varios personajes que se llaman de varias formas y en algunos casos el `alter_ego` coincide con `characters`, la condiciones sera que si no son iguales, entonces muestre todos los `characters`.
+
+Despues de realizar el maquetado, agregamos una etiqueta `Link` que se debe de importar y se añade la ruta `./hero` y se le concatea el id, de momento no funciona, pero se deja lista para el siguiente capitulo
+
+```
+import React from 'react'
+import './herocard.css'
+
+export const HeroCard = ({
+    id,
+    superhero,
+    publisher,
+    alter_ego,
+    first_appearance,
+    characters,
+}) => {
+    return (
+        <div className="card ms-3" style={ { maxWidth:520 } }>
+            <div className="row no-gutters">
+                <div className="col-md-4">
+                    <img src={ `./assets/heroes/${id}.jpg`} className="card-img" alt={ superhero } />
+                </div>
+                <div className="col-md-8">
+                    <div className="card-body">
+                        <h5 className="card-title"> {superhero} </h5>
+                        <p className="card-text"> { alter_ego} </p>
+                        {
+                            ( alter_ego !== characters )
+                            && <p className="card-text">{ characters}</p>
+                        }
+                        <p className="card-text">
+                            <small className="text-muted"> { first_appearance} </small>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    )
+}
+```
+
+Por el momento la pagina esta asi 
+
+![assets-git/394.png](assets-git/394.png)
+
+![assets-git/395.png](assets-git/395.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>

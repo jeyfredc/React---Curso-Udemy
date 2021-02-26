@@ -8,7 +8,7 @@ export const LoginScreen = ({ history }) => {
     }
 
     return (
-    <div className="container">
+    <div className="containerLogin">
         <div className="row mt-5">
             <div className="col-md-offset-5 col-md-3">
                 <div className="form-login">
