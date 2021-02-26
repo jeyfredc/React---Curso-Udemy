@@ -184,7 +184,7 @@ ___
 
 [Tarjetas con la información del Héroe](#Tarjetas-con-la-información-del-Héroe)
 
-[](#)
+[Leer argumentos por URL](#Leer-argumentos-por-URL)
 
 [](#)
 
@@ -14695,6 +14695,137 @@ Por el momento la pagina se ve asi y si damos click en el Link `Mas...` la sigui
 
 ![assets-git/395.png](assets-git/395.png)
 
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Leer argumentos por URL
+
+Si abrimos la pestaña **Components** y buscamos el componente `HeroScreen` y revisamos las props nuevamente en el `match` vamos a encontrar un metodo llamado `params` el cual trae la información del `heroeId`
+
+![assets-git/396.png](assets-git/396.png)
+
+A continuacion abrir el componente `HeroScreen` y si quiero extraer la información del `heroeId` existe un hook llamado `useParams` y este hook va a extraer todos los parametros que vayan por el url 
+
+```
+import React from 'react'
+import { useParams } from 'react-router-dom'
+
+export const HeroScreen = () => {
+
+    const params = useParams();
+
+    console.log(params);
+    
+    return (
+
+        <div>
+            <h1>HeroScreen</h1>
+        </div>
+    )
+}
+```
+
+![assets-git/397.png](assets-git/397.png)
+
+tambien se puede usar la desestructuracion para obtener los datos del heroe a traves de su id y tambien obtener todos los datos del objeto de cada heroe mediante la funcion `getHeroById`
+
+```
+import React from 'react'
+import { useParams } from 'react-router-dom'
+import { getHeroById } from '../../selectors/getHeroById';
+
+export const HeroScreen = () => {
+
+    const { heroeId } = useParams();
+
+    const hero = getHeroById( heroeId )
+
+    console.log(hero);
+
+    return (
+
+        <div>
+            <h1>HeroScreen</h1>
+        </div>
+    )
+}
+```
+
+![assets-git/398.png](assets-git/398.png)
+
+De momento el ejercicio esta bien realizado, pero si alguna persona coloca el path del heroe mal, la pagina enseguida va a generar un `undefined`, porque logicamente el id no contiene otros argumentos, por ejemplo, se deberia buscar la ruta http://localhost:3000/heroe/marvel-spider y no esta ruta http://localhost:3000/heroe/marvel-spider143242 porque arroja `undefined`
+
+![assets-git/399.png](assets-git/399.png)
+
+Ahora vamos a extraer la información del heroe con la desestructuración, pero es necesario hacer un redireccionamiento de la pagina porque de otro modo va a mostrar un error
+
+```
+import React from 'react'
+import { useParams } from 'react-router-dom'
+import { getHeroById } from '../../selectors/getHeroById';
+
+export const HeroScreen = () => {
+
+    const { heroeId } = useParams();
+
+    const hero = getHeroById( heroeId )
+
+    const {
+        superhero,
+        publisher,
+        alter_ego,
+        first_appearance,
+        characters,
+    } = hero;
+
+    return (
+
+        <div>
+            <h1>HeroScreen</h1>
+        </div>
+    )
+}
+```
+
+![assets-git/400.png](assets-git/400.png)
+
+y para manejar este error lo unico que se debe hacer es añadir una condición para manejarlo
+
+si el id del heroe no es correcto lo redirige al componente que tiene el path `"/"` es decir que lo va a redirigir hacia el componente de `MarvelScreen`
+
+```
+import React from 'react'
+import { Redirect, useParams } from 'react-router-dom'
+import { getHeroById } from '../../selectors/getHeroById';
+
+export const HeroScreen = () => {
+
+    const { heroeId } = useParams();
+
+    const hero = getHeroById( heroeId )
+
+    if (!hero) {
+        return <Redirect to="/" />
+    }
+
+    const {
+        superhero,
+        publisher,
+        alter_ego,
+        first_appearance,
+        characters,
+    } = hero;
+
+    return (
+
+        <div>
+            <h1>HeroScreen</h1>
+        </div>
+    )
+}
+```
+**Nota:** Hacer la prueba buscando la ruta http://localhost:3000/heroe/marvel-spider143242, lo que debe pasar es que se debe redirigir la pagina hacia la de Marvel
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
