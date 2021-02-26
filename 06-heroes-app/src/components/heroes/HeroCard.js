@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import './herocard.css'
 
 export const HeroCard = ({
@@ -26,7 +27,12 @@ export const HeroCard = ({
                         <p className="card-text">
                             <small className="text-muted"> { first_appearance} </small>
                         </p>
+
+                        <Link to= { `./heroe/${id}`}>
+                            Mas...
+                        </Link>
                     </div>
+                    
 
                 </div>
             </div>

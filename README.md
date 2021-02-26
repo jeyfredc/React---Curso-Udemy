@@ -14646,6 +14646,7 @@ Despues de realizar el maquetado, agregamos una etiqueta `Link` que se debe de i
 
 ```
 import React from 'react'
+import { Link } from 'react-router-dom'
 import './herocard.css'
 
 export const HeroCard = ({
@@ -14673,7 +14674,12 @@ export const HeroCard = ({
                         <p className="card-text">
                             <small className="text-muted"> { first_appearance} </small>
                         </p>
+
+                        <Link to= { `./heroe/${id}`}>
+                            Mas...
+                        </Link>
                     </div>
+                    
 
                 </div>
             </div>
@@ -14683,11 +14689,12 @@ export const HeroCard = ({
 }
 ```
 
-Por el momento la pagina esta asi 
+Por el momento la pagina se ve asi y si damos click en el Link `Mas...` la siguiente pagina que va abrir es la ruta del heroe
 
 ![assets-git/394.png](assets-git/394.png)
 
 ![assets-git/395.png](assets-git/395.png)
+
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
