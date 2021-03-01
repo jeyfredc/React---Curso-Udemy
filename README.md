@@ -192,7 +192,9 @@ ___
 
 [Aplicar filtro en base al QueryString](#Aplicar-filtro-en-base-al-QueryString)
 
-[](#)
+___
+
+[Context y reducer de mi aplicación](#Context-y-reducer-de-mi-aplicación)
 
 [](#)
 
@@ -15607,6 +15609,108 @@ export const SearchScreen = ( { history }) => {
 ![assets-git/412.png](assets-git/412.png)
 
 ![assets-git/413.png](assets-git/413.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Context y reducer de mi aplicación
+
+En este capitulo lo que vamos a realizar es trabajar en la autenticación de la aplicación, es decir que si un usuario va directamente al path y escribe `/marvel` no pueda ingresar a la aplicación si no hasta cuando haga click en el boton login de la pantalla principal, apra esto es necesario crear un Context y un Reducer
+
+Dentro de la carpeta **src** crear carpeta **auth** y dentro de esta crear a **authReducer.js**, recordar que un reducer es una funcion que recibe un estado y una accion y que dentro de este se usa un `switch` para manejar diferentes casos
+
+```
+export const authReducer = ( state = {}, action) => {
+    switch ( action.type ) {
+        case 'login':
+
+            break;
+
+        default:
+
+            break;
+    }
+}
+```
+
+Despues dentro de la carpeta **src** crear otra carpeta la cual se llamara **types** y contendra el archivo **types.js**, este archivo va a contener todos los types de la aplicación y la acción que va a contener es el `login` y el `logout`
+
+```
+export const types = {
+    login: '[auth] login',
+    logout: '[auth] logout'
+}
+```
+
+Ahora hay que regresar al `authReducer` y alli importar a `types`, entonces los casos ahora no se manejaran entre string si no como un objeto que llama una acción `types.login` y dentro de este se va a retornar todo lo que mande el `action.payload`, donde posiblemente se podra mandar el nombre de usuario, correo o algo que se quiera y ademas se va a pasar la autenticacion con un `logged` en `true` si pasa la autenticación, en el caso del `logout` estara en `false`
+
+```
+import { types } from "../types/types";
+
+export const authReducer = ( state = {}, action) => {
+    switch ( action.type ) {
+        case types.login:
+            return {
+                ...action.payload,
+                logged: true
+            }
+
+        case types.logout:
+            return{
+                logged: false
+            }
+
+
+        default:
+
+            return state;
+    }
+}
+```
+
+Lo siguiente que hay que realizar es crear el `AuthContext` en la carpeta **auth** y la llamamos **AuthContext.js**, recordando que este provee un Componente padre para tener control sobre los componentes hijos a traves del `AuthContext.Provider`, el archivo lo unico que contendra sera esto
+
+
+```
+import { createContext } from "react";
+
+export const AuthContext = createContext();
+```
+
+Dentro del componente `HeroesApp` el cual es el punto inicial de la aplicación importamos a `AuthContext` y en sus `props` va a recibir un `user` y un `dispatch` lo cual sera lo que se va a distribuir entre los componentes hijos, tambien es necesario el manejo de `useReducer` recordando que recibe un reducer, un estado inicial e init.
+
+El reducer sera `authReducer`, el estado inicial sera un objeto vacio `{}` y el init, sera una validación donde se obtendra al usuario en localstorage, si no esta autenticado, el logged estara en `false`
+
+```
+import React, { useReducer } from 'react'
+import { AuthContext } from './auth/AuthContext'
+import { authReducer } from './auth/authReducer'
+import { AppRouter } from './routers/AppRouter'
+
+const init = () => {
+    return JSON.parse(localStorage.getItem('user')) || { logged: false };
+}
+
+export const HeroesApp = () => {
+
+    const [user, dispatch] = useReducer(authReducer, {}, init)
+    return (
+
+            <AuthContext.Provider value = {{ user, dispatch } }>
+
+            <AppRouter />
+
+            </AuthContext.Provider>
+
+    )
+}
+
+```
+
+En la pestaña Components del navegador en el Context.Provider, debemos ver la propiedad user con el `logged` en `false`
+
+![assets-git/414.png](assets-git/414.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
