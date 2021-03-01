@@ -22,7 +22,8 @@ export const HeroScreen = ( {history}) => {
 
     const handleReturn = () => {
 
-        if( history.lenght <= 2){
+        if( history.length <=2 ){
+
             history.push('/');
         } else {
 

@@ -14833,7 +14833,7 @@ export const HeroScreen = () => {
 
 ### Estilos del componente HeroScreen
 
-A continuación los estilos del componente `HeroScreen` donde se hizo la implementación del boton regresar que cumple la función de regresar a la pagina anterior y tiene una validación a traves de la función `handleReturn` y se utiliza el metodo `goBack`, Por ejemplo si la persona entra a una pagina en incognito y da click en el boton regresar lo devuelve a la pagina de inicio sin necesidad de mandar algun argumento de la ruta pero si da click en el boton de atras que viene por el navegador,  no se ha hecho un `history` este inmediatamente lo mandara a la ventana de incognito como si no se hubiera recorrido alguna pagina
+A continuación los estilos del componente `HeroScreen` donde se hizo la implementación del boton regresar que cumple la función de regresar a la pagina anterior y tiene una validación a traves de la función `handleReturn` y se utiliza el metodo `goBack`, Por ejemplo si la persona entra a una pagina en incognito y da click en el boton regresar lo devuelve a la pagina de inicio sin necesidad de mandar algun argumento de la ruta pero si da click en el boton de atras que viene por el navegador,  no se ha hecho un `history` este inmediatamente lo mandara a la ventana de incognito como si no se hubiera recorrido alguna pagina, ademas existe una validación si el usuario no ha realizado un recorrido y es la primer vez que da click sobre el boton regresar lo devuelve a la ruta `'/'` que por defecto es el componente de `marvel`
 
 ```
 import React from 'react'
