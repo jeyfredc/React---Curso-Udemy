@@ -14906,3 +14906,262 @@ La pagina se debe visualizar de la siguiente manera
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
+
+### SearchComponent
+
+Dentro de la carpeta Components, crear una carpeta llamada **search** y dentro de esta crear el componente `SearchScreen.js`, crear la estructura basica y dejar de acuerdo al siguiente bloque de codigo
+
+```
+import React from 'react'
+import '../heroes/herocard.css'
+
+export const SearchScreen = () => {
+    return (
+        <div>
+            <h1>Search Screen</h1>
+            <hr />
+
+            <div className="row">
+                <div className="col-5">
+                    <h4> Formulario de busqueda </h4>
+                    <hr />
+
+                    <form>
+                        <input 
+                            type="text"
+                            placeholder="Busca tu heroe"
+                            className="form-control"
+                        />
+
+                        <button 
+                            type="submit"
+                            className="btn m-1 btn-block btn-outline-light"
+                            >
+                                Buscar...
+                            </button>
+                    </form>
+                </div>
+
+                <div
+                    className="col-7">
+                        <h4> Resultados </h4>
+                        <hr />
+                        
+                </div>
+            </div>
+        </div>
+    )
+}
+
+
+```
+
+Ahora vamos a agregar el componente a una opción del `NavBar` para poder acceder al componente y lo modificamos de la siguiente forma
+
+```
+import React from 'react'
+import { Link, NavLink } from 'react-router-dom'
+
+export const Navbar = () => {
+    return (
+        <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
+            
+            <Link 
+                className="navbar-brand" 
+                to="/"
+            >
+                Asociaciones
+            </Link>
+
+            <div className="navbar-collapse">
+                <div className="navbar-nav">
+
+                    <NavLink 
+                        activeClassName="active"
+                        className="nav-item nav-link" 
+                        exact
+                        to="/marvel"
+                    >
+                        Marvel
+                    </NavLink>
+
+                    <NavLink 
+                        activeClassName="active"
+                        className="nav-item nav-link" 
+                        exact
+                        to="/dc"
+                    >
+                        DC
+                    </NavLink>
+
+                    <NavLink 
+                        activeClassName="active"
+                        className="nav-item nav-link" 
+                        exact
+                        to="/search"
+                    >
+                        Buscar
+                    </NavLink>
+                </div>
+            </div>
+
+            <div className="navbar-collapse collapse w-100 order-3 dual-collapse2">
+                <ul className="navbar-nav ml-auto">
+                    <NavLink 
+                        activeClassName="active"
+                        className="nav-item nav-link" 
+                        exact
+                        to="/login"
+                    >
+                        Logout
+                    </NavLink>
+                </ul>
+            </div>
+        </nav>
+    )
+}
+```
+
+Despues debemos abrir el componente `DashboardRoutes` e incluir el path `/search` para poder abrir el componente
+
+```
+import React from 'react'
+import { Navbar } from '../components/ui/NavBar'
+import {
+    Switch,
+    Route,
+    Redirect
+  } from "react-router-dom";
+import { MarvelScreen } from '../components/marvel/MarvelScreen';
+import { HeroScreen } from '../components/heroes/HeroScreen';
+import { DcScreen } from '../components/dc/DcScreen';
+import { SearchScreen } from '../components/search/SearchScreen';
+import './dashboard.css'
+
+export const DashboardRoutes = () => {
+    return (
+        <>
+
+        <Navbar />
+        <div className="container mt-2 centrado">
+        <Switch>
+            <Route exact path="/marvel" component={ MarvelScreen }/>
+            <Route exact path="/heroe/:heroeId" component={ HeroScreen }/>
+            <Route exact path="/dc" component={ DcScreen }/>
+            <Route exact path="/search" component={ SearchScreen } />
+
+            <Redirect to="/marvel"/>
+
+        </Switch>
+        </div>
+            
+        </>
+    )
+}
+
+```
+
+Ademas se debe añadir un `h4` a las clases del archivo herocard.css
+
+```
+body {
+    color: black;
+}
+
+h1, hr, h4{
+    color: white;
+}
+```
+
+El componente y el `NavBar` deben estar mostrando esto en el navegador
+
+![assets-git/402.png](assets-git/402.png)
+
+Lo siguiente que vamos a realizar es que todo lo que ingresamos al campo de texto se debe capturar a traves del `hook` que en capitulos anteriores habiamos creado.
+
+Para esto dentro de la carpeta **src** creamos una nueva carpeta llamada **hooks** y alli copiamos el **useForm.js** que habiamos realizado y lo importamos dentro del componente `SearchScreen` y luego obtenemos el estado usando la desestructuración y realizamos la función `handleSearch` para implementarla en el formulario recordar que la manera en como actua el hook `useForm` es que recibe unos datos para inicializar el estado que en esta ocasion le llamando `searchText`, ademas de esto al formulario le agregamos el evento `onSubmit` donde llamamos la función `handleSearch` y tambien debemos agregar los atributos `name`, `value` y un evento `onChange` para llamar a la función que viene del `useForm` la cual ayuda a recibir el estado en la consola, y a modificar el estado inicializado.
+
+Luego de esto, en la parte de los Resultados, hacemos el metodo `.map` para traer los personajes 
+
+```
+import React from 'react'
+import { heroes } from '../../data/heroes'
+import { useForm } from '../../hooks/useForm'
+import { HeroCard } from '../heroes/HeroCard'
+import '../heroes/herocard.css'
+
+export const SearchScreen = () => {
+
+
+    const [ values, handleInputChange] = useForm({
+        searchText:''
+    });
+
+    const {searchText} = values
+
+    const heroesFiltered = heroes;
+
+
+    const handleSearch = ( e ) => {
+        e.preventDefault();
+        console.log(values)
+    }
+
+
+    return (
+
+        <div>
+            <h1>Search Screen</h1>
+            <hr />
+
+            <div className="row">
+                <div className="col-5">
+                    <h4> Formulario de busqueda </h4>
+                    <hr />
+
+                    <form onSubmit={handleSearch}>
+                        <input 
+                            type="text"
+                            placeholder="Busca tu heroe"
+                            className="form-control"
+                            name="searchText"
+                            value= { searchText}
+                            onChange={ handleInputChange}
+                        />
+
+                        <button 
+                            type="submit"
+                            className="btn m-1 btn-block btn-outline-light"
+                            >
+                                Buscar...
+                            </button>
+                    </form>
+                </div>
+
+                <div
+                    className="col-7">
+                        <h4> Resultados </h4>
+                        <hr />
+                        {
+                            heroesFiltered.map( hero => (
+                                <HeroCard
+                                    key={ hero.id }
+                                    { ... hero }
+                                    />
+                            ))
+                        }
+                </div>
+            </div>
+        </div>
+    )
+}
+```
+
+De esta forma cuando insertamos una palabra en el campo de texto, la obtenemos por consola y en la pestaña Components del navegador
+
+![assets-git/403.png](assets-git/403.png)
+
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
