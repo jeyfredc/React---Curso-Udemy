@@ -188,7 +188,7 @@ ___
 
 [Estilos del componente HeroScreen](#Estilos-del-componente-HeroScreen)
 
-[](#)
+[Aplicar filtro de Heroes QuerytString](#Aplicar-filtro-de-Heroes-QuerytString)
 
 [](#)
 
@@ -15160,6 +15160,299 @@ export const SearchScreen = () => {
 De esta forma cuando insertamos una palabra en el campo de texto, la obtenemos por consola y en la pestaña Components del navegador
 
 ![assets-git/403.png](assets-git/403.png)
+
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Aplicar filtro de Heroes QuerytString
+
+En el componente `SearchScreen` dentro de la función `handleSearch` vamos a realizar un `history.push` esta va a ser la forma de mandar un query en la `url` para esto hacemos, esta es la forma en como mandamos la consulta que estamos colocando en el campo de texto, recordar que `history` hay que desestructurarlo en el componente
+
+`history.push(`?q=${ searchText }`);`
+
+```
+import React from 'react'
+import { heroes } from '../../data/heroes'
+import { useForm } from '../../hooks/useForm'
+import { HeroCard } from '../heroes/HeroCard'
+import '../heroes/herocard.css'
+
+export const SearchScreen = ( { history }) => {
+
+
+    const [ values, handleInputChange] = useForm({
+        searchText:''
+    });
+
+    const {searchText} = values
+
+    const heroesFiltered = heroes;
+
+
+    const handleSearch = ( e ) => {
+        e.preventDefault();
+        history.push(`?q=${ searchText }`);
+    }
+
+
+    return (
+
+        <div>
+            <h1>Search Screen</h1>
+            <hr />
+
+            <div className="row">
+                <div className="col-5">
+                    <h4> Formulario de busqueda </h4>
+                    <hr />
+
+                    <form onSubmit={handleSearch}>
+                        <input 
+                            type="text"
+                            placeholder="Busca tu heroe"
+                            className="form-control"
+                            name="searchText"
+                            value= { searchText}
+                            onChange={ handleInputChange}
+                        />
+
+                        <button 
+                            type="submit"
+                            className="btn m-1 btn-block btn-outline-light"
+                            >
+                                Buscar...
+                            </button>
+                    </form>
+                </div>
+
+                <div
+                    className="col-7">
+                        <h4> Resultados </h4>
+                        <hr />
+                        {
+                            heroesFiltered.map( hero => (
+                                <HeroCard
+                                    key={ hero.id }
+                                    { ... hero }
+                                    />
+                            ))
+                        }
+                </div>
+            </div>
+        </div>
+    )
+}
+```
+
+Cuando enviemos por ejemplo una palabra como batman, vamos a obtenerla por la url
+
+![assets-git/404.png](assets-git/404.png)
+
+Otro lugar donde se obtiene este resultado es en las `props` del componente en la pestaña Components del navegador
+
+![assets-git/405.png](assets-git/405.png)
+
+Ahora debemos acceder a la ubicación para que cuando realicemos la busqueda del personaje, por que de momento si ingresamos algo aparece la estructura del query pero nada mas, entonces hacemos uso de `useLocation` a traves de una constante a la que despues le podamos hacer un `console.log`
+
+```
+    const location = useLocation();
+    console.log(location);
+```
+
+```
+import React from 'react'
+import { useLocation } from 'react-router-dom'
+import { heroes } from '../../data/heroes'
+import { useForm } from '../../hooks/useForm'
+import { HeroCard } from '../heroes/HeroCard'
+import '../heroes/herocard.css'
+
+export const SearchScreen = ( { history }) => {
+
+    const location = useLocation();
+    console.log(location);
+    
+    const [ values, handleInputChange] = useForm({
+        searchText:''
+    });
+
+    const {searchText} = values
+
+    const heroesFiltered = heroes;
+
+
+    const handleSearch = ( e ) => {
+        e.preventDefault();
+        history.push(`?q=${ searchText }`);
+    }
+
+
+    return (
+
+        <div>
+            <h1>Search Screen</h1>
+            <hr />
+
+            <div className="row">
+                <div className="col-5">
+                    <h4> Formulario de busqueda </h4>
+                    <hr />
+
+                    <form onSubmit={handleSearch}>
+                        <input 
+                            type="text"
+                            placeholder="Busca tu heroe"
+                            className="form-control"
+                            name="searchText"
+                            value= { searchText}
+                            onChange={ handleInputChange}
+                        />
+
+                        <button 
+                            type="submit"
+                            className="btn m-1 btn-block btn-outline-light"
+                            >
+                                Buscar...
+                            </button>
+                    </form>
+                </div>
+
+                <div
+                    className="col-7">
+                        <h4> Resultados </h4>
+                        <hr />
+                        {
+                            heroesFiltered.map( hero => (
+                                <HeroCard
+                                    key={ hero.id }
+                                    { ... hero }
+                                    />
+                            ))
+                        }
+                </div>
+            </div>
+        </div>
+    )
+}
+```
+
+![assets-git/406.png](assets-git/406.png)
+
+Alli estamos obteniendo, el path y el query pero existe una herramienta que tambien se puede utilizar y parsear el query ya que este llega como un string para esto debemos finalizar el servidor e instalar [query-String](https://www.npmjs.com/package/query-string)
+
+asi que en la terminal ejecutamos `npm install query-string`
+
+despues de instalar volvemos a ejecutar la terminal y encender el servidor y dentro del componente SearchScreen hacemos la importación del modulo `import queryString from 'query-string'` y ahora mandamos en el `console.log` a `location.search`
+
+```
+    const location = useLocation();
+    console.log(location.search);
+```
+
+![assets-git/407.png](assets-git/407.png)
+
+y ahora podemos hacer lo que nos dice la documentación que es parsear ese string
+
+```
+    const location = useLocation();
+    console.log( queryString.parse( location.search ));
+```
+
+despues se pueden mandar otras consultas en el navegador, agregando un ampersa el valor, en este momento solo interesa el `q` que viene de query
+
+![assets-git/408.png](assets-git/408.png)
+
+Lo siguiente que se debe hacer entonces es desestructurar la q y mandarlo al objeto en el estado inicial, para que sea el primer argumento de busqueda cuando se mande algun campo de texto la `q = ''` es para que el objeto por defecto no sea un argumento `undefined` si no que se inicialice como un objeto vacio
+
+```
+    const location = useLocation();
+    const { q = '' } = queryString.parse( location.search);
+
+    const [ values, handleInputChange] = useForm({
+        searchText:q
+    });
+```
+
+```
+import React from 'react'
+import queryString from 'query-string'
+import { useLocation } from 'react-router-dom'
+import { heroes } from '../../data/heroes'
+import { useForm } from '../../hooks/useForm'
+import { HeroCard } from '../heroes/HeroCard'
+import '../heroes/herocard.css'
+
+export const SearchScreen = ( { history }) => {
+
+    const location = useLocation();
+    const { q = '' } = queryString.parse( location.search);
+
+    const [ values, handleInputChange] = useForm({
+        searchText:q
+    });
+
+    const {searchText} = values
+
+    const heroesFiltered = heroes;
+
+
+    const handleSearch = ( e ) => {
+        e.preventDefault();
+        history.push(`?q=${ searchText }`);
+    }
+
+
+    return (
+
+        <div>
+            <h1>Search Screen</h1>
+            <hr />
+
+            <div className="row">
+                <div className="col-5">
+                    <h4> Formulario de busqueda </h4>
+                    <hr />
+
+                    <form onSubmit={handleSearch}>
+                        <input 
+                            type="text"
+                            placeholder="Busca tu heroe"
+                            className="form-control"
+                            name="searchText"
+                            value= { searchText}
+                            onChange={ handleInputChange}
+                        />
+
+                        <button 
+                            type="submit"
+                            className="btn m-1 btn-block btn-outline-light"
+                            >
+                                Buscar...
+                            </button>
+                    </form>
+                </div>
+
+                <div
+                    className="col-7">
+                        <h4> Resultados </h4>
+                        <hr />
+                        {
+                            heroesFiltered.map( hero => (
+                                <HeroCard
+                                    key={ hero.id }
+                                    { ... hero }
+                                    />
+                            ))
+                        }
+                </div>
+            </div>
+        </div>
+    )
+}
+
+```
 
 
 <div align="right">
