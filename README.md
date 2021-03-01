@@ -196,7 +196,7 @@ ___
 
 [Context y reducer de mi aplicación](#Context-y-reducer-de-mi-aplicación)
 
-[](#)
+[Login de un usuario](#Login-de-un-usuario)
 
 [](#)
 
@@ -15711,6 +15711,153 @@ export const HeroesApp = () => {
 En la pestaña Components del navegador en el Context.Provider, debemos ver la propiedad user con el `logged` en `false`
 
 ![assets-git/414.png](assets-git/414.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Login de un usuario
+
+Ahora lo que debemos hacer es extraer en el componente `LoginScreen` extraer el `dispatch` del `AuthContext` y mandarlo en la función  `handleLogin`, alli el `dispatch` contendra a `types.login` y adicionalmente enviaremos al usuario que en este caso sera mi nombre y el logged en `true`
+
+```
+import React, { useContext } from 'react'
+import { AuthContext } from '../../auth/AuthContext'
+import { types } from '../../types/types';
+import './login.css'
+
+export const LoginScreen = ({ history }) => {
+
+    const { dispatch } = useContext( AuthContext );
+
+    const handleLogin = () => {
+        /* history.replace('/') */
+        dispatch({
+            type: types.login,
+            payload: {
+                name: 'jeyfred.calderon',
+            }
+        })
+
+    }
+
+    return (
+    <div className="containerLogin">
+        <div className="row mt-5">
+            <div className="col-md-offset-5 col-md-3">
+                <div className="form-login">
+                    <h4>Bienvenido a Heroes App.</h4>
+                    <p>Por favor haz click sobre Login para ingresar a la aplicación</p>
+                        <button 
+                            className="btn btn-dark btn-md"
+                            onClick={ handleLogin}
+                        >
+                            login
+                        </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    )
+}
+```
+
+como tenemos comentada la linea `/* history.replace('/') */` si en este momento hacemos click sobre el boton login no va a ingresar a la aplicación, pero podremos observar en la pestaña Components del navegador que el usuario se esta enviando y que ademas el logged esta en `true`, esto significa que paso por el reducer hizo todo el procedimiento  y quedo autenticado
+
+![assets-git/415.png](assets-git/415.png)
+
+Nuevamente para poder navegar a la aplicación se debe agregar la linea comentada despues del `dispatch`
+
+```
+    const handleLogin = () => {
+        
+        dispatch({
+            type: types.login,
+            payload: {
+                name: 'jeyfred.calderon',
+            }
+        })
+
+        history.replace('/')
+
+    }
+```
+
+Ahora lo que queremos es que al ingresar podamos presentar el nombre en el `NavBar`, de esta forma podria ser mas segura y verificación autenticada, para eso debemos abrir el componente `NavBar` y alli traer el useContext, extrayendo al usuario con su valor por defecto el cual es `name` y crear un `NavLink` mas para poder presentar los datos del usuario
+
+```
+import React, { useContext } from 'react'
+import { Link, NavLink } from 'react-router-dom'
+import { AuthContext } from '../../auth/AuthContext';
+
+export const Navbar = () => {
+
+    const { user: { name } }= useContext(AuthContext);
+
+    return (
+        <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
+            
+            <Link 
+                className="navbar-brand" 
+                to="/"
+            >
+                Asociaciones
+            </Link>
+
+            <div className="navbar-collapse">
+                <div className="navbar-nav">
+
+                    <NavLink 
+                        activeClassName="active"
+                        className="nav-item nav-link" 
+                        exact
+                        to="/marvel"
+                    >
+                        Marvel
+                    </NavLink>
+
+                    <NavLink 
+                        activeClassName="active"
+                        className="nav-item nav-link" 
+                        exact
+                        to="/dc"
+                    >
+                        DC
+                    </NavLink>
+
+                    <NavLink 
+                        activeClassName="active"
+                        className="nav-item nav-link" 
+                        exact
+                        to="/search"
+                    >
+                        Buscar
+                    </NavLink>
+                </div>
+            </div>
+
+            <div className="navbar- w-10 order-3 dual-collapse2">
+                <ul className="navbar-nav ml-auto">
+
+                    <span className="nav-item nav-link text-info" >
+                        { name }
+                    </span>
+                    <NavLink 
+                        activeClassName="active"
+                        className="nav-item nav-link" 
+                        exact
+                        to="/login"
+                    >
+                        Logout
+                    </NavLink>
+                </ul>
+            </div>
+        </nav>
+    )
+}
+```
+
+![assets-git/416.png](assets-git/416.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
