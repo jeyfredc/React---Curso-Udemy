@@ -186,7 +186,7 @@ ___
 
 [Leer argumentos por URL](#Leer-argumentos-por-URL)
 
-[](#)
+[Estilos del componente HeroScreen](#Estilos-del-componente-HeroScreen)
 
 [](#)
 
@@ -14826,6 +14826,82 @@ export const HeroScreen = () => {
 }
 ```
 **Nota:** Hacer la prueba buscando la ruta http://localhost:3000/heroe/marvel-spider143242, lo que debe pasar es que se debe redirigir la pagina hacia la de Marvel
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Estilos del componente HeroScreen
+
+A continuación los estilos del componente `HeroScreen` donde se hizo la implementación del boton regresar que cumple la función de regresar a la pagina anterior y tiene una validación a traves de la función `handleReturn` y se utiliza el metodo `goBack`, Por ejemplo si la persona entra a una pagina en incognito y da click en el boton regresar lo devuelve a la pagina de inicio sin necesidad de mandar algun argumento de la ruta pero si da click en el boton de atras que viene por el navegador,  no se ha hecho un `history` este inmediatamente lo mandara a la ventana de incognito como si no se hubiera recorrido alguna pagina
+
+```
+import React from 'react'
+import { Redirect, useParams } from 'react-router-dom'
+import { getHeroById } from '../../selectors/getHeroById';
+
+export const HeroScreen = ( {history}) => {
+
+    const { heroeId } = useParams();
+
+    const hero = getHeroById( heroeId )
+
+    if (!hero) {
+        return <Redirect to="/" />
+    }
+
+    const {
+        superhero,
+        publisher,
+        alter_ego,
+        first_appearance,
+        characters,
+    } = hero;
+
+    const handleReturn = () => {
+
+        if( history.lenght <= 2){
+            history.push('/');
+        } else {
+            history.goBack()
+        }
+    }
+
+    return (
+
+        <div className="row mt-5">
+            <div className="col-4">
+                <img 
+                    className="img-thumbnail"
+                    src={ `../assets/heroes/${ heroeId }.jpg` }
+                    alt={ superhero }/>
+            </div>
+            <div className="col-8">
+                <h3> { superhero } </h3>
+                <ul className="list-group list-group-flush">
+                    <li className="list-group-item"> <b> Alter ego: </b> { alter_ego } </li>
+                    <li className="list-group-item"> <b> Publisher: </b> { publisher } </li>
+                    <li className="list-group-item"> <b> First appearance: </b> { first_appearance } </li>
+                </ul>
+
+                <h5> Characters </h5>
+                <p> { characters }</p>
+
+                <button 
+                    className="btn btn-outline-light"
+                    onClick={ handleReturn }>
+                    Regresar
+                </button>
+            </div>
+        </div>
+    )
+}
+
+```
+
+La pagina se debe visualizar de la siguiente manera
+
+![assets-git/401.png](assets-git/401.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
