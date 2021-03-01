@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import queryString from 'query-string'
 import { useLocation } from 'react-router-dom'
-import { heroes } from '../../data/heroes'
 import { useForm } from '../../hooks/useForm'
 import { HeroCard } from '../heroes/HeroCard'
 import '../heroes/herocard.css'
+import { getHeroesByName } from '../../selectors/getHeroesByName'
 
 export const SearchScreen = ( { history }) => {
 
@@ -17,12 +17,14 @@ export const SearchScreen = ( { history }) => {
 
     const {searchText} = values
 
-    const heroesFiltered = heroes;
+    const heroesFiltered = useMemo(() => getHeroesByName( q ), [q]);
+
+    
 
 
     const handleSearch = ( e ) => {
         e.preventDefault();
-        history.push(`?q=${ searchText }`);
+        history.push(`?q=${ searchText.toLowerCase() }`);
     }
 
 
@@ -43,8 +45,8 @@ export const SearchScreen = ( { history }) => {
                             placeholder="Busca tu heroe"
                             className="form-control"
                             name="searchText"
-                            value= { searchText}
-                            onChange={ handleInputChange}
+                            value= { searchText }
+                            onChange={ handleInputChange }
                         />
 
                         <button 
@@ -60,6 +62,22 @@ export const SearchScreen = ( { history }) => {
                     className="col-7">
                         <h4> Resultados </h4>
                         <hr />
+
+                        { (q==='')
+                        &&
+                        <div className="alert alert-info">
+                            Busca un superheroe
+                        </div>
+                         }
+
+                        {
+                            (q !== '' && heroesFiltered.length === 0 )
+                            && 
+                            <div className="alert alert-danger">
+                                El argumento {q} no es valido
+                            </div>
+                        }
+
                         {
                             heroesFiltered.map( hero => (
                                 <HeroCard

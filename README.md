@@ -190,7 +190,7 @@ ___
 
 [Aplicar filtro de Heroes QuerytString](#Aplicar-filtro-de-Heroes-QuerytString)
 
-[](#)
+[Aplicar filtro en base al QueryString](#Aplicar-filtro-en-base-al-QueryString)
 
 [](#)
 
@@ -15454,6 +15454,159 @@ export const SearchScreen = ( { history }) => {
 
 ```
 
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Aplicar filtro en base al QueryString
+
+Dentro de la carpeta selectors crear una nueva funcion que se llamara **getHeroesByName.js**, el argumento que recibira sera el `name` y luego realizar un filtro de heroes
+
+```
+export const getHeroesByName = ( name ) => {
+    
+}
+```
+
+Luego de esto importamos a `heroes` de `data` y hacemos un `return` donde aplicamos el filtro y el campo que vamos a obtener es el de `superhero` para obtener el nombre del heroe directamente, utilizamos el metodo `toLowerCase` para que no importe si el nombre biene en mayúscula o minúscula y el metodo `includes` para que tome este campo
+
+```
+import { heroes } from "../data/heroes"
+
+export const getHeroesByName = ( name ) => {
+    return heroes.filter( hero => hero.superhero.toLowerCase().includes(name))   
+}
+```
+
+y luego realizamos una validación por si el campo de texto esta vacio para que regreso un arreglo vacio
+
+```
+import { heroes } from "../data/heroes"
+
+export const getHeroesByName = ( name ) => {
+
+    if( name === ''){
+        return [];
+    }
+    
+    return heroes.filter( hero => hero.superhero.toLowerCase().includes(name))   
+}
+```
+
+Despues de tener la función lo que hay que hacer es cambiar el `heroes` en la constante `heroesFiltered` del componente `SearchScreen` y reemplazarla por la funcion, recibiendo el argumento `searchText`, tener en cuenta eliminar la importación del `heroes` ya que no es mas necesaria
+
+```
+const heroesFiltered = getHeroesByName( searchText );
+```
+De esta forma cuando empiece a buscar va a empezar al personaje filtrado 
+
+![assets-git/409.png](assets-git/409.png)
+
+El unico inconveniente es que si se elimina todo, la lista de heroes ya no aparece, entonces podemos añadir algunas validaciones en la parte de la renderización del componente y en el push del query agregar el metodo `toLowerCase`, para que si la persona que ingrese un campo se equivoca y manda algun campo en mayuscula, la busqueda se haga en minúscula como estan los heroes en la lista
+
+```
+import React, { useMemo } from 'react'
+import queryString from 'query-string'
+import { useLocation } from 'react-router-dom'
+import { useForm } from '../../hooks/useForm'
+import { HeroCard } from '../heroes/HeroCard'
+import '../heroes/herocard.css'
+import { getHeroesByName } from '../../selectors/getHeroesByName'
+
+export const SearchScreen = ( { history }) => {
+
+    const location = useLocation();
+    const { q = '' } = queryString.parse( location.search);
+
+    const [ values, handleInputChange] = useForm({
+        searchText:q
+    });
+
+    const {searchText} = values
+
+    const heroesFiltered = useMemo(() => getHeroesByName( q ), [q]);
+
+    
+
+
+    const handleSearch = ( e ) => {
+        e.preventDefault();
+        history.push(`?q=${ searchText.toLowerCase() }`);
+    }
+
+
+    return (
+
+        <div>
+            <h1>Search Screen</h1>
+            <hr />
+
+            <div className="row">
+                <div className="col-5">
+                    <h4> Formulario de busqueda </h4>
+                    <hr />
+
+                    <form onSubmit={handleSearch}>
+                        <input 
+                            type="text"
+                            placeholder="Busca tu heroe"
+                            className="form-control"
+                            name="searchText"
+                            value= { searchText }
+                            onChange={ handleInputChange }
+                        />
+
+                        <button 
+                            type="submit"
+                            className="btn m-1 btn-block btn-outline-light"
+                            >
+                                Buscar...
+                            </button>
+                    </form>
+                </div>
+
+                <div
+                    className="col-7">
+                        <h4> Resultados </h4>
+                        <hr />
+
+                        { (q==='')
+                        &&
+                        <div className="alert alert-info">
+                            Busca un superheroe
+                        </div>
+                         }
+
+                        {
+                            (q !== '' && heroesFiltered.length === 0 )
+                            && 
+                            <div className="alert alert-danger">
+                                El argumento {q} no es valido
+                            </div>
+                        }
+
+                        {
+                            heroesFiltered.map( hero => (
+                                <HeroCard
+                                    key={ hero.id }
+                                    { ... hero }
+                                    />
+                            ))
+                        }
+                </div>
+            </div>
+        </div>
+    )
+}
+
+```
+
+![assets-git/411.png](assets-git/411.png)
+
+![assets-git/412.png](assets-git/412.png)
+
+![assets-git/413.png](assets-git/413.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
