@@ -16044,3 +16044,219 @@ De esta forma el logout ocurre de manera inmediata
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
 
+### Rutas privadas
+
+En este capitulo se va a realizar la protección de todas las rutas, ya que actualmente si estamos en el login y cambiamos el path en la url por ejemplo a http://localhost:3000/marvel, http://localhost:3000/, http://localhost:3000/dc o http://localhost:3000/search, tenemos acceso a cualquiera de los componentes, no es necesario, hacer click en el login para poder acceder y la idea de esta y en otras aplicaciones es que el usuario se deba autenticar para poder tener acceso a todas las rutas que proporcione una pagina.
+
+Para esto dentro de la carpeta **routers** vamos a crear un nuevo componente llamado **PrivateRoute.js** y generamos la estructura basica 
+
+```
+import React from 'react'
+
+export const PrivateRoute = () => {
+    return (
+        <div>
+            
+        </div>
+    )
+}
+```
+
+Si revisamos el componente de AppRouter, vemos que el acceso principal a todas las rutas es el `DashBoardRoutes` que tiene el path mas general `'/'`, entonces es alli donde debemos buscar proteger todas las rutas.
+
+Regresando al componente de `PrivateRoute` en los argumentos se pasa un objeto para inicializar todas las `props` del componente.
+
+La primer propiedad que se pasa es `isAuthenticated` porque se va a realizar una condición para poder acceder a todas las rutas, la segunda propiedad que va a tener es el `component` pero como la sintaxis  en React de todos los componentes es mayúscula se puede renombrar con `:` y nombrar en mayúscula `component : Component`, todos los demas argumentos como `exact`, `path` se requieren recuperar por tanto se agrega el operador rest que esta indicado mediante `...rest`
+
+```
+import React from 'react'
+
+export const PrivateRoute = ({
+    isAuthenticated,
+    component : Component,
+    ...rest
+}) => {
+    
+    return (
+        <div>
+            
+        </div>
+    )
+}
+```
+
+Despues se renderiza el `Route` pasandole todas las propiedades con el operador spread y a continuación de la etiqueta `<Route { ...rest } />`.
+
+Luego se pasa la condición a traves de la propiedad `component` y debe recibir los `props` de ella que son history, params y otras propiedades y dentro de esta en el callback se agrega una condición ternaria con `isAuthenticated`, la condición dice que si el usuario esta autenticado, redirija al componente, de lo contrario se hace una redirección al mismo login y no accede la pagina a otra ruta
+
+```
+import { Redirect, Route } from 'react-router-dom'
+
+export const PrivateRoute = ({
+    isAuthenticated,
+    component : Component,
+    ...rest
+}) => {
+    
+    return (
+        <Route { ...rest }
+            component= { (props) => (
+                ( isAuthenticated )
+                ? (<Component { ...props }/>)
+                : (<Redirect to="/login" />)
+            )}
+        
+        />
+    )
+}
+
+```
+
+Ahora es necesario importar los `prop-types` para terminar de condicionar la ruta privada y esto hace parte de las buenas practicas.
+
+isAuthenticated es un proptype de caracter booleano y es requerido y component es un proptype que es un functional component y es requerido
+
+```
+import React from 'react'
+import PropTypes from 'prop-types';
+import { Redirect, Route } from 'react-router-dom'
+
+export const PrivateRoute = ({
+    isAuthenticated,
+    component : Component,
+    ...rest
+}) => {
+    
+    return (
+        <Route { ...rest }
+            component= { (props) => (
+                ( isAuthenticated )
+                ? (<Component { ...props }/>)
+                : (<Redirect to="/login" />)
+            )}
+        
+        />
+    )
+}
+
+PrivateRoute.protoTypes = {
+    isAuthenticated: PropTypes.bool.isRequired,
+    component: PropTypes.func.isRequired
+}
+```
+
+Ahora pasamos al componente `AppRouter` y cambiamos el Route del `DashboardRoutes` por `PrivateRoute` que es la ruta o componente que tiene acceso a todas las demas rutas
+
+```
+import React from 'react'
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route
+  } from "react-router-dom";
+import { LoginScreen } from '../components/login/LoginScreen';
+import { DashboardRoutes } from './DashboardRoutes';
+import { PrivateRoute } from './PrivateRoute';
+
+export const AppRouter = () => {
+    return (
+        <Router>
+            <div>
+
+                <Switch>
+                    <Route exact path="/login" component={ LoginScreen } />
+
+                    <PrivateRoute path="/" component={ DashboardRoutes } />
+                </Switch>
+            </div>
+        </Router>
+    )
+}
+```
+
+Lo ultimo que falta es saber si en el `AppRouter` el usuario esta autenticado para poder ingresar, entonces se debe usar el hook `useContext` y desestructurar al usuario para luego llamarlo en la condición del `PrivateRoute`, primero hacemos un `console.log(user)`
+
+```
+import React, { useContext } from 'react'
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route
+  } from "react-router-dom";
+import { AuthContext } from '../auth/AuthContext';
+import { LoginScreen } from '../components/login/LoginScreen';
+import { DashboardRoutes } from './DashboardRoutes';
+import { PrivateRoute } from './PrivateRoute';
+
+export const AppRouter = () => {
+
+    const { user } = useContext(AuthContext);
+    console.log(user)
+    
+    return (
+        <Router>
+            <div>
+
+                <Switch>
+                    <Route exact path="/login" component={ LoginScreen } />
+
+                    <PrivateRoute path="/" component={ DashboardRoutes } />
+                </Switch>
+            </div>
+        </Router>
+    )
+}
+
+```
+
+En este caso hice click en el boton login y por eso aparece el `logged` en `true`, de lo contrario seria `false` por defecto
+
+![assets-git/419.png](assets-git/419.png) 
+
+Luego pasamos al `PrivateRoute` la propiedad isAuthenticated con el usuario logueado
+
+```
+import React, { useContext } from 'react'
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route
+  } from "react-router-dom";
+import { AuthContext } from '../auth/AuthContext';
+import { LoginScreen } from '../components/login/LoginScreen';
+import { DashboardRoutes } from './DashboardRoutes';
+import { PrivateRoute } from './PrivateRoute';
+
+export const AppRouter = () => {
+
+    const { user } = useContext(AuthContext);
+    console.log(user)
+    
+    return (
+        <Router>
+            <div>
+
+                <Switch>
+                    <Route exact path="/login" component={ LoginScreen } />
+
+                    <PrivateRoute 
+                        path="/" 
+                        component={ DashboardRoutes } 
+                        isAuthenticated={ user.logged }
+                        />
+                </Switch>
+            </div>
+        </Router>
+    )
+}
+
+```
+
+De esta manera ya se puede volver a tener acceso a todas las rutas configuradas en la aplicación al dar click en el boton login
+
+![assets-git/420.png](assets-git/420.png) 
+
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>

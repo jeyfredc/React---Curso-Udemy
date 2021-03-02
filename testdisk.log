@@ -1,0 +1,114 @@
+
+
+Tue Mar  2 11:56:04 2021
+Command line: TestDisk
+
+TestDisk 7.1, Data Recovery Utility, July 2019
+Christophe GRENIER <grenier@cgsecurity.org>
+https://www.cgsecurity.org
+OS: Linux, kernel 5.4.0-66-generic (#74-Ubuntu SMP Wed Jan 27 22:54:38 UTC 2021) x86_64
+Compiler: GCC 9.2
+ext2fs lib: 1.45.5, ntfs lib: libntfs-3g, reiserfs lib: none, ewf lib: none, curses lib: ncurses 6.1
+User is not root!
+Hard disk list
+
+
+TestDisk exited normally.
+Using locale 'es_CO.UTF-8'.
+
+
+Tue Mar  2 11:56:04 2021
+Command line: TestDisk /debug
+
+TestDisk 7.1, Data Recovery Utility, July 2019
+Christophe GRENIER <grenier@cgsecurity.org>
+https://www.cgsecurity.org
+OS: Linux, kernel 5.4.0-66-generic (#74-Ubuntu SMP Wed Jan 27 22:54:38 UTC 2021) x86_64
+Compiler: GCC 9.2
+ext2fs lib: 1.45.5, ntfs lib: libntfs-3g, reiserfs lib: none, ewf lib: none, curses lib: ncurses 6.1
+/dev/sda: LBA, HPA, LBA48, DCO support
+/dev/sda: size       976773168 sectors
+/dev/sda: user_max   976773168 sectors
+/dev/sda: native_max 976773168 sectors
+Warning: can't get size for Disk /dev/mapper/control - 0 B - 0 sectors, sector size=512
+Warning: can't get size for Disk /dev/loop17 - 0 B - 0 sectors, sector size=512
+Hard disk list
+Disk /dev/sda - 500 GB / 465 GiB - CHS 60801 255 63, sector size=512 - ST500LM030-1RK17D, S/N:WL14BYF5, FW:SDM1
+Disk /dev/loop0 - 102 MB / 97 MiB - 200464 sectors (RO), sector size=512
+Disk /dev/loop1 - 103 MB / 98 MiB - 201424 sectors (RO), sector size=512
+Disk /dev/loop10 - 183 MB / 175 MiB - 359144 sectors (RO), sector size=512
+Disk /dev/loop11 - 66 MB / 63 MiB - 129104 sectors (RO), sector size=512
+Disk /dev/loop12 - 183 MB / 175 MiB - 359152 sectors (RO), sector size=512
+Disk /dev/loop13 - 53 MB / 51 MiB - 104536 sectors (RO), sector size=512
+Disk /dev/loop14 - 181 MB / 172 MiB - 354232 sectors (RO), sector size=512
+Disk /dev/loop15 - 127 MB / 121 MiB - 248936 sectors (RO), sector size=512
+Disk /dev/loop16 - 309 MB / 295 MiB - 604808 sectors (RO), sector size=512
+Disk /dev/loop2 - 58 MB / 55 MiB - 113424 sectors (RO), sector size=512
+Disk /dev/loop3 - 58 MB / 55 MiB - 113592 sectors (RO), sector size=512
+Disk /dev/loop4 - 18 MB / 17 MiB - 36672 sectors (RO), sector size=512
+Disk /dev/loop5 - 170 MB / 162 MiB - 333552 sectors (RO), sector size=512
+Disk /dev/loop6 - 67 MB / 64 MiB - 132648 sectors (RO), sector size=512
+Disk /dev/loop7 - 229 MB / 218 MiB - 448496 sectors (RO), sector size=512
+Disk /dev/loop8 - 30 MB / 28 MiB - 59136 sectors (RO), sector size=512
+Disk /dev/loop9 - 30 MB / 28 MiB - 59144 sectors (RO), sector size=512
+
+Partition table type (auto): EFI GPT
+Disk /dev/sda - 500 GB / 465 GiB - ST500LM030-1RK17D
+Partition table type: EFI GPT
+
+Analyse Disk /dev/sda - 500 GB / 465 GiB - CHS 60801 255 63
+hdr_size=92
+hdr_lba_self=1
+hdr_lba_alt=976773167 (expected 976773167)
+hdr_lba_start=34
+hdr_lba_end=976773134
+hdr_lba_table=2
+hdr_entries=128
+hdr_entsz=128
+Current partition structure:
+ 1 P EFI System                  2048    1050623    1048576 [EFI System Partition]
+ 2 P Linux filesys. data      1050624  976771071  975720448
+
+search_part()
+Disk /dev/sda - 500 GB / 465 GiB - CHS 60801 255 63
+FAT32 at 0/32/33
+FAT1 : 32-1055
+FAT2 : 1056-2079
+start_rootdir : 2080 root cluster : 2
+Data : 2080-1048575
+sectors : 1048576
+cluster_size : 8
+no_of_cluster : 130812 (2 - 130813)
+fat_length 1024 calculated 1022
+set_FAT_info: name from BS used
+
+FAT32 at 0/32/33
+FAT: cluster=2(0x2), pos=4128
+     EFI System                  2048    1050623    1048576 [EFI System Partition] [NO NAME]
+     FAT32, blocksize=4096, 536 MB / 512 MiB
+
+recover_EXT2: s_block_group_nr=0/3722, s_mnt_count=83/4294967295, s_blocks_per_group=32768, s_inodes_per_group=8192
+recover_EXT2: s_blocksize=4096
+recover_EXT2: s_blocks_count 121965056
+recover_EXT2: part_size 975720448
+Filesystem created: Thu Dec 10 18:33:25 2020
+Last mount time:    Tue Mar  2 07:18:47 2021
+     Linux filesys. data      1050624  976771071  975720448
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 499 GB / 465 GiB
+
+Results
+   P EFI System                  2048    1050623    1048576 [EFI System Partition] [NO NAME]
+     FAT32, blocksize=4096, 536 MB / 512 MiB
+   P Linux filesys. data      1050624  976771071  975720448
+     ext4 blocksize=4096 Large_file Sparse_SB Recover, 499 GB / 465 GiB
+
+Hint for advanced users: dmsetup may be used if you prefer to avoid rewriting the partition table for the moment:
+echo "0 1048576 linear /dev/sda 2048" | dmsetup create test0
+echo "0 975720448 linear /dev/sda 1050624" | dmsetup create test1
+
+interface_write()
+ 1 P EFI System                  2048    1050623    1048576 [EFI System Partition] [NO NAME]
+ 2 P Linux filesys. data      1050624  976771071  975720448
+Don't write, no confirmation
+
+TestDisk exited normally.
