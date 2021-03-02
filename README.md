@@ -15862,3 +15862,185 @@ export const Navbar = () => {
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
+
+### Logout del usuario
+
+Vamos a modificar el `Logout` que se encuentra en el componente `NavBar` y va a dejar de ser un `NavLink` porque lo vamos a transformar en una etiqueta de boton
+
+```
+                    <button className="nav-item nav-link btn" style={{ fontSize:'87%'}}>
+                        Logout
+                    </button>
+```
+
+Este Logout se modifica porque ahora va a tener un evento `onClick` que va a recibir a la funcion `handleLogout` y esta va a tener el dispatch que va a disparar el logged en `false` y ademas va a redireccionar hacia el componente del `login`.
+
+```
+import React, { useContext } from 'react'
+import { Link, NavLink } from 'react-router-dom'
+import { AuthContext } from '../../auth/AuthContext';
+import { types } from '../../types/types';
+
+export const Navbar = ( ) => {
+
+    const { user: { name }, dispatch }= useContext(AuthContext);
+
+    const handleLogout = () => {
+        dispatch({
+            type: types.logout
+        })
+        
+    }
+
+    return (
+        <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
+            
+            <Link 
+                className="navbar-brand" 
+                to="/"
+            >
+                Asociaciones
+            </Link>
+
+            <div className="navbar-collapse">
+                <div className="navbar-nav">
+
+                    <NavLink 
+                        activeClassName="active"
+                        className="nav-item nav-link" 
+                        exact
+                        to="/marvel"
+                    >
+                        Marvel
+                    </NavLink>
+
+                    <NavLink 
+                        activeClassName="active"
+                        className="nav-item nav-link" 
+                        exact
+                        to="/dc"
+                    >
+                        DC
+                    </NavLink>
+
+                    <NavLink 
+                        activeClassName="active"
+                        className="nav-item nav-link" 
+                        exact
+                        to="/search"
+                    >
+                        Buscar
+                    </NavLink>
+                </div>
+            </div>
+
+            <div className="navbar- w-10 order-3 dual-collapse2">
+                <ul className="navbar-nav ml-auto">
+
+                    <span className="nav-item nav-link text-info" >
+                        { name }
+                    </span>
+                    <button 
+                        className="nav-item nav-link btn" style={{ fontSize:'87%'}}
+                        onClick={ handleLogout }>
+                        Logout
+                    </button>
+                </ul>
+            </div>
+        </nav>
+    )
+}
+```
+Para hacer esta prueba antes de redirigir hacia el `logout`, vemos en la pestaña components que esta la información de usuario, la prueba es que al hacer click en logout la informacion de usuario debe desaparecer en el NavBar y en los props del hook
+
+![assets-git/417.png](assets-git/417.png)
+
+![assets-git/418.png](assets-git/418.png)
+
+El `NavBar` esta contenido dentro de un `Context.Provider`, esto no significa que haga parte de las rutas pero si puede hacer uso de un hook llamado `useHistory` a traves de este, se puede hacer uso de `history` para hacer el logout de la pagina
+
+```
+import React, { useContext } from 'react'
+import { Link, NavLink, useHistory } from 'react-router-dom'
+import { AuthContext } from '../../auth/AuthContext';
+import { types } from '../../types/types';
+
+export const Navbar = ( ) => {
+
+    const { user: { name }, dispatch }= useContext(AuthContext);
+    const history = useHistory();
+
+    const handleLogout = () => {
+        dispatch({
+            type: types.logout
+        })
+        
+        history.replace('/login')
+    }
+
+    return (
+        <nav className="navbar navbar-expand-sm navbar-dark bg-dark">
+            
+            <Link 
+                className="navbar-brand" 
+                to="/"
+            >
+                Asociaciones
+            </Link>
+
+            <div className="navbar-collapse">
+                <div className="navbar-nav">
+
+                    <NavLink 
+                        activeClassName="active"
+                        className="nav-item nav-link" 
+                        exact
+                        to="/marvel"
+                    >
+                        Marvel
+                    </NavLink>
+
+                    <NavLink 
+                        activeClassName="active"
+                        className="nav-item nav-link" 
+                        exact
+                        to="/dc"
+                    >
+                        DC
+                    </NavLink>
+
+                    <NavLink 
+                        activeClassName="active"
+                        className="nav-item nav-link" 
+                        exact
+                        to="/search"
+                    >
+                        Buscar
+                    </NavLink>
+                </div>
+            </div>
+
+            <div className="navbar- w-10 order-3 dual-collapse2">
+                <ul className="navbar-nav ml-auto">
+
+                    <span className="nav-item nav-link text-info" >
+                        { name }
+                    </span>
+                    <button 
+                        className="nav-item nav-link btn" style={{ fontSize:'87%'}}
+                        onClick={ handleLogout }>
+                        Logout
+                    </button>
+                </ul>
+            </div>
+        </nav>
+    )
+}
+```
+
+De esta forma el logout ocurre de manera inmediata
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
