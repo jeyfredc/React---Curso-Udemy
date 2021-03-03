@@ -16260,3 +16260,86 @@ De esta manera ya se puede volver a tener acceso a todas las rutas configuradas 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
+
+### Rutas publicas
+
+En la ruta publica ocurre lo contrario a la ruta privada con una modificación, para esto creamos dentro de la carpeta **routers** el componente **PublicRoute.js**, este lleva practicamente lo mismo que la ruta privada solo que hay una negación en la autenticación `(! isAuthenticated )` y que el `Redirect` esta redirigiendo hacia la ruta general `'/'`
+
+```
+import React from 'react'
+import PropTypes from 'prop-types';
+import { Redirect, Route } from 'react-router-dom'
+
+export const PublicRoute = ({
+    isAuthenticated,
+    component : Component,
+    ...rest
+}) => {
+    
+    return (
+        
+        <Route { ...rest }
+            component= { (props) => (
+                (! isAuthenticated )
+                ? (<Component { ...props }/>)
+                : (<Redirect to="/" />)
+            )}
+        
+        />
+    )
+}
+
+PublicRoute.protoTypes = {
+    isAuthenticated: PropTypes.bool.isRequired,
+    component: PropTypes.func.isRequired
+}
+```
+
+Tambien se debe importar en `AppRouter` y utilizar el prop `isAuthenticated` para que haga la validación
+
+```
+import React, { useContext } from 'react'
+import {
+    BrowserRouter as Router,
+    Switch,
+  } from "react-router-dom";
+import { AuthContext } from '../auth/AuthContext';
+import { LoginScreen } from '../components/login/LoginScreen';
+import { DashboardRoutes } from './DashboardRoutes';
+import { PrivateRoute } from './PrivateRoute';
+import { PublicRoute } from './PublicRoute';
+
+export const AppRouter = () => {
+
+    const { user } = useContext(AuthContext);
+    console.log(user)
+    
+    return (
+        <Router>
+            <div>
+
+                <Switch>
+                    <PublicRoute 
+                        exact path="/login" 
+                        component={ LoginScreen } 
+                        isAuthenticated={ user.logged }
+                        />
+
+                    <PrivateRoute 
+                        path="/" 
+                        component={ DashboardRoutes } 
+                        isAuthenticated={ user.logged }
+                        />
+                </Switch>
+            </div>
+        </Router>
+    )
+}
+
+```
+
+En el caso que el usuario este ubicado sobre la ruta de `/marvel`, `/dc` o `/search `y intente ir hacia la ruta `/login`, a menos que haga un logout la ruta se va a recargar hacia la general `/`
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
