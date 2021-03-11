@@ -9,7 +9,7 @@
     width: 100vw;
 }
 
-.auth__box-container{
+.auth__box-container {
     background-color: white;
     box-shadow: 0px 3px $dark-grey;
     border-radius: 2px;
@@ -17,11 +17,12 @@
     width: 250px;
 }
 
-// darken sirve para buscar un color que exista y modificarlo y aplicarlo al estilo de otra clase, $amount es el degrade que se aplica sobre el mismo
+
 .auth__title {
     color: darken($color: $primary, $amount: 20);
     margin-bottom: 20px;
 }
+
 .auth__input {
     color: $dark-grey;
     border: 0px;
@@ -32,7 +33,7 @@
     width: 100%;
 
     transition: border-bottom .3s ease;
-
+    
     &:focus {
         border-bottom: 1px solid $primary;
         outline: none;
@@ -49,6 +50,7 @@
     width: 100%;
 }
 
+
 .auth__alert-error {
     background-color: red;
     border-radius: 5px;
@@ -56,5 +58,5 @@
     display: flex;
     justify-content: center;
     margin-bottom: 10px;
-    padding: 5px;
+    padding: 5px
 }
