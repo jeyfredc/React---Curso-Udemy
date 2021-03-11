@@ -5,6 +5,8 @@ import { RegisterScreen } from '../components/auth/RegisterScreen'
 
 export const Authrouter = () => {
     return (
+        <div className="auth__main">
+            <div className="auth__box-container">
 
         <Switch>
 
@@ -19,5 +21,8 @@ export const Authrouter = () => {
             <Redirect to="/auth/login"/>
 
         </Switch>
+
+            </div>
+        </div>
     )
 }
