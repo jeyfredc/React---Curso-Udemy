@@ -198,13 +198,15 @@ ___
 
 [Login de un usuario](#Login-de-un-usuario)
 
-[](#)
+[Logout del usuario](#Logout-del-usuario)
 
-[](#)
+[Rutas privadas](#Rutas-privadas)
 
-[](#)
+[Rutas publicas](#Rutas-publicas)
 
-[](#)
+___
+
+[Proyecto JournalApp](#Proyecto-JournalApp)
 
 [](#)
 
@@ -16343,3 +16345,17 @@ En el caso que el usuario este ubicado sobre la ruta de `/marvel`, `/dc` o `/sea
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
+
+## Proyecto JournalApp
+
+Este proyecto va a tener autenticación con Google y va a hacer uso de Redux, estas son las vistas de la aplicación donde se utilizo [sass](https://sass-lang.com/install) para ello se tuvo que hacer una estructura de estilos separados tambien por componentes que se encuentra en la carpeta **styles**, a continuación las vistas de la aplicación que quedaran adjuntas para continuar el proyecto y empezar a utilizar redux
+
+![assets-git/421.png](assets-git/421.png) 
+
+![assets-git/422.png](assets-git/422.png) 
+
+![assets-git/423.png](assets-git/423.png) 
+
+![assets-git/424.png](assets-git/424.png) 
+
+para ejecutar el proyecto en el momento con estilos, se debe clonar del repositorio [Journal App]() y luego de esto ejecutar `npm i` o `yarn`
