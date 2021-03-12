@@ -16358,4 +16358,4 @@ Este proyecto va a tener autenticación con Google y va a hacer uso de Redux, es
 
 ![assets-git/424.png](assets-git/424.png) 
 
-para ejecutar el proyecto en el momento con estilos, se debe clonar del repositorio [Journal App]() y luego de esto ejecutar `npm i` o `yarn`
+para ejecutar el proyecto en el momento con estilos, se debe clonar del repositorio [Journal App](https://github.com/jeyfredc/JournalApp-Estilos) y luego de esto ejecutar `npm i` o `yarn`.
