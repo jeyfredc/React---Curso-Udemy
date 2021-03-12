@@ -210,7 +210,7 @@ ___
 
 [Configurando Redux en JournalApp](#Configurando-Redux-en-JournalApp)
 
-[](#)
+[Redux DevTools](#Redux-DevTools)
 
 [](#)
 
@@ -16544,3 +16544,45 @@ export const JournalApp = () => {
 ```
 
 Si nos dirigimos al navegador y revisamos la pestaña **Components** veremos que tendremos el PRovider, ReactRedux.Provider, etc y tendremos el store como props y ademas un hook proporcionado llamado Memo que esta guardando el estado de la aplicación la cual en el momento es un objeto vacio
+
+![assets-git/425.png](assets-git/425.png) 
+
+### Redux DevTools
+
+Si en el momento abrimos el navegador y ubicamos la pestaña **Redux** va a salir una información de que el store no ha sido encontrado 
+
+![assets-git/426.png](assets-git/426.png) 
+
+Para que esto empiece a funcionar debemos revisar el siguiente [enlace](https://github.com/zalmoxisus/redux-devtools-extension#usage), la cual indica una configuración adicional que debemos realizar, por el momento para google Chrome
+
+![assets-git/427.png](assets-git/427.png) 
+
+Lo que debemos hacer es copiar la linea que esta en color verde e incluirla en el archivo **store.js** debajo del argumento `reducers` que recibe la función `createStore`
+
+```
+import { createStore, combineReducers } from 'redux'
+import { authReducer } from '../reducers/authReducer';
+
+const reducers = combineReducers({
+    auth: authReducer
+})
+
+export const store = createStore(
+    reducers,
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    );
+```
+
+Si regresamos al navegador despues de guardar, obtenemos la vista de los DevTools de Redux
+
+![assets-git/428.png](assets-git/428.png) 
+
+Alli hay varias pestañas como el `Action`, `State`, etc, donde podremos por ejemplo ver el estado de la aplicación lo cual por el momento es un objeto vacio
+
+![assets-git/429.png](assets-git/429.png) 
+
+en la pestaña `Chart` vemos el punto de acceso a la aplicación y a medida que vayamos avanzando se iran viendo las diferentes herramientas que posee Redux
+
+![assets-git/430.png](assets-git/430.png)
+
+**Nota:** Es necesario aclarar que esta herramienta solo servira en un ambiente de desarrollo, cuando la pagina este puesta en producción no podremos tener acceso a los DevTools de Redux
