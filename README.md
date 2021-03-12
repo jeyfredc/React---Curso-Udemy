@@ -208,6 +208,56 @@ ___
 
 [Proyecto JournalApp](#Proyecto-JournalApp)
 
+[Configurando Redux en JournalApp](#Configurando-Redux-en-JournalApp)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
+[](#)
+
 [](#)
 
 <div align="right">
@@ -16359,3 +16409,138 @@ Este proyecto va a tener autenticación con Google y va a hacer uso de Redux, es
 ![assets-git/424.png](assets-git/424.png) 
 
 para ejecutar el proyecto en el momento con estilos, se debe clonar del repositorio [Journal App](https://github.com/jeyfredc/JournalApp-Estilos) y luego de esto ejecutar `npm i` o `yarn`.
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Configurando Redux en JournalApp
+
+A continuación se dejan los enlaces para revisar la documentación e instalación de Redux, el primer [enlace](https://es.redux.js.org/) tiene la documentación en español y el funcionamiento como tal de lo que es Redux y el segundo [enlace](https://react-redux.js.org/) es la aplicabilidad de Redux en React haciendo uso de hooks.
+
+Para realizar la instalacióin se debe abrir la terminal, ubicar la carpeta del proyecto y ejecutar el comando 
+
+`npm install react-redux redux` o el comando `yarn add react-redux redux`.
+
+Inicialmente empezaremos a trabajar en el login, en lo que seria la autenticación.
+
+En la carpeta src crear una nueva carpeta llamada **reducers**, dentro de esta crear la función llamada **authReducer.js**, alli se crea la función `authReducer` que recordando como funciona el reducer recibe como argumento un estado y una acción
+
+```
+export const authReducer = (state, action ) => {
+    
+}
+```
+
+El state se inicializa como un objeto vacio `state = {}`. La forma en como funcionara el estado sera que cuando esta vacio es porque no hay autenticación y cuando la hay tendra un `uid` que proporcionara la base de datos no relacional que usaremos la cual es firebase y tambien el nombre de usuario.
+
+Luego de esto vamos a crear y dejar listo el `switch` para hacer el manejo de las acciones
+
+```
+export const authReducer = (state = {}, action ) => {
+
+    switch (action.type) {
+        case value:
+            
+            break;
+    
+        default:
+            break;
+    }
+
+}
+```
+
+y ahora dentro de la carpeta **src** crear una nueva carpeta llamada **types**, dentro de esta crear otra función llamada **types.js** esta contendra un objeto donde van a estar las acciones las cuales seran `login` y `logout`
+
+```
+
+export const types = {
+    login : '[Auth] login',
+    logout: '[Auth] logout'
+}
+```
+
+nuevamente nos devolvemos a la función `authReducer` y alli llamamos estas acciones, como se habia mencionado anteriormente el estado cuando haga login va a recibir un uid y un name y cuando se haga logout sera un objeto vacio
+
+```
+import { types } from "../types/types";
+
+export const authReducer = (state = {}, action ) => {
+
+    switch (action.type) {
+        case types.login:
+            return {
+                uid: action.payload.uid,
+                name: action.payload.displayName
+            }
+            
+        case types.logout:
+            return { }
+    
+        default:
+            return state;
+    }
+
+}
+```
+
+Ahora vamos a utilizar el **store** el cual tiene que ver propiamente con Redux, para esto dentro de la carpeta **src**, creamos una carpeta llamada **store** y dentro de esta la función llamada **store.js**.
+
+Se debe importar createStore de redux y luego crear una constante que llame esta funcion
+
+```
+import { createStore } from 'redux'
+
+export const store = createStore();
+```
+
+la funcion `createStore` solo recibe como argumento un reducer que en este caso seria el unico reducer que hemos creado `authReducer`, pero puede pasar que tengamos que hacer uso de mas reducer por lo cual es necesario crear una constante que recibe varios reducers y luego pasarlo como argumento de la función.
+
+La constante que crearemos se llamara `reducers` y este a su vez recibira una función llamada `combineReducers` que viene de `redux`
+, esto sirve para que si en algun momento se crea otro reducer se pueda pasar como argumento y no se tenga que realizar alguna refactorización de codigo
+
+```
+import { createStore, combineReducers } from 'redux'
+
+const reducers = combineReducers({
+
+})
+
+export const store = createStore(reducers);
+```
+
+Despues dentro del objeto creamos una propiedad llamada `auth` que va a ser manejada por el `authReducer` que ya creamos 
+
+```
+import { createStore, combineReducers } from 'redux'
+import { authReducer } from '../reducers/authReducer';
+
+const reducers = combineReducers({
+    auth: authReducer
+})
+
+export const store = createStore(reducers);
+```
+
+Lo que sigue despues de esto es dirigirnos al punto mas alto de la aplicación, en teoria seria **index.js** pero este archivo por lo general se trata de no moificar asi que el siguiente punto mas alto de la aplicación es el archivo **JournalApp.js** y alli se importa `Provider` de `react-redux`, `Provider` es utilizado como un componente mas el cual provee información a toda la aplicacion y recibe la propiedad store que inicializa la función que ya creamos la cual llamamos `store`. Esta es toda la configuración que hay que hacer para tener `Redux` implementado en toda la aplicación
+
+```
+import React from 'react';
+import { Provider } from 'react-redux'
+import { store } from './store/store';
+import { AppRouter } from './routers/AppRouter';
+
+export const JournalApp = () => {
+    return (
+        <Provider store={ store }>
+
+            <AppRouter />
+
+        </Provider>
+    )
+}
+
+```
+
+Si nos dirigimos al navegador y revisamos la pestaña **Components** veremos que tendremos el PRovider, ReactRedux.Provider, etc y tendremos el store como props y ademas un hook proporcionado llamado Memo que esta guardando el estado de la aplicación la cual en el momento es un objeto vacio
