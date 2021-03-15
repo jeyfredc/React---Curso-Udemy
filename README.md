@@ -212,7 +212,7 @@ ___
 
 [Redux DevTools](#Redux-DevTools)
 
-[](#)
+[Primer dispatch de una acción a nuestro Store](#Primer-dispatch-de-una-acción-a-nuestro-Store)
 
 [](#)
 
@@ -16547,6 +16547,10 @@ Si nos dirigimos al navegador y revisamos la pestaña **Components** veremos que
 
 ![assets-git/425.png](assets-git/425.png) 
 
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
 ### Redux DevTools
 
 Si en el momento abrimos el navegador y ubicamos la pestaña **Redux** va a salir una información de que el store no ha sido encontrado 
@@ -16586,3 +16590,362 @@ en la pestaña `Chart` vemos el punto de acceso a la aplicación y a medida que 
 ![assets-git/430.png](assets-git/430.png)
 
 **Nota:** Es necesario aclarar que esta herramienta solo servira en un ambiente de desarrollo, cuando la pagina este puesta en producción no podremos tener acceso a los DevTools de Redux
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Primer dispatch de una acción a nuestro Store
+
+Lo primero que vamos a realizar antes de crear la acción es utilizar el custom hook creado en capitulos anteriores. Lo unico que se debe hacer es crear en la carpeta **src** una carpeta llamada **hooks**, crear el archivo **useForm.js** y utilizar este bloque de codigo
+
+```
+import { useState } from "react"
+
+
+export const useForm = ( initialState = {} ) => {
+
+    const [values, setValues] = useState(initialState)
+
+    const reset = () => {
+        setValues(initialState)
+    }
+
+    const handleInputChange = ({target}) => {
+        
+        setValues({
+            ...values,
+            [target.name]: target.value
+        })    
+    }
+    
+return [values, handleInputChange, reset];
+}
+```
+
+El hook se va a implementar en el componente `LoginScreen` asi que alli vamos a utilizar a `values` y la función `handleInputChange` e inicializamos el estado con los nombre correspondiente que vamos a recibir en el formulario, los cuales seran el email y el password.
+
+Despues de realizar esto, desestructuramos el estado que acabamos de inicializar para llamarlo en el `value` del formulario
+
+```
+import React from 'react';
+import { Link } from 'react-router-dom'
+import { useForm } from '../../hooks/useForm';
+
+export const LoginScreen = () => {
+
+    const [ values, handleInputChange] = useForm({
+        email: '',
+        password: ''
+    })
+
+    const { email, password } = values; 
+```
+
+Ahora creamos el `value` en cada input, llamamos cada propiedad en el `value` correspondiente y tambien el evento `onChange` donde recibiremos la función `handleInputChange`
+
+```
+import React from 'react';
+import { Link } from 'react-router-dom'
+import { useForm } from '../../hooks/useForm';
+
+export const LoginScreen = () => {
+
+    const [ values, handleInputChange] = useForm({
+        email: '',
+        password: ''
+    })
+
+    const { email, password } = values; 
+
+
+    return (
+        <>
+            <h3 className="auth__title">Login</h3>
+
+            <form>
+
+                <input 
+                    type="text"
+                    placeholder="Email"
+                    name="email"
+                    value= { email }
+                    className="auth__input"
+                    autoComplete="off"
+                    onChange= { handleInputChange }
+                />
+
+                <input 
+                    type="password"
+                    placeholder="Password"
+                    name="password"
+                    value= { password }
+                    className="auth__input"
+                    onChange= { handleInputChange }
+                />
+
+
+                <button
+                    type="submit"
+                    className="btn btn-primary btn-block"
+                >
+                    Login
+                </button>
+
+                
+                <div className="auth__social-networks">
+                    <p>Login with social networks</p>
+
+                    <div 
+                        className="google-btn"
+                    >
+                        <div className="google-icon-wrapper">
+                            <img className="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="google button" />
+                        </div>
+                        <p className="btn-text">
+                            <b>Sign in with google</b>
+                        </p>
+                    </div>
+                </div>
+
+                <Link 
+                    to="/auth/register"
+                    className="link"
+                >
+                    Create new account    
+                </Link>
+
+            </form>
+        </>
+    )
+}
+
+```
+
+Despues de esto creamos el submit de la información que insertemos en el formulario del login y para esto creamos la función `handleLogin` y en esta para comprobar que todo este funcionando correctamente hacemos un console.log del `email` y el `password` y creamos el evento `onSubmit` donde llamamos la función `handleLogin` en el formulario
+
+```
+import React from 'react';
+import { Link } from 'react-router-dom'
+import { useForm } from '../../hooks/useForm';
+
+export const LoginScreen = () => {
+
+    const [ values, handleInputChange] = useForm({
+        email: '',
+        password: ''
+    })
+
+    const { email, password } = values; 
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+        console.log( email, password)
+    }
+
+
+    return (
+        <>
+            <h3 className="auth__title">Login</h3>
+
+            <form onSubmit= { handleLogin }>
+
+                <input 
+                    type="text"
+                    placeholder="Email"
+                    name="email"
+                    value= { email }
+                    className="auth__input"
+                    autoComplete="off"
+                    onChange= { handleInputChange }
+                />
+
+                <input 
+                    type="password"
+                    placeholder="Password"
+                    name="password"
+                    value= { password }
+                    className="auth__input"
+                    onChange= { handleInputChange }
+                />
+
+
+                <button
+                    type="submit"
+                    className="btn btn-primary btn-block"
+                >
+                    Login
+                </button>
+
+                
+                <div className="auth__social-networks">
+                    <p>Login with social networks</p>
+
+                    <div 
+                        className="google-btn"
+                    >
+                        <div className="google-icon-wrapper">
+                            <img className="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="google button" />
+                        </div>
+                        <p className="btn-text">
+                            <b>Sign in with google</b>
+                        </p>
+                    </div>
+                </div>
+
+                <Link 
+                    to="/auth/register"
+                    className="link"
+                >
+                    Create new account    
+                </Link>
+
+            </form>
+        </>
+    )
+}
+
+```
+
+Ingresamos correo y contraseña y vemos que al hacer click en Login obtenemos por consola el correo y la contraseña ingresada y ademas verificamos que el estado se este cambiando en los Components
+
+![assets-git/431.png](assets-git/431.png)
+
+![assets-git/432.png](assets-git/432.png)
+
+Ahora para manejar la accion vamos a crear la primera que sera la autenticación, para esto dentro de la carpeta **src** crearemos una nueva carpeta llamada **actions** la cual contendra el archivo **auth.js** que es donde manejaremos la acción que llama el reducer **authReducer.js**
+
+Alli vamos a crear la accion `login` la cual va a recibir el uid y el displayName en los argumentos y luego demos importar los types para que se conecten con el reducer y el payload como lo establecimos en ese archivo
+
+**auth.js**
+
+```
+import { types } from "../types/types"
+
+
+export const login = ( uid, displayName) => ({
+    type: types.login,
+    payload: {
+        uid,
+        displayName
+    }
+})
+```
+
+Ahora en el componente `LoginScreen` se necesita hacer el `dispatch` de esa acción para esto debemos utilizar un hook de Redux llamado `useDispatch` el cual debemos importar de react-redux `import { useDispatch } from 'react-redux'`.
+
+Luego debemos importarlo en una constante llamada `dispatch`, en esta constante y en la función `handleLogin` llamamos a dispatch y le pasamos como argumento la accion la cual es `login` y viene de la carpeta **actions**, lo cual se debe verificar para no tener ningun error
+
+```
+import React from 'react';
+import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { useForm } from '../../hooks/useForm';
+import { login } from '../../actions/auth'
+
+export const LoginScreen = () => {
+
+    const dispatch = useDispatch();
+
+    const [ values, handleInputChange] = useForm({
+        email: '',
+        password: ''
+    })
+
+    const { email, password } = values; 
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+        // console.log( email, password)
+        dispatch(login)
+    }
+
+
+    return (
+        <>
+            <h3 className="auth__title">Login</h3>
+
+            <form onSubmit= { handleLogin }>
+
+                <input 
+                    type="text"
+                    placeholder="Email"
+                    name="email"
+                    value= { email }
+                    className="auth__input"
+                    autoComplete="off"
+                    onChange= { handleInputChange }
+                />
+
+                <input 
+                    type="password"
+                    placeholder="Password"
+                    name="password"
+                    value= { password }
+                    className="auth__input"
+                    onChange= { handleInputChange }
+                />
+
+
+                <button
+                    type="submit"
+                    className="btn btn-primary btn-block"
+                >
+                    Login
+                </button>
+
+                
+                <div className="auth__social-networks">
+                    <p>Login with social networks</p>
+
+                    <div 
+                        className="google-btn"
+                    >
+                        <div className="google-icon-wrapper">
+                            <img className="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="google button" />
+                        </div>
+                        <p className="btn-text">
+                            <b>Sign in with google</b>
+                        </p>
+                    </div>
+                </div>
+
+                <Link 
+                    to="/auth/register"
+                    className="link"
+                >
+                    Create new account    
+                </Link>
+
+            </form>
+        </>
+    )
+}
+
+```
+
+Para probar que este funcionando el dispatch en el `login` pasamos el uid con un numero cualquiera y el nombre
+
+```
+    const handleLogin = (e) => {
+        e.preventDefault();
+        // console.log( email, password)
+        dispatch(login(12345, 'Pepe'))
+    }
+```
+
+Ahora nos dirigimos al navegador en la ruta del login 
+
+![assets-git/433.png](assets-git/433.png)
+
+Cuando hacemos click en Login realizamos el dispatch de una nueva accion que vemos reflejada en la pestaña Diff
+
+![assets-git/434.png](assets-git/434.png)
+
+y tambien lo veremos de una forma mucho mas clara en la pestaña State, donde encontramos el **uid** y el **name**
+
+![assets-git/435.png](assets-git/435.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
