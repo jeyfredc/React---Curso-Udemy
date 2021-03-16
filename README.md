@@ -218,7 +218,7 @@ ___
 
 [Thunk Middleware Acciones asincronas](#Thunk-Middleware-Acciones-asincronas)
 
-[](#)
+[Configurar Firebase y Google Sign in](#Configurar-Firebase-y-Google-Sign-in)
 
 [](#)
 
@@ -17106,6 +17106,296 @@ Lo que sigue en el return del componente se deja como esta y ahora si nos dirigi
 
 
 ![assets-git/440.png](assets-git/440.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Configurar Firebase y Google Sign in
+
+Nuevamente abrimos el proyecto de Firebase, damos click en Descripcion general y luego damos click en el icono Web
+
+![assets-git/441.png](assets-git/441.png)
+
+Luego agregamos el nombre para registrar la App puede ser cualquier nombre y luego damos click en Registrar app
+
+![assets-git/442.png](assets-git/442.png)
+
+Luego saldra una ventana como esta donde vamos a copiar lo que esta seleccionado en el cuadro rojo, cuando copiemos lo unico que va a cambiar es el keyword `var` por `const`
+
+![assets-git/443.png](assets-git/443.png)
+
+Despues de copiar dentro de la carpeta **src** creamos otra carpeta llamada **firebase** y dentro de esta un archivo llamado **firebase-config.js** donde hacemos varias importaciones, la primera es la de firebase, la segunda y la tercera hacen referencia a las carpetas que tendra acceso firebase
+
+```
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/auth';
+
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDYAApyi8BbpThsORzAYy6Lv62jL48tGfk",
+    authDomain: "jorunalapp-1eb82.firebaseapp.com",
+    projectId: "jorunalapp-1eb82",
+    storageBucket: "jorunalapp-1eb82.appspot.com",
+    messagingSenderId: "67664483135",
+    appId: "1:67664483135:web:05fbcab3ead19f3b01798a"
+  };
+  // Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+```
+
+Seguido de esto hay que hacer una configuración mas en el archivo, adjunto en este [enlace]() se puede ver un curso pequeño sobre firebase y a continuación creamos una constante db que apunta a la referencia de firebase y luego agregamos un nombre significativo `googleAuthProvider` que tiene que ver con la autenticación de Google, esto se hace tambien para las otras plataformas donde nos queramos autenticar y luego exportamos las constantes creadas
+
+```
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/auth';
+
+
+const firebaseConfig = {
+    apiKey: "AIzaSyDYAApyi8BbpThsORzAYy6Lv62jL48tGfk",
+    authDomain: "jorunalapp-1eb82.firebaseapp.com",
+    projectId: "jorunalapp-1eb82",
+    storageBucket: "jorunalapp-1eb82.appspot.com",
+    messagingSenderId: "67664483135",
+    appId: "1:67664483135:web:05fbcab3ead19f3b01798a"
+  };
+  // Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.firestore();
+const googleAuthProvider = new firebase.auth.GoogleAuthProvider();
+
+export {
+    db,
+    googleAuthProvider,
+    firebase
+}
+```
+
+Lo siguiente que hay que hacer es regresar al archivo **auth.js** y crear una nueva función asincrona que hara la petición a firebase para hacer la autenticación
+
+```
+import { types } from "../types/types"
+
+export const startLoginEmailPassword = ( email, password )=> {
+    return ( dispatch ) => {
+        setTimeout(() => {
+            
+            dispatch( login ( 123, 'Pedro'))
+
+        }, 3500);
+    }
+}
+
+export const startGoogleLogin = () => {
+    return ( dispatch ) => {
+        
+    }
+}
+
+
+export const login = ( uid, displayName) => ({
+    type: types.login,
+    payload: {
+        uid,
+        displayName
+    }
+})
+
+```
+
+alli utilizamos a `firebase` para traer el metodo auth y el metodo `signInWithPopup` donde pasamos `googleAuthProvider`, todo esto debe ser importado, luego hacemos un `.then` para esperar la promesa  un `console.log` de `userCred` que es lo que devuelve la promesa
+
+```
+import { firebase, googleAuthProvider } from '../firebase/firebase-config'
+import { types } from "../types/types"
+
+export const startLoginEmailPassword = ( email, password )=> {
+    return ( dispatch ) => {
+        setTimeout(() => {
+            
+            dispatch( login ( 123, 'Pedro'))
+
+        }, 3500);
+    }
+}
+
+export const startGoogleLogin = () => {
+    return ( dispatch ) => {
+
+        firebase.auth().signInWithPopup( googleAuthProvider )
+            .then ( userCredential => {
+                console.log( userCredential )
+            })
+    }
+}
+
+
+
+export const login = ( uid, displayName) => ({
+    type: types.login,
+    payload: {
+        uid,
+        displayName
+    }
+})
+```
+
+Falta crear la función para autenticar el Login con google, asi que abrimos el archivo **LoginScreen.js** y creamos una nueva función llamada `handleGoogleLogin` y hace el dispatch de la nueva accion creada `startGoogleLogin` la cual se debe importar de `auth` y luego creamos el evento `onClick` y llamamos la función alli 
+
+```
+import React from 'react';
+import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { useForm } from '../../hooks/useForm';
+import { startGoogleLogin, startLoginEmailPassword } from '../../actions/auth'
+
+export const LoginScreen = () => {
+
+    const dispatch = useDispatch();
+
+    const [ values, handleInputChange] = useForm({
+        email: '',
+        password: ''
+    })
+
+    const { email, password } = values; 
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+        // console.log( email, password)
+        dispatch( startLoginEmailPassword( email, password ))
+    }
+
+    const handleGoogleLogin = () => {
+        dispatch( startGoogleLogin() );
+    }
+
+
+    return (
+        <>
+            <h3 className="auth__title">Login</h3>
+
+            <form onSubmit= { handleLogin }>
+
+                <input 
+                    type="text"
+                    placeholder="Email"
+                    name="email"
+                    value= { email }
+                    className="auth__input"
+                    autoComplete="off"
+                    onChange= { handleInputChange }
+                />
+
+                <input 
+                    type="password"
+                    placeholder="Password"
+                    name="password"
+                    value= { password }
+                    className="auth__input"
+                    onChange= { handleInputChange }
+                />
+
+
+                <button
+                    type="submit"
+                    className="btn btn-primary btn-block"
+                >
+                    Login
+                </button>
+
+                
+                <div className="auth__social-networks">
+                    <p>Login with social networks</p>
+
+                    <div 
+                        className="google-btn"
+                        onClick= { handleGoogleLogin }
+                    >
+                        <div className="google-icon-wrapper">
+                            <img className="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="google button" />
+                        </div>
+                        <p className="btn-text">
+                            <b>Sign in with google</b>
+                        </p>
+                    </div>
+                </div>
+
+                <Link 
+                    to="/auth/register"
+                    className="link"
+                >
+                    Create new account    
+                </Link>
+
+            </form>
+        </>
+    )
+}
+
+```
+
+Ahora nos dirigimos al navegador, hacemos click sobre el boton **Sign in with google** y deberia salir un pop-up con nuestras cuentas, seleccionamos la que tengamos
+
+![assets-git/444.png](assets-git/444.png)
+
+Luego nos dirigimos a la consola 
+
+![assets-git/445.png](assets-git/445.png)
+
+Seleccionamos y desplegamos **user** y de alli lo que nos interesa es obtener el **displayName** y el **uid** que trae firebase
+
+![assets-git/446.png](assets-git/446.png)
+
+Por ultimo lo unico que falta es manejar el `dispatch` de la acción, regresamos al archivo **auth.js** y en `then` desestructuramos al usuario y hacemos el dispatch enviando el `user.id` y el `user.displayName`
+
+```
+import { firebase, googleAuthProvider } from '../firebase/firebase-config'
+import { types } from "../types/types"
+
+export const startLoginEmailPassword = ( email, password )=> {
+    return ( dispatch ) => {
+        setTimeout(() => {
+            
+            dispatch( login ( 123, 'Pedro'))
+
+        }, 3500);
+    }
+}
+
+export const startGoogleLogin = () => {
+    return ( dispatch ) => {
+
+        firebase.auth().signInWithPopup( googleAuthProvider )
+            .then ( ({ user }) => {
+                dispatch(
+                    login (user.uid, user.displayName) 
+                )
+            });
+    }
+}
+
+
+
+export const login = ( uid, displayName) => ({
+    type: types.login,
+    payload: {
+        uid,
+        displayName
+    }
+})
+```
+
+Nuevamente regresamos al navegador seleccionamos el boton de **Sign in with google**, ubicamos la pestaña Redux y despues de seleccionar nuestra cuenta de google, debemos obtener el uid y el name
+
+![assets-git/447.png](assets-git/447.png)
+
+Por ultimo si regresamos a firebase y revisamos la parte de Authentication, vamos a notas el registro con Google
+
+![assets-git/448.png](assets-git/448.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
