@@ -216,7 +216,7 @@ ___
 
 [Firebase y Firestore](#Firebase-y-Firestore)
 
-[](#)
+[Thunk Middleware Acciones asincronas](#Thunk-Middleware-Acciones-asincronas)
 
 [](#)
 
@@ -16972,11 +16972,140 @@ Va a salir una ventana grande que dice Comenzar, dar click alli y ubicar la pest
 
 Se puede seleccionar las opciones que se deseen pero en este proyecto se hara la autenticación con el correo y Google, para esto, seleccionar las dos opciones, verificar que queden habilitados y guardar
 
-![assets-git/440.png](assets-git/440.png)
-
 Por ultimo si el App esta en ejecución, finalizarlo e instalar en la terminal el siguiente comando
 
 `npm install firebase`
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Thunk Middleware Acciones asincronas
+
+En el siguiente [enlace](https://www.npmjs.com/package/redux-thunk) queda la documentación para realizar la instalación de thunk el cual es un middleware el cual es el encargado de hacer peticiones http de manera asincrona.
+
+Empezaremos ejecutando en la terminal el comando 
+
+`npm install --save redux-thunk`
+
+Despues de realizar la instalación abrimos el archivo **store.js** y alli hacemos la importación del modulo que acabamos de instalar `import thunk from 'redux-thunk';`
+
+```
+import { createStore, combineReducers } from 'redux'
+import { authReducer } from '../reducers/authReducer';
+import thunk from 'redux-thunk';
+
+const reducers = combineReducers({
+    auth: authReducer
+})
+
+export const store = createStore(
+    reducers,
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    );
+```
+
+En el store ya tenemos un middleware el cual es esta linea de codigo `window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()`, pero como vamos a agregar otro middleware debemos añadir la siguiente linea al codigo e importar `compose` en redux
+
+`const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;`
+
+```
+import { createStore, combineReducers, compose } from 'redux'
+import { authReducer } from '../reducers/authReducer';
+import thunk from 'redux-thunk';
+
+const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
+
+const reducers = combineReducers({
+    auth: authReducer
+})
+
+export const store = createStore(
+    reducers,
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+    );
+```
+
+posteriormente cambiamos toda la linea donde teniamos el middleware anterior y lo reemplazamos por `composeEnhancers`, importamos de redux `applyMiddleware` y lo utilizamos en la función para incluir a `thunk`
+
+```
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
+import { authReducer } from '../reducers/authReducer';
+import thunk from 'redux-thunk';
+
+const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
+
+const reducers = combineReducers({
+    auth: authReducer
+})
+
+export const store = createStore(
+    reducers,
+    composeEnhancers(
+        applyMiddleware( thunk )
+    )
+);
+```
+
+y nuevamente lanzar la aplicación y verificar que no existan errores
+
+Ahora debemos realizar la petición asincrona de ejemplo, para esto abrimos el archivo **auth.js** y alli creamos la función `startEmailPassword` esta recibe como argumento el `email` y el `password`, a su vez esta función debe retornar un callback que recibe como argumento `dispatch`, este dispatch esta proporcionado por thunk y el retorno de la función a traves de un `setTimeout` hace un dispatch de la acción `login`.
+
+```
+import { types } from "../types/types"
+
+export const startLoginEmailPassword = ( email, password )=> {
+    return (dispatch) => {
+        setTimeout(() => {
+            
+            dispatch( login ( 123, 'Pedro'))
+
+        }, 3500);
+    }
+}
+
+
+export const login = ( uid, displayName) => ({
+    type: types.login,
+    payload: {
+        uid,
+        displayName
+    }
+})
+```
+
+Ahora pasamos al archivo **LoginScreen.js** y en vez de hacer un dispatch de `login` en la funcion `handleLogin`, hacemos un dispatch de la nueva función asincrona que creamos en **auth.js**, debemos importarla y alli pasarle los argumentos del email y el password
+
+```
+import React from 'react';
+import { Link } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { useForm } from '../../hooks/useForm';
+import { startLoginEmailPassword } from '../../actions/auth'
+
+export const LoginScreen = () => {
+
+    const dispatch = useDispatch();
+
+    const [ values, handleInputChange] = useForm({
+        email: '',
+        password: ''
+    })
+
+    const { email, password } = values; 
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+        // console.log( email, password)
+        dispatch( startLoginEmailPassword( email, password ))
+    }
+
+```
+
+Lo que sigue en el return del componente se deja como esta y ahora si nos dirigimos al navegador, insertamos cualquier correo y contraseña y damos click en Login, despues de 3 segundos en el estado de Redux debemos obtener los datos enviados
+
+
+![assets-git/440.png](assets-git/440.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
