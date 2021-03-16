@@ -214,7 +214,7 @@ ___
 
 [Primer dispatch de una acción a nuestro Store](#Primer-dispatch-de-una-acción-a-nuestro-Store)
 
-[](#)
+[Firebase y Firestore](#Firebase-y-Firestore)
 
 [](#)
 
@@ -16945,6 +16945,38 @@ Cuando hacemos click en Login realizamos el dispatch de una nueva accion que vem
 y tambien lo veremos de una forma mucho mas clara en la pestaña State, donde encontramos el **uid** y el **name**
 
 ![assets-git/435.png](assets-git/435.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Firebase y Firestore
+
+En el siguiente [enlace](https://firebase.google.com/), deben realizar la autenticación con google y luego dirigirse a esta ventana para agregar el primer proyecto.
+
+**Nota:** En caso que se presente un error con el navegador Google Chrome, cambiar e intentarlo en Firefox
+
+![assets-git/436.png](assets-git/436.png)
+
+Despues de dar click sobre la opcioón de agregar mi primer Proyecto, dar un nombre al mismo y la siguiente ventana que aparezca deshabilitar la opción de Google Analytics y luego dar click en Crear Proyecto, luego de esto se va a empezar a crear el proyecto y va a demorar unos minutos, por ultimo saldra esta pantalla.
+
+![assets-git/437.png](assets-git/437.png)
+
+Despues de esto dar click sobre la opción Compilación y alli seleccionar Authentication
+
+![assets-git/438.png](assets-git/438.png)
+
+Va a salir una ventana grande que dice Comenzar, dar click alli y ubicar la pestaña Sign-in method
+
+![assets-git/439.png](assets-git/439.png)
+
+Se puede seleccionar las opciones que se deseen pero en este proyecto se hara la autenticación con el correo y Google, para esto, seleccionar las dos opciones, verificar que queden habilitados y guardar
+
+![assets-git/440.png](assets-git/440.png)
+
+Por ultimo si el App esta en ejecución, finalizarlo e instalar en la terminal el siguiente comando
+
+`npm install firebase`
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
