@@ -220,7 +220,7 @@ ___
 
 [Configurar Firebase y Google Sign in](#Configurar-Firebase-y-Google-Sign-in)
 
-[](#)
+[Formulario de registro de usuarios](#Formulario-de-registro-de-usuarios)
 
 [](#)
 
@@ -17393,9 +17393,139 @@ Nuevamente regresamos al navegador seleccionamos el boton de **Sign in with goog
 
 ![assets-git/447.png](assets-git/447.png)
 
-Por ultimo si regresamos a firebase y revisamos la parte de Authentication, vamos a notas el registro con Google
+Por ultimo si regresamos a firebase y revisamos la parte de Authentication, vamos a notar el registro con Google
 
 ![assets-git/448.png](assets-git/448.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Formulario de registro de usuarios
+
+En este capitulo se deben obtener los datos en la ruta http://localhost:3000/auth/register, se debe obtener el nombre, el email, password y password2, para eso tendremos que usar el hook de useForm implementado en capitulos anteriores, para recordar como funciona se debe importar el hook e inicializarlo con los values que iran en cada input vacios, es decir el estado original del formulario es que primero se encuentra vacio
+
+```
+    const  [values, handleInputChange]  = useForm({
+        name: '',
+        email: '',
+        password: '',
+        password2: ''
+    })
+```
+
+Lo desestructuramos del objeto para obtener los valores uno a uno
+
+Luego agregamos una funcion llamada handleRegister, lo ponemos en la escucha del evento e, para evitar que se recargue la pagina, agregamos dentro de este un `e.preventDefault()` y luego hacemos un console.log de cada elemento
+
+```
+    const  [values, handleInputChange]  = useForm({
+        name: '',
+        email: '',
+        password: '',
+        password2: ''
+    })
+
+    const { name, email, password, password2} = values;
+
+    const handleRegistrer = (e) => {
+        e.preventDefault()
+        console.log(name, email, password, password2)
+    }
+```
+
+por ultimo se agregan los values en los input del formulario y en la etiqueta `Form` agregamos el evento `onSubmit` y alli llamamos la funcion `handleRegister` para poder obtener por consola los elementos que digitemos en el formulario.
+
+Recordar que en los input del formulario se agrega el evento `onChange` el cual detecta los cambios que hagamos en los espacios del formulario.
+
+```
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useForm } from '../../hooks/useForm';
+
+export const RegisterScreen = () => {
+
+    const  [values, handleInputChange]  = useForm({
+        name: '',
+        email: '',
+        password: '',
+        password2: ''
+    })
+
+    const { name, email, password, password2} = values;
+
+    const handleRegistrer = (e) => {
+        e.preventDefault()
+        console.log(name, email, password, password2)
+    }
+
+    return (
+        <>
+            <h3 className="auth__title">Register</h3>
+
+            <form onSubmit={handleRegistrer}>
+
+                <input 
+                    type="text"
+                    placeholder="Name"
+                    name="name"
+                    className="auth__input"
+                    autoComplete="off"
+                    value={name}
+                    onChange={handleInputChange}
+                />
+
+                <input 
+                    type="text"
+                    placeholder="Email"
+                    name="email"
+                    className="auth__input"
+                    autoComplete="off"
+                    value={email}
+                    onChange={handleInputChange}
+                />
+
+                <input 
+                    type="password"
+                    placeholder="Password"
+                    name="password"
+                    className="auth__input"
+                    value={password}
+                    onChange={handleInputChange}
+                />
+
+                <input 
+                    type="password"
+                    placeholder="Confirm password"
+                    name="password2"
+                    className="auth__input"
+                    value={password2}
+                    onChange={handleInputChange}
+                />
+
+
+                <button
+                    type="submit"
+                    className="btn btn-primary btn-block mb-5">
+                    Register
+                </button>
+
+               
+
+                <Link 
+                    to="/auth/login"
+                    className="link"
+                >
+                    Already registered?
+                </Link>
+
+            </form>
+        </>
+    )
+}
+
+```
+![assets-git/449.png](assets-git/449.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
