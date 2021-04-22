@@ -222,9 +222,9 @@ ___
 
 [Formulario de registro de usuarios](#Formulario-de-registro-de-usuarios)
 
-[](#)
+[Manejo de errores del formulario](#Manejo-de-errores-del-formulario)
 
-[](#)
+[uiReducer y Aciones](#uiReducer-y-Aciones)
 
 [](#)
 
@@ -17403,7 +17403,7 @@ Por ultimo si regresamos a firebase y revisamos la parte de Authentication, vamo
 
 ### Formulario de registro de usuarios
 
-En este capitulo se deben obtener los datos en la ruta http://localhost:3000/auth/register, se debe obtener el nombre, el email, password y password2, para eso tendremos que usar el hook de useForm implementado en capitulos anteriores, para recordar como funciona se debe importar el hook e inicializarlo con los values que iran en cada input vacios, es decir el estado original del formulario es que primero se encuentra vacio
+En este capitulo se deben obtener los datos en la ruta http://localhost:3000/auth/register, recordar que este es del archivo **RegisterScree.js** se debe obtener el nombre, el email, password y password2, para eso tendremos que usar el hook de useForm implementado en capitulos anteriores, para recordar como funciona se debe importar el hook e inicializarlo con los values que iran en cada input vacios, es decir el estado original del formulario es que primero se encuentra vacio
 
 ```
     const  [values, handleInputChange]  = useForm({
@@ -17526,6 +17526,298 @@ export const RegisterScreen = () => {
 
 ```
 ![assets-git/449.png](assets-git/449.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Manejo de errores del formulario
+
+Dentro de la función `handleRegister` llamaremos otra función que validara si los campos del formulario son correctos ,entonces primero creamos esta función y para facilitar este capitulo inicializaremos el formulario con datos, esto se hace en el `useForm` colocamos algunos datos predeterminados y mas abajo agregamos la funcion `isFormValid` y hacemos un return de `true` para que al dar click sobre Register el mensaje por consola sea `El formulario se valido correctamente`
+
+```
+    const  [values, handleInputChange]  = useForm({
+        name: 'Jeyfred Caderon',
+        email: 'jeyfredc@gmail.com',
+        password: 'reset123',
+        password2: 'reset123'
+    })
+
+    const { name, email, password, password2} = values;
+
+    const handleRegistrer = (e) => {
+        e.preventDefault()
+        if(formIsValid){
+            console.log('El formulario se valido correctamente')
+        }
+    }
+
+    const formIsValid = () => {
+        return true
+    }
+
+```
+
+![assets-git/450.png](assets-git/450.png)
+
+Ahora hacemos las validaciones correspondientes
+
+1. Si el nombre es igual a un espacio vacio, va a lanzar el nombre es requerido
+2. Instalamos con npm en la terminal [validator](https://www.npmjs.com/package/validator) la cual es una libreria que se utiliza para validar correos y asi evitar realizar una constante con Regex, para esto ejecutamos el comando `npm i validator` y lo importamos en el `RegisterScreen.js`
+3. Validamos que el password 1 y 2 sean iguales y que ademas minimo contenga 6 caracteres
+
+```
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useForm } from '../../hooks/useForm';
+import validator from 'validator';
+
+export const RegisterScreen = () => {
+
+    const  [values, handleInputChange]  = useForm({
+        name: 'Jeyfred Caderon',
+        email: 'jeyfredc@gmail.com',
+        password: 'reset123',
+        password2: 'reset123'
+    })
+
+    const { name, email, password, password2} = values;
+
+    const handleRegistrer = (e) => {
+        e.preventDefault()
+        if(formIsValid()){
+            console.log('El formulario se valido correctamente')
+        }
+    }
+
+    const formIsValid = () => {
+        if( name.trim().length === 0) {
+            console.log('Name is required')
+            return false
+        } else if( !validator.isEmail( email )){
+            console.log('Email is not valid')
+            return false
+        }else if( password !== password2 || password.length<5 ){
+            console.log('Password should be at least 6 characters and match each other')
+            return false
+        }
+        return true
+    }
+```
+
+**Nota:** la expresión `validator.isEmail()` es propia de la libreria **validator**
+
+Para el primer paso y poder probar que se cumpla lo que estamos validando, dejamos el campo del nombre vacio y verificamos la consola
+
+![assets-git/451.png](assets-git/451.png)
+
+En el segundo dejamos el campo del email sin .com o quitamos la @
+
+![assets-git/452.png](assets-git/452.png)
+
+En el tercero, escribimos contraseñas iguales pero menores a 6 caracteres o la primer contraseña diferente a la segunda
+
+![assets-git/453.png](assets-git/453.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### uiReducer y Aciones
+
+Ahora vamos a crear el reducer para hacer el dispatch de las acciones que hara el `RegisterScreen`, para esto debemos buscar la carpeta reducers y alli crear el archivo **uuiReducer.js**
+
+dentro del archivo creamos el `initialState` el cual sera un `loading` que se inicializa en `false` y un mensaje de error que se inicializa con `null`
+
+```
+const intialState = {
+    loading: false,
+    msgError: null
+}
+```
+
+Debajo de este hacemos el exporrt del reducer, en los parametros recibimos el `state` y el `action` y cremaos el switch para el manejo de los casos
+
+```
+
+const intialState = {
+    loading: false,
+    msgError: null
+}
+
+export const uiReducer = ( state= intialState, action) => {
+
+    switch (action.type) {
+        case value:
+            
+            break;
+    
+        default:
+            break;
+    }
+}
+```
+
+Despues de realizar esto debemos de crear las acciones, las cuales vendran de la carpeta types y el archivo **types.js**, dentro de esta creamos la accion `uisetError` y `uiRemoveError`
+
+```
+
+export const types = {
+    login : '[Auth] login',
+    logout: '[Auth] logout',
+
+    uiSetError: '[UI] Set Error',
+    uiRemoveError: '[UI] Remove Error',
+
+}
+```
+
+Despues de crearlos regresamos nuevamente a el `uiReducer` y importamos types alli en la primer acción hacemos una copia del state, no se cambia `loading` porque no interesa cambiarlo pero como se va a lanzar un mensaje de error, el elemento queda con lo que enviemos en el `action.payload` y para la acción del `uiRemoveError` el mensaje de error sera `null`, nuevamente el loading no intenera cambiarlo
+
+```
+import { types } from "../types/types";
+
+const intialState = {
+    loading: false,
+    msgError: null
+}
+
+export const uiReducer = ( state= intialState, action) => {
+
+    switch (action.type) {
+        case types.uiSetError:
+            return {
+                ...state,
+                msgError: action.payload
+            }
+        
+        case types.uiRemoveError:
+            return {
+                ...state,
+                msgError: null
+            }
+    
+        default:
+            return state;
+    }
+}
+```
+
+Ahora abrimos el **store.js** y alli importamos el `uiReducer` y lo pasamos en el objeto de los reducers para poder visualizar el state en la pestaña del navegador **Redux**
+
+```
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
+import { authReducer } from '../reducers/authReducer';
+import { uiReducer } from '../reducers/uiReducer';
+import thunk from 'redux-thunk';
+
+const composeEnhancers = (typeof window !== 'undefined' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) || compose;
+
+const reducers = combineReducers({
+    auth: authReducer,
+    ui: uiReducer,
+})
+
+export const store = createStore(
+    reducers,
+    composeEnhancers(
+        applyMiddleware( thunk )
+    )
+);
+```
+
+Con esto recargamos la pagina y verificamos que el ui aparezca en el state
+
+![assets-git/454.png](assets-git/454.png)
+
+Ahora en la carpeta **actions** creamos un archivo llamado **ui.js** donde iran las acciones `setError` la cual recibira el error y la pasara a `payload` y la accion `removeError` que simplemente tomara el type que ya creamos
+
+```
+import { types } from "../types/types";
+
+export const setError = ( error ) => ({
+    type: types.uiSetError,
+    payload: error
+})
+
+export const RemoveError = ( error ) => ({
+    type: types.uiRemoveError
+})
+```
+
+Ahora es momento de disparar los mensajes de error que estabamos validando en el **RegisterScreen**.
+
+Para realizar esto debemos de importar el useDispatch y utilizarlo dentro del mismo y luego importar las acciones que acabos de crear en el archivo **ui.js**
+
+despues vamos a donde estan ubicadas las validaciones y las reemplazamos por `dispatch(accion('mensaje de error'))` de tal forma que quede asi
+
+```
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux'
+import { useForm } from '../../hooks/useForm';
+import validator from 'validator';
+import { RemoveError, setError } from '../../actions/ui';
+
+export const RegisterScreen = () => {
+
+    const  [values, handleInputChange]  = useForm({
+        name: 'Jeyfred Caderon',
+        email: 'jeyfredc@gmail.com',
+        password: 'reset123',
+        password2: 'reset123'
+    })
+
+    const dispatch = useDispatch()
+
+    const { name, email, password, password2} = values;
+
+    const handleRegistrer = (e) => {
+        e.preventDefault()
+        if(formIsValid()){
+            console.log('El formulario se valido correctamente')
+        }
+    }
+
+    const formIsValid = () => {
+        if( name.trim().length === 0) {
+            dispatch(
+                setError('Name is required')
+            )
+            return false
+        } else if( !validator.isEmail( email )){
+            dispatch(
+                setError('Email is not valid')
+            )
+            return false
+        }else if( password !== password2 || password.length<6 ){
+            dispatch(
+                setError('Password should be at least 6 characters and match each other')
+            )
+            return false
+        }
+        dispatch( RemoveError() )
+        return true
+    }
+```
+
+Despues de realizar esto, podemos devolvernos al navegador y empezar a revisar cada una de las validaciones y ver que se cumplan una a una
+
+1. click sobre el boton Register con los datos bien, para ver que envia Remove Error
+
+![assets-git/455.png](assets-git/455.png)
+
+2. Dejar el nombre vacio y verificar el mensaje de error
+
+![assets-git/456.png](assets-git/456.png)
+
+3. Dejar mal el correo y verificar el mensaje de error
+
+![assets-git/457.png](assets-git/457.png)
+
+4. Dejar mal las constraseñas y verificar el mensaje de error
+
+![assets-git/458.png](assets-git/458.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
