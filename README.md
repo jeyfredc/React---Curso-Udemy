@@ -228,7 +228,7 @@ ___
 
 [useSelector Obtener información del State](#useSelector-Obtener-información-del-State)
 
-[](#)
+[Crear usuario con correo y contraseña](#Crear-usuario-con-correo-y-contraseña)
 
 [](#)
 
@@ -18038,6 +18038,252 @@ export const RegisterScreen = () => {
 verificamos el navegador y por lo menos hacemos una de las validaciones
 
 ![assets-git/462.png](assets-git/462.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Crear usuario con correo y contraseña
+
+Hasta el momento cuando hacemos click en el boton de Registro sale un mensaje de Formulario correcto por consola, pero no pasa nada mas, ahora es momento de disparar la acción para que el usuario lo podamos guardar en firebase, tendremos que regresar a la carpeta **actions** y abrir el archivo **auth.js**
+
+Alli debajo de la funcion `startLoginEmailPassword`, crearemos otra que se llamara `startRegisterWithEmailPasswordName` y recibira el email el password y el name
+
+```
+import { firebase, googleAuthProvider } from '../firebase/firebase-config'
+import { types } from "../types/types"
+
+export const startLoginEmailPassword = ( email, password )=> {
+    return ( dispatch ) => {
+        setTimeout(() => {
+            
+            dispatch( login ( 123, 'Pedro'))
+
+        }, 3500);
+    }
+}
+
+export const startRegisterWithEmailPasswordName = (email, password, name) => {
+
+    
+}
+
+export const startGoogleLogin = () => {
+    return ( dispatch ) => {
+
+        firebase.auth().signInWithPopup( googleAuthProvider )
+            .then ( ({ user }) => {
+                dispatch(
+                    login (user.uid, user.displayName) 
+                )
+            });
+    }
+}
+
+
+
+export const login = ( uid, displayName) => ({
+    type: types.login,
+    payload: {
+        uid,
+        displayName
+    }
+})
+```
+
+Dentro de la función tendremos que regresar un callback porque va a funcionar de manera asincrona y tendremos que usar uno de los metodos que proporciona firebase para la autenticación, este recibe el email y el password y espera una promesa que en este caso sera el usuario, lo dejamos de esta forma
+
+```
+import { firebase, googleAuthProvider } from '../firebase/firebase-config'
+import { types } from "../types/types"
+
+export const startLoginEmailPassword = ( email, password )=> {
+    return ( dispatch ) => {
+        setTimeout(() => {
+            
+            dispatch( login ( 123, 'Pedro'))
+
+        }, 3500);
+    }
+}
+
+export const startRegisterWithEmailPasswordName = (email, password, name) => {
+    return ( dispatch ) => {
+
+        firebase.auth().createUserWithEmailAndPassword( email, password )
+            .then( ({ user })=> {
+                console.log(user)
+            } )
+    }
+
+}
+
+export const startGoogleLogin = () => {
+    return ( dispatch ) => {
+
+        firebase.auth().signInWithPopup( googleAuthProvider )
+            .then ( ({ user }) => {
+                dispatch(
+                    login (user.uid, user.displayName) 
+                )
+            });
+    }
+}
+
+
+
+export const login = ( uid, displayName) => ({
+    type: types.login,
+    payload: {
+        uid,
+        displayName
+    }
+})
+```
+
+Despues de realizar esto regresamos nuevamente al **RegisterScreen** y dentro de la funcion `handleRegister` importamos la función que acabamos de crear 
+
+```
+    const handleRegistrer = (e) => {
+        e.preventDefault()
+        if(formIsValid()){
+            dispatch( startRegisterWithEmailPasswordName( email, password, name))
+        }
+    }
+```
+
+Regresamos al navegador, debemos registrar un correo diferente al que registramos con google en firebase y damos click en el boton register y nos fijamos en la consola
+
+![assets-git/463.png](assets-git/463.png)
+
+Como se observa, la consola, nos proporciona toda la información que tiene que ver con firebase y si revisamos en firebase tambien obtenemos el registro
+
+![assets-git/464.png](assets-git/464.png)
+
+El unico problema es que cuando hacemos el registro de esta forma, el `displayName` es nulo, la unica forma de obtenerlo directamente es cuando hacemos registros en redes sociales 
+
+![assets-git/465.png](assets-git/465.png)
+
+Entonces para corregir esto, primero borramos de firebase el ultimo correo registrado, despues regresamos al archivo **auth.js** y utilizamos dentro del then otra función que provee firebase para establecer el displayName, tambien hacemos uso de `async await` para esperar el usario y retonarlo en el dispatch del login
+
+```
+import { firebase, googleAuthProvider } from '../firebase/firebase-config'
+import { types } from "../types/types"
+
+export const startLoginEmailPassword = ( email, password )=> {
+    return ( dispatch ) => {
+        setTimeout(() => {
+            
+            dispatch( login ( 123, 'Pedro'))
+
+        }, 3500);
+    }
+}
+
+export const startRegisterWithEmailPasswordName = (email, password, name) => {
+    return ( dispatch ) => {
+
+        firebase.auth().createUserWithEmailAndPassword( email, password )
+            .then( async({ user })=> {
+                await user.updateProfile({ displayName: name })
+
+                dispatch(
+                    login (user.uid, user.displayName) 
+                )
+            } )
+    }
+
+}
+
+export const startGoogleLogin = () => {
+    return ( dispatch ) => {
+
+        firebase.auth().signInWithPopup( googleAuthProvider )
+            .then ( ({ user }) => {
+                dispatch(
+                    login (user.uid, user.displayName) 
+                )
+            });
+    }
+}
+
+
+
+export const login = ( uid, displayName) => ({
+    type: types.login,
+    payload: {
+        uid,
+        displayName
+    }
+})
+```
+
+De esta forma si nuevamente realizamos el registro va a aparecer el displayName
+
+![assets-git/466.png](assets-git/466.png)
+
+Si no borramos la cuenta de firebase nos va a salir este error
+
+![assets-git/467.png](assets-git/467.png)
+
+Para manejarlo lo unico que tendremos que hacer es agregar un `catch` del error
+
+```
+import { firebase, googleAuthProvider } from '../firebase/firebase-config'
+import { types } from "../types/types"
+
+export const startLoginEmailPassword = ( email, password )=> {
+    return ( dispatch ) => {
+        setTimeout(() => {
+            
+            dispatch( login ( 123, 'Pedro'))
+
+        }, 3500);
+    }
+}
+
+export const startRegisterWithEmailPasswordName = (email, password, name) => {
+    return ( dispatch ) => {
+
+        firebase.auth().createUserWithEmailAndPassword( email, password )
+            .then( async({ user })=> {
+                console.log(user)
+                await user.updateProfile({ displayName: name })
+
+                dispatch(
+                    login (user.uid, user.displayName) 
+                )
+            } ).catch(error => console.log(error))
+    }
+
+}
+
+export const startGoogleLogin = () => {
+    return ( dispatch ) => {
+
+        firebase.auth().signInWithPopup( googleAuthProvider )
+            .then ( ({ user }) => {
+                dispatch(
+                    login (user.uid, user.displayName) 
+                )
+            });
+    }
+}
+
+
+
+export const login = ( uid, displayName) => ({
+    type: types.login,
+    payload: {
+        uid,
+        displayName
+    }
+})
+```
+
+y por el momento todo estara listo para despues mostrarselo al usuario
+
+![assets-git/468.png](assets-git/468.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
