@@ -226,7 +226,7 @@ ___
 
 [uiReducer y Aciones](#uiReducer-y-Aciones)
 
-[](#)
+[useSelector Obtener información del State](#useSelector-Obtener-información-del-State)
 
 [](#)
 
@@ -17818,6 +17818,226 @@ Despues de realizar esto, podemos devolvernos al navegador y empezar a revisar c
 4. Dejar mal las constraseñas y verificar el mensaje de error
 
 ![assets-git/458.png](assets-git/458.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### useSelector Obtener información del State
+
+En este capitulo vamos a mostrar el mensaje de error en el navegador para esto vamos a hacer uso del `useSelector`, el cual es otro hook que proporciona Redux, la forma de usarlo es muy parecido a como se utiliza useDispatch, solo que se inicializa de esta forma `const state = useSelector()`, entre sus argumentos recibe el callback state y retorna el state, es decir de esta forma
+
+`const state = useSelector( (state) => state )`
+
+se debe importa al lado de `useDispatch` y para ver que retorna se hace un `console.log(state)`
+
+```
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux'
+import { useForm } from '../../hooks/useForm';
+import validator from 'validator';
+import { RemoveError, setError } from '../../actions/ui';
+
+export const RegisterScreen = () => {
+
+    const  [values, handleInputChange]  = useForm({
+        name: 'Jeyfred Caderon',
+        email: 'jeyfredc@gmail.com',
+        password: 'reset123',
+        password2: 'reset123'
+    })
+
+    const dispatch = useDispatch()
+    const state = useSelector(state => state)
+
+    console.log(state)
+
+    const { name, email, password, password2} = values;
+
+    const handleRegistrer = (e) => {
+        e.preventDefault()
+        if(formIsValid()){
+            console.log('El formulario se valido correctamente')
+        }
+    }
+
+    const formIsValid = () => {
+        if( name.trim().length === 0) {
+            dispatch(
+                setError('Name is required')
+            )
+            return false
+        } else if( !validator.isEmail( email )){
+            dispatch(
+                setError('Email is not valid')
+            )
+            return false
+        }else if( password !== password2 || password.length<6 ){
+            dispatch(
+                setError('Password should be at least 6 characters and match each other')
+            )
+            return false
+        }
+        dispatch( RemoveError() )
+        return true
+    }
+
+```
+
+Luego verificamos que esta retornando en el navegador
+
+![assets-git/459.png](assets-git/459.png)
+
+Como se puede observar trae el state que aparece cuando seleccionamos la pestaña de Redux, ahora hay que empezar a traer el objeto accediendo de esta forma en el useSelector
+
+`const state = useSelector(state => state.ui)`
+
+Esto traera lo que esta dentro del objeto
+
+![assets-git/460.png](assets-git/460.png)
+
+y como es un objeto ahora uso la desestructuración para obtener el msgError directamente
+
+```
+const { msgError } = useSelector(state => state.ui)
+
+console.log(msgError)
+```
+
+![assets-git/461.png](assets-git/461.png)
+
+por ultimo modificamos la parte del html para mostrar el error debajo de la palabra **Register**
+
+```
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux'
+import { useForm } from '../../hooks/useForm';
+import validator from 'validator';
+import { RemoveError, setError } from '../../actions/ui';
+
+export const RegisterScreen = () => {
+
+    const  [values, handleInputChange]  = useForm({
+        name: 'Jeyfred Caderon',
+        email: 'jeyfredc@gmail.com',
+        password: 'reset123',
+        password2: 'reset123'
+    })
+
+    const dispatch = useDispatch()
+    const { msgError } = useSelector(state => state.ui)
+
+    console.log(msgError)
+
+    const { name, email, password, password2} = values;
+
+    const handleRegistrer = (e) => {
+        e.preventDefault()
+        if(formIsValid()){
+            console.log('El formulario se valido correctamente')
+        }
+    }
+
+    const formIsValid = () => {
+        if( name.trim().length === 0) {
+            dispatch(
+                setError('Name is required')
+            )
+            return false
+        } else if( !validator.isEmail( email )){
+            dispatch(
+                setError('Email is not valid')
+            )
+            return false
+        }else if( password !== password2 || password.length<6 ){
+            dispatch(
+                setError('Password should be at least 6 characters and match each other')
+            )
+            return false
+        }
+        dispatch( RemoveError() )
+        return true
+    }
+
+    return (
+        <>
+            <h3 className="auth__title">Register</h3>
+
+            <form onSubmit={handleRegistrer}>
+
+                {
+                    msgError &&
+                    <div className="auth__alert-error">
+                        {msgError}
+                    </div>
+                }
+
+                <input 
+                    type="text"
+                    placeholder="Name"
+                    name="name"
+                    className="auth__input"
+                    autoComplete="off"
+                    value={name}
+                    onChange={handleInputChange}
+                />
+
+                <input 
+                    type="text"
+                    placeholder="Email"
+                    name="email"
+                    className="auth__input"
+                    autoComplete="off"
+                    value={email}
+                    onChange={handleInputChange}
+                />
+
+                <input 
+                    type="password"
+                    placeholder="Password"
+                    name="password"
+                    className="auth__input"
+                    value={password}
+                    onChange={handleInputChange}
+                />
+
+                <input 
+                    type="password"
+                    placeholder="Confirm password"
+                    name="password2"
+                    className="auth__input"
+                    value={password2}
+                    onChange={handleInputChange}
+                />
+
+
+                <button
+                    type="submit"
+                    className="btn btn-primary btn-block mb-5">
+                    Register
+                </button>
+
+               
+
+                <Link 
+                    to="/auth/login"
+                    className="link"
+                >
+                    Already registered?
+                </Link>
+
+            </form>
+        </>
+    )
+}
+
+```
+
+verificamos el navegador y por lo menos hacemos una de las validaciones
+
+![assets-git/462.png](assets-git/462.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
