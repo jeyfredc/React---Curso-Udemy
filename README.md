@@ -18334,3 +18334,221 @@ Con realizar esta acción volvemos a colocar el correo que habiamos creado con l
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
+
+### Tarea Loading state
+
+Bloquear el botón de login cuando está en el proceso de autenticación.
+
+Pasos:
+
+1. Crear dos tipos en nuestros types.js
+    uiStartLoading: '[UI] Start loading'
+    uiFinishLoading: '[UI] Finish loading'
+
+2. Crear dos acciones que modifiquen nuestro state en el uiReducer (no reciben argumentos)
+    uiStartLoading: debe de colocar la propiedad loading en true 
+    uiFinishLoading: debe de colocar la propiedad loading en false
+
+    Esas acciones tendrán el nombre de startLoading y finishLoading respectivamente
+
+3. Las acciones de startLoading y finishLoading serán despachadas únicamente en la acción:
+    startLoginEmailPassword
+        Tan pronto la acción es creada, debe de disparar la acción de startLoading
+        Cuando se resuelve la petición de Firebase de autenticación con éxito o error, deben de
+        disparar la acción finisLoading
+
+4. En el <LoginScreen />, deben de bloquear el botón de Login, añadiendo la propiedad:
+    disabled={ loading }
+
+    Donde loading es la propiedad del state ui.loading.
+
+
+5. Mucha suerte!
+
+**Solución**
+
+1. Abrimos el archivo types y añadimos los nuevos types
+
+```
+export const types = {
+    login : '[Auth] login',
+    logout: '[Auth] logout',
+
+    uiSetError: '[UI] Set Error',
+    uiRemoveError: '[UI] Remove Error',
+
+    uiStartLoading: '[UI] Start loading',
+    uiFinishLoading: '[UI] Finish loading'
+
+}    
+```
+
+2. pasamos al uiReducer y agregamos los nuevos types, estableciendo en cada uno una copia del estado y colocando loading en true y en false respectivamente
+
+```
+import { types } from "../types/types";
+
+const intialState = {
+    loading: false,
+    msgError: null
+}
+
+export const uiReducer = ( state= intialState, action) => {
+
+    switch (action.type) {
+        case types.uiSetError:
+            return {
+                ...state,
+                msgError: action.payload
+            }
+        
+        case types.uiRemoveError:
+            return {
+                ...state,
+                msgError: null
+            }
+        case types.uiStartLoading:
+            return {
+                ...state,
+                loading: true
+            }
+        case types.uiFinishLoading:
+            return {
+                ...state,
+                loading:false
+            }
+    
+        default:
+            return state;
+    }
+}
+```
+
+3. Regresamos a **auth.js**  y alli llamamos cada una de las acciones en la función `startLoginEmailPassword`
+
+```
+export const startLoginEmailPassword = ( email, password )=> {
+    return ( dispatch ) => {
+
+        dispatch(startLoading())
+
+        firebase.auth().signInWithEmailAndPassword( email, password )
+        .then( ({ user })=> {
+            console.log(user)
+
+            dispatch(login (user.uid, user.displayName));
+
+            dispatch(finishLoading())
+        }).catch(error => {
+            console.log(error)
+            dispatch(finishLoading())
+        }
+        )
+
+    }
+}
+```
+
+4. Regresamos a `LoginScreen` y utilizamos el hook useSelector para usar la desestructuración y obtener `loading` a traves de `ui`, recordar que se debe hacer primero un `console.log` del `state`, alli obtenemos el `ui` y luego en el useSelector lo llamamos con `state.ui` y por ultimo buscamos la etiqueta de Login agregamos la propiedad `disabled` y pasamos al navegador para realizar la prueba y deshabilitar y habilitar el botón en tanto se hace la acción del login
+
+```
+import React from 'react';
+import { Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { useForm } from '../../hooks/useForm';
+import { startGoogleLogin, startLoginEmailPassword } from '../../actions/auth'
+
+export const LoginScreen = () => {
+
+    const dispatch = useDispatch();
+
+    const {loading} = useSelector(state => state.ui)
+
+    const [ values, handleInputChange] = useForm({
+        email: '',
+        password: ''
+    })
+
+    const { email, password } = values; 
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+        // console.log( email, password)
+        dispatch( startLoginEmailPassword( email, password ))
+    }
+
+    const handleGoogleLogin = () => {
+        dispatch( startGoogleLogin() );
+    }
+
+
+    return (
+        <>
+            <h3 className="auth__title">Login</h3>
+
+            <form onSubmit= { handleLogin }>
+
+                <input 
+                    type="text"
+                    placeholder="Email"
+                    name="email"
+                    value= { email }
+                    className="auth__input"
+                    autoComplete="off"
+                    onChange= { handleInputChange }
+                />
+
+                <input 
+                    type="password"
+                    placeholder="Password"
+                    name="password"
+                    value= { password }
+                    className="auth__input"
+                    onChange= { handleInputChange }
+                />
+
+
+                <button
+                    type="submit"
+                    className="btn btn-primary btn-block"
+                    disabled={loading}
+                >
+                    Login
+                </button>
+
+                
+                <div className="auth__social-networks">
+                    <p>Login with social networks</p>
+
+                    <div 
+                        className="google-btn"
+                        onClick= { handleGoogleLogin }
+                    >
+                        <div className="google-icon-wrapper">
+                            <img className="google-icon" src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="google button" />
+                        </div>
+                        <p className="btn-text">
+                            <b>Sign in with google</b>
+                        </p>
+                    </div>
+                </div>
+
+                <Link 
+                    to="/auth/register"
+                    className="link"
+                >
+                    Create new account    
+                </Link>
+
+            </form>
+        </>
+    )
+}
+
+```
+
+![assets-git/471.png](assets-git/471.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
