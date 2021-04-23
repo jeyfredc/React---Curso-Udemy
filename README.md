@@ -18552,3 +18552,73 @@ export const LoginScreen = () => {
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
 </div>
+
+### Mantener el estado de la autenticación al recargar
+
+Desde el primer momento que hicimos la utenticación o el login del user siempre hemos estado en un estado de autenticado pero no lo podemos ver, para guardar el estado debemos usar otro metodo proporcionado por firebase en el **AppRouter.js**, el cual lo unico que esta haciendo es validar si el usuario devuelve un id, esto lo agregamos dentro de una condición `if user?.uid` si el usuario esta utenticado devolvera el dispatch de la acción del login, de lo contrario, no entrara a la condición y por el momento no pasara nada 
+
+Lo unico que debemos hacer es agregar el useEffect con el metodo proporcionado por firebase
+
+```
+import React, { useEffect } from 'react';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Redirect
+  } from 'react-router-dom';
+
+import { AuthRouter } from './AuthRouter';
+import { JournalScreen } from '../components/journal/JournalScreen';
+import { useDispatch } from 'react-redux';
+import firebase from 'firebase';
+import { login } from '../actions/auth';
+
+export const AppRouter = () => {
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        
+        firebase.auth().onAuthStateChanged( (user) => {
+
+            if(user?.uid){
+
+                dispatch( login( user.uid, user.displayName ))
+            }
+        })
+    }, [dispatch])
+    
+    return (
+        <Router>
+            <div>
+                <Switch>
+                    <Route 
+                        path="/auth"
+                        component={ AuthRouter }
+                    />
+
+                    <Route 
+                        exact
+                        path="/"
+                        component={ JournalScreen }
+                    />
+
+                    <Redirect to="/auth/login" />
+
+
+                </Switch>
+            </div>
+        </Router>
+    )
+}
+
+```
+
+De esta forma, con tan solo recargar la pagina veremos que ya tenemos el estado del login guardado
+
+![assets-git/472.png](assets-git/472.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
