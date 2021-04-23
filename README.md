@@ -230,7 +230,7 @@ ___
 
 [Crear usuario con correo y contraseña](#Crear-usuario-con-correo-y-contraseña)
 
-[](#)
+[Realizar el login de usuario con correo y contraseña](#Realizar-el-login-de-usuario-con-correo-y-contraseña)
 
 [](#)
 
@@ -18284,6 +18284,52 @@ export const login = ( uid, displayName) => ({
 y por el momento todo estara listo para despues mostrarselo al usuario
 
 ![assets-git/468.png](assets-git/468.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Realizar el login de usuario con correo y contraseña
+
+Es momento de realizar la autenticación del usuario, para eso ya esta creada una función en el **auth.js** llamada `startLoginEmailPassword`, alli se debe utilizar un metodo que proporciona firebase para la autenticación que se hace en esta parte 
+
+![assets-git/469.png](assets-git/469.png)
+
+Ahora pasamos al archivo y reemplazamos por lo siguiente en esta función que se encuentra actualmente asi 
+
+```
+export const startLoginEmailPassword = ( email, password )=> {
+    return ( dispatch ) => {
+        setTimeout(() => {
+            
+            dispatch( login ( 123, 'Pedro'))
+
+        }, 3500);
+    }
+}
+```
+
+por lo siguiente 
+
+```
+export const startLoginEmailPassword = ( email, password )=> {
+    return ( dispatch ) => {
+
+        firebase.auth().signInWithEmailAndPassword( email, password )
+            .then( ({ user })=> {
+
+            dispatch(
+                login (user.uid, user.displayName)
+            );
+        }).catch(error => console.log(error))
+    }
+}
+```
+
+Con realizar esta acción volvemos a colocar el correo que habiamos creado con la contraseña y obtenemos el uid y el name 
+
+![assets-git/470.png](assets-git/470.png)
+
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
