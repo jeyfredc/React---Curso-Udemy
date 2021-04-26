@@ -232,11 +232,11 @@ ___
 
 [Realizar el login de usuario con correo y contraseña](#Realizar-el-login-de-usuario-con-correo-y-contraseña)
 
-[](#)
+[Mantener el estado de la autenticación al recargar](#Mantener-el-estado-de-la-autenticación-al-recargar)
 
-[](#)
+[Mostrar un loading global en la aplicación](#Mostrar-un-loading-global-en-la-aplicación)
 
-[](#)
+[Logout de Firebase](#Logout-de-Firebase)
 
 [](#)
 
@@ -18618,6 +18618,174 @@ export const AppRouter = () => {
 De esta forma, con tan solo recargar la pagina veremos que ya tenemos el estado del login guardado
 
 ![assets-git/472.png](assets-git/472.png)
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Mostrar un loading global en la aplicación
+
+Cuando estamos en la aplicación debemos esperar la respuesta de firebase en el proceso de autenticación y como se debe hacer esto, es necesario mostrarle al usuario lo que esta pasando, para eso se agrega una bandera que sera el cheking y que se manejara a traves de un estado dentro de **AppRouter**
+
+`checking` sera inicializado en `true`, es decir esta cargando, mientra que cuando ya se hace la autenticación este estado pasa a ser `false`
+
+debajo del useEffect podemos condicionar la variable que mientras checking sea true muestre un mensaje de espera
+
+```
+import React, { useEffect, useState } from 'react';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Redirect
+  } from 'react-router-dom';
+
+import { AuthRouter } from './AuthRouter';
+import { JournalScreen } from '../components/journal/JournalScreen';
+import { useDispatch } from 'react-redux';
+import firebase from 'firebase';
+import { login } from '../actions/auth';
+
+export const AppRouter = () => {
+
+    const [checking, setChecking] = useState(true)
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        
+        firebase.auth().onAuthStateChanged( (user) => {
+
+            if(user?.uid){
+
+                dispatch( login( user.uid, user.displayName ))
+            }
+            setChecking(false)
+        })
+    }, [dispatch, setChecking])
+
+    if(checking){
+        return(
+        <h1>Espere...</h1>
+        )
+    }
+    
+    return (
+        <Router>
+            <div>
+                <Switch>
+                    <Route 
+                        path="/auth"
+                        component={ AuthRouter }
+                    />
+
+                    <Route 
+                        exact
+                        path="/"
+                        component={ JournalScreen }
+                    />
+
+                    <Redirect to="/auth/login" />
+
+
+                </Switch>
+            </div>
+        </Router>
+    )
+}
+
+```
+}
+
+Si por un momento cambiamos la validación del if y dejamos el estado en `true`, se va a mantener el mensaje de espere...
+
+![assets-git/473.png](assets-git/473.png)
+
+Por ultimo se hace necesario reconocer si esta autenticado o no el usuario por lo cual se crea otra bandera llamada `loggedIn`, esta estara el `true` en el caso de estar autenticado y `false` en el caso de no estarlo, esto servira en capitulos posteriores para redirigir al componente de `JournalScreen`, si no esta autenticado entonces la ruta seguira siendo `auth/login`
+
+```
+import React, { useEffect, useState } from 'react';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    Redirect
+  } from 'react-router-dom';
+
+import { AuthRouter } from './AuthRouter';
+import { JournalScreen } from '../components/journal/JournalScreen';
+import { useDispatch } from 'react-redux';
+import firebase from 'firebase';
+import { login } from '../actions/auth';
+
+export const AppRouter = () => {
+
+    const [checking, setChecking] = useState(true)
+
+    const [loggedIn, setLoggedIn] = useState(false)
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        
+        firebase.auth().onAuthStateChanged( (user) => {
+
+            if(user?.uid){
+
+                dispatch( login( user.uid, user.displayName ))
+                setLoggedIn(true)
+            }else {
+                setLoggedIn(false)
+            }
+            setChecking(false)
+        })
+    }, [dispatch, setChecking])
+
+    if(checking){
+        return(
+        <h1>Espere...</h1>
+        )
+    }
+    
+    return (
+        <Router>
+            <div>
+                <Switch>
+                    <Route 
+                        path="/auth"
+                        component={ AuthRouter }
+                    />
+
+                    <Route 
+                        exact
+                        path="/"
+                        component={ JournalScreen }
+                    />
+
+                    <Redirect to="/auth/login" />
+
+
+                </Switch>
+            </div>
+        </Router>
+    )
+}
+
+```
+
+para ver que esto se este cumpliendo vamos a ver las banderas que acabamos de colocar en la pestaña components del navegador 
+
+![assets-git/474.png](assets-git/474.png)
+
+El primer state del navegador muestra `false` eso quiere decir que ya cargo y el segundo muestra `true` quiere decir que ya esta autenticado el usuario
+
+<div align="right">
+  <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
+</div>
+
+### Logout de Firebase
+
+![assets-git/475.png](assets-git/475.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
