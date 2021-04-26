@@ -18785,7 +18785,188 @@ El primer state del navegador muestra `false` eso quiere decir que ya cargo y el
 
 ### Logout de Firebase
 
+En esta parte se trabaja el logout en la ruta http://localhost:3000/, lo que se debe hacer es el caso inverso al loggin y hay que borrar el uid y el name del auth para poder sacar al usuario de la aplicación
+
 ![assets-git/475.png](assets-git/475.png)
+
+Para empezar a probar lo primero que hacemos es abrir **Sidebar** y ubicar el boton de Logout, implementamos una función que nos ayude a identificar que podemos realizar una acción sobre el boton como por ejemplo un log de `'click en Logout'`
+
+```
+import React from 'react'
+import { JournalEntries } from './JournalEntries'
+
+export const Sidebar = () => {
+
+    const handleLogout = () => {
+        console.log('click en Logout');
+    }
+    return (
+        <aside className="journal__sidebar">
+            
+            <div className="journal__sidebar-navbar">
+                <h3 className="mt-5">
+                    <i className="far fa-moon"></i>
+                    <span> Jeyfred</span>
+                </h3>
+
+                <button 
+                className="btn"
+                onClick={handleLogout}
+                >
+                    Logout
+                </button>
+            </div>
+
+            <div className="journal__new-entry">
+                <i className="far fa-calendar-plus fa-5x"></i>
+                <p className="mt-5">
+                    New entry
+                </p>
+            </div>
+
+            <JournalEntries />    
+
+        </aside>
+    )
+}
+```
+
+y verificamos que esto se cumpla en la consola del navegador al hacer click sobre el boton Logout
+
+![assets-git/476.png](assets-git/476.png)
+
+Ahora pasamos a **auth.js** para crear 2 acciones nuevas la primera se llama `startLogout` y sera una función asincrona porque debemos esperar la respuesta de firebase, la segunda es logout que simplemente lo que va a retornar sera un objeto vacio y de esta forma conseguimos que el usuario ya no quede autenticado en la aplicación
+
+```
+import { firebase, googleAuthProvider } from '../firebase/firebase-config'
+import { types } from "../types/types"
+import { finishLoading, startLoading } from './ui'
+
+export const startLoginEmailPassword = ( email, password )=> {
+    return ( dispatch ) => {
+
+        dispatch(startLoading())
+
+        firebase.auth().signInWithEmailAndPassword( email, password )
+        .then( ({ user })=> {
+            console.log(user)
+
+            dispatch(login (user.uid, user.displayName));
+
+            dispatch(finishLoading())
+        }).catch(error => {
+            console.log(error)
+            dispatch(finishLoading())
+        }
+        )
+
+    }
+}
+    
+
+export const startRegisterWithEmailPasswordName = (email, password, name) => {
+    return ( dispatch ) => {
+
+        firebase.auth().createUserWithEmailAndPassword( email, password )
+            .then( async({ user })=> {
+                console.log(user)
+                await user.updateProfile({ displayName: name })
+
+                dispatch(
+                    login (user.uid, user.displayName) 
+                )
+            } ).catch(error => console.log(error))
+    }
+
+}
+
+export const startGoogleLogin = () => {
+    return ( dispatch ) => {
+
+        firebase.auth().signInWithPopup( googleAuthProvider )
+            .then ( ({ user }) => {
+                dispatch(
+                    login (user.uid, user.displayName) 
+                )
+            });
+    }
+}
+
+
+export const login = ( uid, displayName) => ({
+    type: types.login,
+    payload: {
+        uid,
+        displayName
+    }
+})
+
+export const startLogout = () => {
+    return async( dispatch ) => {
+        await firebase.auth().signOut();
+
+        dispatch( logout () );
+    }
+}
+
+export const logout = () => ({
+    type: types.logout
+})
+```
+
+ahora pasamos al **Sidebar** nuevamente y hacemos el dispatch de `startLogout`
+
+```
+import React from 'react'
+import { useDispatch } from 'react-redux'
+import { startLogout } from '../../actions/auth'
+import { JournalEntries } from './JournalEntries'
+
+export const Sidebar = () => {
+
+    const dispatch = useDispatch()
+
+    const handleLogout = () => {
+        dispatch( startLogout() )
+    }
+    
+    return (
+        <aside className="journal__sidebar">
+            
+            <div className="journal__sidebar-navbar">
+                <h3 className="mt-5">
+                    <i className="far fa-moon"></i>
+                    <span> Jeyfred</span>
+                </h3>
+
+                <button 
+                className="btn"
+                onClick={handleLogout}
+                >
+                    Logout
+                </button>
+            </div>
+
+            <div className="journal__new-entry">
+                <i className="far fa-calendar-plus fa-5x"></i>
+                <p className="mt-5">
+                    New entry
+                </p>
+            </div>
+
+            <JournalEntries />    
+
+        </aside>
+    )
+}
+
+```
+
+Hacemos nuevamente la prueba y observamos en el navegador que este el uid y el usuario y se borren en el momento de hacer un click sobre Logout
+
+![assets-git/477.png](assets-git/477.png)
+
+![assets-git/478.png](assets-git/478.png)
 
 <div align="right">
   <small><a href="#tabla-de-contenido">🡡 volver al inicio</a></small>
