@@ -10,7 +10,6 @@ import { CalendarScreen } from '../components/calendar/CalendarScreen';
 export const AppRouter = () => {
     return (
         <div>
-            <h1>AppRouter</h1>
 
             <Routes>
       
